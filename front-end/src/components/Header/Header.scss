@@ -1,0 +1,62 @@
+#header {
+  height: 160px;
+  margin: auto;
+  background-color: #ececec;
+  border-bottom: 1px solid #ccc;
+}
+
+.header__content {
+  width: 1000px;
+  margin: 0 auto;
+  display: flex;
+  justify-content: space-between;
+}
+.header__menu {
+  height: 40px;
+  width: 1000px;
+  margin: 17px auto 0;
+  background-color: #d4dcdf;
+  border-top: solid 1px #bbc5c7;
+}
+.header__nav {
+  list-style: none;
+  display: flex;
+}
+.header__link a {
+  display: block;
+  padding: 0 20px;
+  font-size: 1.4rem;
+  line-height: 4rem;
+  border-right: 1px solid #ccc;
+}
+.header__logo {
+  height: 102px;
+  width: 100px;
+  object-fit: contain;
+}
+.header__actions {
+  padding-top: 5px;
+  font-weight: bold;
+  font-size: 17px;
+}
+.header__actions-name {
+  text-transform: uppercase;
+  color: red;
+}
+
+.header__logout,
+.header__changePass {
+  font-size: inherit;
+  font-weight: inherit;
+}
+
+.header__logout:hover {
+  text-decoration: underline;
+}
+
+.header__title {
+  align-self: center;
+  font-size: 3rem;
+  color: rgb(20, 175, 20);
+  font-weight: bold;
+}

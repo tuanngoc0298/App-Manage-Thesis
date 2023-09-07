@@ -1,0 +1,32 @@
+.sidebar {
+  width: 198px;
+  border-style: solid;
+  border-color: #e4e9eb;
+  border-width: 0 1px 1px 1px;
+  background: #e8edef;
+}
+
+.sidebar__list ul {
+  list-style: none;
+}
+
+.list__title {
+  margin: 0 -1px;
+  line-height: 35px;
+  font-size: 1.5rem;
+  text-indent: 10px;
+  color: #175765;
+  font-weight: bold;
+  border-top: solid 1px #ddd;
+  border-bottom: solid 1px #ddd;
+}
+
+.list__item a {
+  display: block;
+  padding: 10px 0 10px 10px;
+  border-bottom: solid 1px #ddd;
+}
+
+.list__item a:hover {
+  background-color: #eef0f0;
+}

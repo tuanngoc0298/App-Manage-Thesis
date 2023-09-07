@@ -1,0 +1,50 @@
+.departments {
+  margin-left: 10px;
+  background: #f3f6f7;
+  flex: 1;
+}
+.departments__title {
+  text-align: center;
+  padding: 20px;
+}
+.departments__db,
+.departments__db th,
+.departments__db td {
+  border: 1px solid;
+}
+
+.departments__db {
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: auto;
+  min-width: 700px;
+  margin: 0 auto;
+}
+
+.departments__db th,
+.departments__db td {
+  height: 50px;
+}
+
+.departments__input {
+  width: 100%;
+  padding: 16px 0;
+}
+.departments__wrap-btn {
+  width: 200px;
+}
+.departments__btn {
+  padding: 10px 20px;
+  background-color: blue;
+  color: #fff;
+  border-radius: 5px;
+}
+.departments__btn:first-child {
+  margin-right: 15px;
+}
+
+.departments__btn-add {
+  margin-top: 20px;
+  display: block;
+  margin: 30px auto;
+}
