@@ -1,0 +1,25 @@
+.wrap-search {
+  width: 320px;
+  border-radius: 1050px;
+  border: 1px solid #000;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  padding-left: 16px;
+
+  .search {
+    font-size: 1.8rem;
+    height: 100%;
+    flex: 1;
+  }
+
+  .search-btn {
+    width: 52px;
+    height: 100%;
+  }
+}
+
+.btn-add {
+  display: block;
+  border: 1px solid #908d8d;
+}

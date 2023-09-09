@@ -8,13 +8,14 @@
 input {
   outline: none;
   border: none;
-  border-color: transparent !important;
+  border-color: transparent;
 }
 button {
   border: none;
   background: transparent;
   margin-left: 5px;
   cursor: pointer;
+  font-family: Inter;
 }
 
 a {
@@ -28,7 +29,7 @@ html {
   font-size: 62.5%;
 }
 body {
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: Inter;
   margin: 0;
   font-size: 1.6rem;
 }

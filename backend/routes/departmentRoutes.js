@@ -4,9 +4,17 @@ const router = express.Router();
 const Department = require("../models/Department");
 
 router.get("/departments", async (req, res) => {
+  const { searchQuery } = req.query;
   try {
-    const departments = await Department.find();
-    res.json(departments);
+    if (searchQuery) {
+      const departments = await Department.find({
+        $or: [{ code: { $regex: searchQuery, $options: "i" } }, { name: { $regex: searchQuery, $options: "i" } }],
+      });
+      res.json(departments);
+    } else {
+      const departments = await Department.find();
+      res.json(departments);
+    }
   } catch (error) {
     res.status(500).json({ error: "Lỗi khi tải danh sách khoa." });
   }
@@ -14,13 +22,17 @@ router.get("/departments", async (req, res) => {
 
 // Định nghĩa route để thêm khoa mới
 router.post("/departments", async (req, res) => {
-  const { name, code, head, students } = req.body;
+  const { name, code } = req.body;
+  const existingDepartment = await Department.findOne({ $or: [{ name }, { code }] });
+
+  if (existingDepartment) {
+    return res.status(400).json({ message: "Khoa đã tồn tại" });
+  }
+
   try {
-    const department = new Department({ name, code, head, students });
-    if (name && code && head && students) {
-      await department.save();
-      res.status(201).json(department);
-    }
+    const department = new Department({ name, code });
+    await department.save();
+    res.status(201).json(department);
   } catch (error) {
     res.status(500).json({ error: "Lỗi khi thêm khoa mới." });
   }
@@ -28,12 +40,11 @@ router.post("/departments", async (req, res) => {
 
 // Định nghĩa route sửa khoa
 router.put("/departments/:id", async (req, res) => {
-  const { name, code, head, students } = req.body;
+  const { name, code } = req.body;
   const { id } = req.params;
-
   try {
-    const department = await Department.findByIdAndUpdate(id, { name, code, head, students }, { new: true });
-    res.json(department);
+    const department = await Department.findByIdAndUpdate(id, { name, code }, { new: true });
+    res.status(200).json(department);
   } catch (error) {
     res.status(500).json({ error: "Lỗi khi sửa khoa." });
   }

@@ -1,5 +1,6 @@
 .sidebar {
   width: 198px;
+  height: 700px;
   border-style: solid;
   border-color: #e4e9eb;
   border-width: 0 1px 1px 1px;
@@ -11,14 +12,12 @@
 }
 
 .list__title {
-  margin: 0 -1px;
   line-height: 35px;
   font-size: 1.5rem;
-  text-indent: 10px;
+  text-indent: 7px;
   color: #175765;
   font-weight: bold;
-  border-top: solid 1px #ddd;
-  border-bottom: solid 1px #ddd;
+  background: #dbe3e4;
 }
 
 .list__item a {

@@ -1,7 +1,7 @@
 import React, { useState, createContext, useContext } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
-import { Home, Login, Departments } from "./Pages";
+import { Home, Login, Departments, Majors } from "./Pages";
 
 import Register from "./components/Register/Register";
 import Department from "./components/Department";
@@ -34,7 +34,7 @@ function App() {
             <Route exact path="/" element={<Login onLogin={handleLogin} />} />
             <Route path="/home" element={<Home />} />
             <Route path="/departments" element={<Departments />} />
-            <Route path="/majors" element={<Departments />} />
+            <Route path="/majors" element={<Majors />} />
           </Routes>
         </HeaderContext.Provider>
       </div>
