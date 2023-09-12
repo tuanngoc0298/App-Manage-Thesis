@@ -1,58 +1,58 @@
-#header {
+.header {
   height: 160px;
   margin: auto;
   background-color: #ececec;
   border-bottom: 1px solid #ccc;
 }
 
-.header__content {
+.content {
   margin: 0 auto;
   display: flex;
   justify-content: space-between;
 }
-.header__menu {
+.menu {
   height: 40px;
   margin-top: 17px;
   background-color: #d4dcdf;
   border-top: solid 1px #bbc5c7;
 }
-.header__nav {
+.nav {
   list-style: none;
   display: flex;
 }
-.header__link a {
+.link a {
   display: block;
   padding: 0 20px;
   font-size: 1.4rem;
   line-height: 4rem;
   border-right: 1px solid #ccc;
 }
-.header__logo {
+.logo {
   height: 102px;
   width: 100px;
   object-fit: contain;
 }
-.header__actions {
+.actions {
   padding-top: 5px;
   font-weight: bold;
   font-size: 17px;
 }
-.header__actions-name {
+.actions-name {
   text-transform: uppercase;
   color: red;
 }
 
-.header__logout,
-.header__changePass {
+.logout,
+.changePass {
   font-size: inherit;
   font-weight: inherit;
 }
 
-.header__logout:hover {
+.logout:hover {
   text-decoration: underline;
 }
 
-.header__title {
+.title {
   align-self: center;
   font-size: 3rem;
   color: rgb(20, 175, 20);

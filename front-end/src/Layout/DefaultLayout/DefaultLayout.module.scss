@@ -1,0 +1,12 @@
+.wrapper {
+  position: relative;
+  margin: 0 auto;
+  margin-top: 10px;
+  display: flex;
+}
+
+.wrapper__content {
+  margin-left: 10px;
+  background: #f3f6f7;
+  flex: 1;
+}

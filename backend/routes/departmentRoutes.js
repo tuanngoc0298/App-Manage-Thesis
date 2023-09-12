@@ -9,7 +9,11 @@ router.get("/departments", async (req, res) => {
   try {
     if (searchQuery) {
       const departments = await Department.find({
-        $or: [{ code: { $regex: searchQuery, $options: "i" } }, { name: { $regex: searchQuery, $options: "i" } }],
+        $or: [
+          { code: { $regex: searchQuery, $options: "i" } },
+          { name: { $regex: searchQuery, $options: "i" } },
+          { describe: { $regex: searchQuery, $options: "i" } },
+        ],
       });
       res.json(departments);
     } else {
@@ -23,7 +27,7 @@ router.get("/departments", async (req, res) => {
 
 // Định nghĩa route để thêm khoa mới
 router.post("/departments", async (req, res) => {
-  const { name, code } = req.body;
+  const { name, code, describe } = req.body;
   const existingDepartment = await Department.findOne({ $or: [{ name }, { code }] });
 
   if (existingDepartment) {
@@ -31,7 +35,7 @@ router.post("/departments", async (req, res) => {
   }
 
   try {
-    const department = new Department({ name, code });
+    const department = new Department({ name, code, describe });
     await department.save();
     res.status(201).json(department);
   } catch (error) {
@@ -41,10 +45,17 @@ router.post("/departments", async (req, res) => {
 
 // Định nghĩa route sửa khoa
 router.put("/departments/:id", async (req, res) => {
-  const { name, code } = req.body;
+  const { name, code, describe } = req.body;
   const { id } = req.params;
+
+  const existingDepartment = await Department.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
+
+  if (existingDepartment) {
+    return res.status(400).json({ error: "Khoa đã tồn tại" });
+  }
+
   try {
-    const department = await Department.findByIdAndUpdate(id, { name, code }, { new: true });
+    const department = await Department.findByIdAndUpdate(id, { name, code, describe }, { new: true });
     res.status(200).json(department);
   } catch (error) {
     res.status(500).json({ error: "Lỗi khi sửa khoa." });

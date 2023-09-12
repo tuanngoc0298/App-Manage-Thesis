@@ -1,9 +1,4 @@
-.departments {
-  margin-left: 10px;
-  background: #f3f6f7;
-  flex: 1;
-}
-.departments__title {
+.title {
   line-height: 35px;
   font-size: 1.5rem;
   text-indent: 7px;
@@ -14,62 +9,82 @@
 }
 
 // Search, add
-.departments__function {
+.function {
   height: 40px;
+  margin: 0 20px;
   display: flex;
-  margin: 0 20px 20px;
+  margin-bottom: 20px;
 }
-.departments__btn-add {
-  margin-left: 30px;
-}
+
 //
 
-.departments__db,
-.departments__db th,
-.departments__db td {
+.data,
+.data th,
+.data td {
   border: 1px solid #908d8d;
 }
 
-.departments__db {
+.data {
   border-collapse: collapse;
   text-align: center;
   table-layout: auto;
   width: 100%;
 }
 
-.departments__db th,
-.departments__db td {
+.data th,
+.data td {
   height: 50px;
 }
 
-.departments__db .table__index {
+.data .table__index {
   width: 50px;
 }
-.departments__db thead {
+.data thead {
   background: #6296c5;
   color: #fff;
 }
 
-.departments__input {
+.input {
   text-align: center;
   width: 100%;
   height: 100%;
   font-size: 1.6rem;
 }
-.departments__wrap-btn {
-  width: 200px;
+.btn-more {
+  position: relative;
 }
-.departments__btn {
-  padding: 10px 20px;
-  font-weight: 800;
+.wrapper__btn {
+  position: absolute;
+  display: flex;
+  gap: 15px;
+  background-color: #6296c5;
+  right: -41px;
+  border-radius: 20px;
+  z-index: 1;
+}
+.wrapper__btn::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent; /* Độ rộng và màu cho cạnh trái */
+  border-right: 8px solid transparent; /* Độ rộng và màu cho cạnh phải */
+  border-bottom: 8px solid #6296c5;
+}
+.btn {
+  padding: 5px 10px;
   color: #fff;
-  background: #6296c5;
   border-radius: 5px;
 }
-.departments__btn:first-child {
-  margin-right: 15px;
+.btn-add {
+  margin-left: 30px;
+  padding: 10px 20px;
+  background-color: #6296c5;
+  font-weight: 800;
 }
-
 // Modal
 .modal {
   position: fixed;

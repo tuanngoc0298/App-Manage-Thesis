@@ -7,11 +7,11 @@
   background: #e8edef;
 }
 
-.sidebar__list ul {
+.list ul {
   list-style: none;
 }
 
-.list__title {
+.title {
   line-height: 35px;
   font-size: 1.5rem;
   text-indent: 7px;
@@ -20,12 +20,12 @@
   background: #dbe3e4;
 }
 
-.list__item a {
+.item a {
   display: block;
   padding: 10px 0 10px 10px;
   border-bottom: solid 1px #ddd;
 }
 
-.list__item a:hover {
+.item a:hover {
   background-color: #eef0f0;
 }

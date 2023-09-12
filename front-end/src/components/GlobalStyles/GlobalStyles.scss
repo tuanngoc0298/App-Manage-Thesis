@@ -13,7 +13,7 @@ input {
 button {
   border: none;
   background: transparent;
-  margin-left: 5px;
+
   cursor: pointer;
   font-family: Inter;
 }
@@ -32,4 +32,7 @@ body {
   font-family: Inter;
   margin: 0;
   font-size: 1.6rem;
+}
+.material-symbols-outlined {
+  font-variation-settings: "FILL" 1, "wght" 400, "GRAD" 0, "opsz" 24;
 }

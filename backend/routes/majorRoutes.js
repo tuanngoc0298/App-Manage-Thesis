@@ -12,7 +12,6 @@ router.get("/majors", async (req, res) => {
           { nameDepartment: { $regex: searchQuery, $options: "i" } },
           { code: { $regex: searchQuery, $options: "i" } },
           { name: { $regex: searchQuery, $options: "i" } },
-          { codeHead: { $regex: searchQuery, $options: "i" } },
           { nameHead: { $regex: searchQuery, $options: "i" } },
         ],
       });
@@ -28,14 +27,14 @@ router.get("/majors", async (req, res) => {
 
 // Định nghĩa route để thêm ngành mới
 router.post("/majors", async (req, res) => {
-  const { nameDepartment, name, code, nameHead, codeHead } = req.body;
+  const { nameDepartment, name, code, nameHead } = req.body;
   const existingMajor = await Major.findOne({ $or: [{ name }, { code }] });
 
   if (existingMajor) {
     return res.status(400).json({ message: "Ngành đã tồn tại" });
   }
   try {
-    const major = new Major({ nameDepartment, name, code, nameHead, codeHead });
+    const major = new Major({ nameDepartment, name, code, nameHead });
     await major.save();
     res.status(201).json(major);
   } catch (error) {
@@ -45,10 +44,15 @@ router.post("/majors", async (req, res) => {
 
 // Định nghĩa route sửa ngành
 router.put("/majors/:id", async (req, res) => {
-  const { nameDepartment, name, code, nameHead, codeHead } = req.body;
+  const { nameDepartment, name, code, nameHead } = req.body;
   const { id } = req.params;
+  const existingMajor = await Major.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
+
+  if (existingMajor) {
+    return res.status(400).json({ message: "Ngành đã tồn tại" });
+  }
   try {
-    const major = await Major.findByIdAndUpdate(id, { nameDepartment, name, code, nameHead, codeHead }, { new: true });
+    const major = await Major.findByIdAndUpdate(id, { nameDepartment, name, code, nameHead }, { new: true });
     res.status(200).json(major);
   } catch (error) {
     res.status(500).json({ error: "Lỗi khi sửa ngành." });

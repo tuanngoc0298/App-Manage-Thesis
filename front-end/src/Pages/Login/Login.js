@@ -1,9 +1,12 @@
-import "./Login.scss";
-
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import images from "~/assets/img";
+
+import classNames from "classnames/bind";
+import styles from "./Login.module.scss";
+
+const cx = classNames.bind(styles);
 
 function Login({ onLogin }) {
   const navigate = useNavigate();
@@ -43,18 +46,18 @@ function Login({ onLogin }) {
   };
 
   return (
-    <div className="container__login">
-      <div className="container__form">
+    <div className={cx("login")}>
+      <div className={cx("form")}>
         <form onSubmit={handleLogin}>
-          <span className="form__logo">
-            <img src={images.logo}></img>
+          <span className={cx("logo")}>
+            <img src={images.logo} alt="logo"></img>
           </span>
-          <span className="form__title">Đăng nhập</span>
-          <div className="form__wrap-input">
+          <span className={cx("title")}>Đăng nhập</span>
+          <div className={cx("wrap-input")}>
             <input
               type="text"
               placeholder={isFocusedName ? "" : "Tên đăng nhập"}
-              className={`form__input ${inputValueName && !isFocusedName ? "hasVal" : ""}`}
+              className={cx("input", `${inputValueName && !isFocusedName ? "hasVal" : ""}`)}
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -63,15 +66,15 @@ function Login({ onLogin }) {
               onFocus={handleFocusName}
               onBlur={handleBlurName}
             ></input>
-            <span className="material-symbols-outlined focus__icon">person</span>
-            <span className="focus-input"></span>
+            <span className={cx("material-symbols-outlined", "focus__icon")}>person</span>
+            <span className={cx("focus-input")}></span>
           </div>
 
-          <div className="form__wrap-input">
+          <div className={cx("wrap-input")}>
             <input
               type="password"
               placeholder={isFocusedPass ? "" : "Mật khẩu"}
-              className={`form__input ${inputValuePass && !isFocusedPass ? "hasVal" : ""}`}
+              className={cx("input", `${inputValuePass && !isFocusedPass ? "hasVal" : ""}`)}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -80,12 +83,12 @@ function Login({ onLogin }) {
               onFocus={handleFocusPass}
               onBlur={handleBlurPass}
             ></input>
-            <span className="material-symbols-outlined focus__icon">lock</span>
-            <span className="focus-input"></span>
+            <span className={cx("material-symbols-outlined", "focus__icon")}>lock</span>
+            <span className={cx("focus-input")}></span>
           </div>
-          {error && <div className="message">{error}</div>}
-          <div className="form__btn">
-            <input type="submit" value="Đăng nhập" name="btnLogin" id="btnLogin" className="form__btn-input" />
+          {error && <div className={cx("message")}>{error}</div>}
+          <div className={cx("btn")}>
+            <input type="submit" value="Đăng nhập" name="btnLogin" id="btnLogin" className={cx("btn-input")} />
           </div>
         </form>
       </div>
