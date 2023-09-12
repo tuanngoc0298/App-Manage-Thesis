@@ -8,13 +8,16 @@ import { HeaderContext } from "~/App";
 
 function Majors() {
   const [majors, setMajors] = useState([]);
-  const [newMajor, setNewMajor] = useState({ codeDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
+  const [newMajor, setNewMajor] = useState({ nameDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
   const [editMajor, setEditMajor] = useState(null);
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
 
   const [error, setError] = useState("");
+
+  const [errorAdd, setErrorAdd] = useState("");
+  const [errorEdit, setErrorEdit] = useState("");
 
   const { token } = useContext(HeaderContext);
 
@@ -33,21 +36,21 @@ function Majors() {
   }, [token]);
 
   const handleAddMajor = () => {
-    if (newMajor.code && newMajor.name && newMajor.codeDepartment && newMajor.codeHead && newMajor.nameHead) {
+    if (newMajor.code && newMajor.name && newMajor.nameDepartment && newMajor.codeHead && newMajor.nameHead) {
       if (!/^[0-9]{7}$/.test(newMajor.code)) {
-        setError("Mã ngành không đúng định dạng (7 số).");
+        setErrorAdd("Mã ngành không đúng định dạng (7 số).");
         return;
       }
       if (newMajor.name.length > 50) {
-        setError("Tên ngành phải ít hơn 50 ký tự.");
+        setErrorAdd("Tên ngành phải ít hơn 50 ký tự.");
         return;
       }
       if (!/^[A-Z]{3}\d{3}$/.test(newMajor.codeHead)) {
-        setError("Mã trưởng ngành không đúng định dạng (3 chữ in hoa + 3 số).");
+        setErrorAdd("Mã trưởng ngành không đúng định dạng (3 chữ in hoa + 3 số).");
         return;
       }
       if (newMajor.nameHead.length > 30) {
-        setError("Tên ngành phải ít hơn 30 ký tự.");
+        setErrorAdd("Tên ngành phải ít hơn 30 ký tự.");
         return;
       }
       setOpenAddModal(false);
@@ -60,38 +63,37 @@ function Majors() {
           // Cập nhật danh sách ngành
           setMajors([...majors, res.data]);
 
-          setError("");
+          setErrorAdd("");
         })
         .catch((err) => {
-          setError("Không thể thêm ngành mới.");
+          setErrorAdd("Không thể thêm ngành mới.");
         });
-      setNewMajor({ codeDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
+      setNewMajor({ nameDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
     } else {
-      setError("Vui lòng điền đầy đủ thông tin");
+      setErrorAdd("Vui lòng điền đầy đủ thông tin");
     }
   };
 
   const handleEdiMajor = () => {
     // Gọi API để sửa ngành
 
-    if (editMajor.codeDepartment && editMajor.name && editMajor.code && editMajor.nameHead && editMajor.codeHead) {
+    if (editMajor.nameDepartment && editMajor.name && editMajor.code && editMajor.nameHead && editMajor.codeHead) {
       if (!/^[0-9]{7}$/.test(editMajor.code)) {
-        setError("Mã ngành không đúng định dạng (6 số).");
+        setErrorEdit("Mã ngành không đúng định dạng (6 số).");
         return;
       }
       if (editMajor.name.length > 50) {
-        setError("Tên ngành phải ít hơn 50 ký tự.");
+        setErrorEdit("Tên ngành phải ít hơn 50 ký tự.");
         return;
       }
       if (!/^[A-Z]{3}\d{3}$/.test(editMajor.codeHead)) {
-        setError("Mã trưởng ngành không đúng định dạng (3 chữ in hoa + 3 số).");
+        setErrorEdit("Mã trưởng ngành không đúng định dạng (3 chữ in hoa + 3 số).");
         return;
       }
       if (editMajor.nameHead.length > 30) {
-        setError("Tên ngành phải ít hơn 30 ký tự.");
+        setErrorEdit("Tên ngành phải ít hơn 30 ký tự.");
         return;
       }
-      console.log(error);
 
       axios
         .put(`http://localhost:3001/api/majors/${editMajor._id}`, editMajor, {
@@ -109,10 +111,10 @@ function Majors() {
           setMajors(updatedMajors);
 
           setEditMajor(null);
-          setError("");
+          setErrorEdit("");
         })
         .catch((err) => {
-          setError("Không thể sửa ngành.");
+          setErrorEdit("Không thể sửa ngành.");
         });
     }
   };
@@ -148,10 +150,10 @@ function Majors() {
   };
 
   const handleSelectionChangeEdit = (value) => {
-    setEditMajor({ ...editMajor, codeDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+    setEditMajor({ ...editMajor, nameDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
   const handleSelectionChangeAdd = (value) => {
-    setNewMajor({ ...newMajor, codeDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+    setNewMajor({ ...newMajor, nameDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
 
   return (
@@ -170,9 +172,9 @@ function Majors() {
             <thead>
               <tr>
                 <th>STT</th>
-                <th>Mã khoa</th>
                 <th>Mã ngành</th>
                 <th>Tên ngành</th>
+                <th>Tên khoa</th>
                 <th>Mã trưởng ngành</th>
                 <th>Tên trưởng ngành</th>
                 <th>Chức năng</th>
@@ -184,9 +186,7 @@ function Majors() {
                 {editMajor && editMajor._id === major._id ? (
                   <tr key={index}>
                     <td className="table__index">{index + 1}</td>
-                    <td>
-                      <ComboBox onSelectionChange={handleSelectionChangeEdit} />
-                    </td>
+
                     <td>
                       <input
                         className="majors__input"
@@ -202,6 +202,9 @@ function Majors() {
                         value={editMajor.name}
                         onChange={(e) => setEditMajor({ ...editMajor, name: e.target.value })}
                       />
+                    </td>
+                    <td>
+                      <ComboBox onSelectionChange={handleSelectionChangeEdit} api={"departments"} />
                     </td>
                     <td>
                       <input
@@ -220,7 +223,13 @@ function Majors() {
                       />
                     </td>
                     <td>
-                      <button className="majors__btn" onClick={() => setEditMajor(null)}>
+                      <button
+                        className="majors__btn"
+                        onClick={() => {
+                          setEditMajor(null);
+                          setErrorEdit("");
+                        }}
+                      >
                         Hủy
                       </button>
                       <button className="majors__btn" onClick={handleEdiMajor}>
@@ -231,14 +240,15 @@ function Majors() {
                 ) : (
                   <tr>
                     <td className="table__index">{index + 1}</td>
-                    <td>
-                      <div>{major.codeDepartment} </div>
-                    </td>
+
                     <td>
                       <div>{major.code} </div>
                     </td>
                     <td>
                       <div>{major.name} </div>
+                    </td>
+                    <td>
+                      <div>{major.nameDepartment} </div>
                     </td>
                     <td>
                       <div>{major.codeHead} </div>
@@ -283,6 +293,11 @@ function Majors() {
               </tbody>
             ))}
           </table>
+          {errorEdit && (
+            <div className="modal__message" style={{ "margin-top": "20px" }}>
+              {errorEdit}
+            </div>
+          )}
         </div>
       </div>
 
@@ -291,15 +306,6 @@ function Majors() {
           <div className="modal">
             <div className="modal__title">Thêm mới</div>
             <div className="modal__form">
-              <div className="modal__row">
-                <span className="modal__field">
-                  Mã Khoa<span style={{ color: "red" }}>*</span>
-                </span>
-                <div className="modal__wrap-input">
-                  <ComboBox onSelectionChange={handleSelectionChangeAdd} />
-                </div>
-              </div>
-
               <div className="modal__row">
                 <span className="modal__field">
                   Mã ngành<span style={{ color: "red" }}>*</span>
@@ -326,6 +332,15 @@ function Majors() {
               </div>
               <div className="modal__row">
                 <span className="modal__field">
+                  Thuộc khoa<span style={{ color: "red" }}>*</span>
+                </span>
+                <div className="modal__wrap-input">
+                  <ComboBox onSelectionChange={handleSelectionChangeAdd} api={"departments"} />
+                </div>
+              </div>
+
+              <div className="modal__row">
+                <span className="modal__field">
                   Mã trưởng ngành<span style={{ color: "red" }}>*</span>
                 </span>
                 <div className="modal__wrap-input">
@@ -348,13 +363,13 @@ function Majors() {
                   />
                 </div>
               </div>
-              {error && <div className="modal__message">{error}</div>}
+              {errorAdd && <div className="modal__message">{errorAdd}</div>}
               <div className="modal__btns">
                 <button
                   className="modal__btn"
                   onClick={() => {
                     setOpenAddModal(false);
-                    setNewMajor({ codeDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
+                    setNewMajor({ nameDepartment: "", name: "", code: "", nameHead: "", codeHead: "" });
                     setError("");
                   }}
                 >

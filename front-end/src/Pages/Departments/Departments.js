@@ -13,7 +13,10 @@ function Departments() {
   const [openAddModal, setOpenAddModal] = useState(false);
   const [openDeleteModal, setOpenDeleteModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
+
   const [error, setError] = useState("");
+  const [errorAdd, setErrorAdd] = useState("");
+  const [errorEdit, setErrorEdit] = useState("");
 
   const { token } = useContext(HeaderContext);
 
@@ -34,11 +37,11 @@ function Departments() {
   const handleAddDepartment = () => {
     if (newDepartment.code && newDepartment.name) {
       if (!/^[A-Z]{3}\d{2}$/.test(newDepartment.code)) {
-        setError("Mã khoa không đúng định dạng (3 chữ in hoa + 2 số).");
+        setErrorAdd("Mã khoa không đúng định dạng (3 chữ in hoa + 2 số).");
         return;
       }
       if (newDepartment.name.length > 50) {
-        setError("Tên khoa phải ít hơn 50 ký tự.");
+        setErrorAdd("Tên khoa phải ít hơn 50 ký tự.");
         return;
       }
       setOpenAddModal(false);
@@ -51,14 +54,14 @@ function Departments() {
           // Cập nhật danh sách khoa
           setDepartments([...departments, res.data]);
 
-          setError("");
+          setErrorAdd("");
         })
         .catch((err) => {
-          setError("Không thể thêm khoa mới.");
+          setErrorAdd("Không thể thêm khoa mới.");
         });
       setNewDepartment({ name: "", code: "" });
     } else {
-      setError("Vui lòng điền đầy đủ thông tin");
+      setErrorAdd("Vui lòng điền đầy đủ thông tin");
     }
   };
 
@@ -67,9 +70,11 @@ function Departments() {
 
     if (editDepartment.name && editDepartment.code) {
       if (!/^[A-Z]{3}\d{2}$/.test(editDepartment.code)) {
+        setErrorEdit("Mã khoa không đúng định dạng (3 chữ in hoa + 2 số).");
         return;
       }
       if (editDepartment.name.length > 50) {
+        setErrorEdit("Tên khoa phải ít hơn 50 ký tự.");
         return;
       }
       axios
@@ -88,10 +93,10 @@ function Departments() {
           setDepartments(updatedDepartments);
 
           setEditDepartment(null);
-          setError("");
+          setErrorEdit("");
         })
         .catch((err) => {
-          setError("Không thể sửa khoa.");
+          setErrorEdit("Không thể sửa khoa.");
         });
     }
   };
@@ -170,7 +175,13 @@ function Departments() {
                     </td>
 
                     <td>
-                      <button className="departments__btn" onClick={() => setEditDepartment(null)}>
+                      <button
+                        className="departments__btn"
+                        onClick={() => {
+                          setEditDepartment(null);
+                          setErrorEdit("");
+                        }}
+                      >
                         Hủy
                       </button>
                       <button className="departments__btn" onClick={handleEditDepartment}>
@@ -225,6 +236,11 @@ function Departments() {
               </tbody>
             ))}
           </table>
+          {errorEdit && (
+            <div className="modal__message" style={{ "margin-top": "20px" }}>
+              {errorEdit}
+            </div>
+          )}
         </div>
       </div>
 
@@ -257,7 +273,7 @@ function Departments() {
                   />
                 </div>
               </div>
-              {error && <div className="modal__message">{error}</div>}
+              {errorAdd && <div className="modal__message">{errorAdd}</div>}
               <div className="modal__btns">
                 <button
                   className="modal__btn"

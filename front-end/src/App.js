@@ -1,10 +1,9 @@
-import React, { useState, createContext, useContext } from "react";
-import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import React, { useState, createContext } from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 import { Home, Login, Departments, Majors } from "./Pages";
 
-import Register from "./components/Register/Register";
-import Department from "./components/Department";
+// import Register from "./components/Register/Register";
 
 export const HeaderContext = createContext();
 

@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const Department = require("../models/Department");
 
+// Định nghĩa route để lấy dữ liệu
 router.get("/departments", async (req, res) => {
   const { searchQuery } = req.query;
   try {
@@ -26,7 +27,7 @@ router.post("/departments", async (req, res) => {
   const existingDepartment = await Department.findOne({ $or: [{ name }, { code }] });
 
   if (existingDepartment) {
-    return res.status(400).json({ message: "Khoa đã tồn tại" });
+    return res.status(400).json({ error: "Khoa đã tồn tại" });
   }
 
   try {

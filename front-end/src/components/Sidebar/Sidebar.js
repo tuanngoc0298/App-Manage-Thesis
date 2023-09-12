@@ -13,6 +13,10 @@ function Sidebar() {
           <li className="list__item">
             <Link to="/majors">Quản lý ngành</Link>
           </li>
+
+          <li className="list__item">
+            <Link to="/majors">Quản lý ngành</Link>
+          </li>
         </ul>
       </div>
     </div>
