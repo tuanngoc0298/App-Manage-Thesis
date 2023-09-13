@@ -5,19 +5,21 @@ import classNames from "classnames/bind";
 import styles from "./ComboBox.module.scss";
 
 const cx = classNames.bind(styles);
-function ComboBox({ title, onSelectionChange, api, oldData }) {
+function ComboBox({ title, onSelectionChange, api, selfData, oldData }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
-    axios
-      .get(`http://localhost:3001/api/${api}`)
-      .then((res) => setData(res.data))
-      .catch((error) => console.error(error));
+    if (api) {
+      axios
+        .get(`http://localhost:3001/api/${api}`)
+        .then((res) => setData(res.data))
+        .catch((error) => console.error(error));
+    } else {
+      setData(selfData);
+    }
   }, [api]);
 
   const handleChange = (event) => {
-    // console.log(event.target.value);
-
     onSelectionChange(event.target.value);
   };
 
@@ -31,9 +33,7 @@ function ComboBox({ title, onSelectionChange, api, oldData }) {
         <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>
           <option value="">Chọn một mục</option>
           {data.map((item) => (
-            <option key={item._id} value={item.name}>
-              {item.name}
-            </option>
+            <option value={item.name}>{item.name}</option>
           ))}
         </select>
       </div>

@@ -20,14 +20,9 @@ function Modal({ name, fields, newData, error, handleCancle, handleLogic, handle
       </div>
     </div>
   ));
-  const { nameDepartment } = newData;
   if (indexsComboBox) {
-    indexsComboBox.forEach(({ title, index, onSelectionChange, api }) => {
-      newFields.splice(
-        index,
-        0,
-        <ComboBox oldData={nameDepartment} title={title} onSelectionChange={onSelectionChange} api={api} />
-      );
+    indexsComboBox.forEach((item) => {
+      newFields.splice(item.index, 0, <ComboBox {...item} />);
     });
   }
 

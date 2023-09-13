@@ -134,11 +134,13 @@ function Departments() {
     setIsOpenAddModal(false);
     setNewDepartment({});
     setErrorAdd("");
+    setIdActiveRow(null);
   };
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
     setEditDepartment({});
     setErrorEdit("");
+    setIdActiveRow(null);
   };
   const handleChangeInputAdd = (value) => {
     setNewDepartment(value);
@@ -185,7 +187,7 @@ function Departments() {
                 <td>
                   <button className={cx("btn-more")}>
                     <span
-                      class="material-symbols-outlined"
+                      className="material-symbols-outlined"
                       onClick={() => setIdActiveRow(idActiveRow === department._id ? null : department._id)}
                     >
                       more_horiz
@@ -193,7 +195,7 @@ function Departments() {
                     {idActiveRow === department._id && (
                       <div className={cx("wrapper__btn")}>
                         <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                          <span class="material-symbols-outlined">delete</span>
+                          <span className="material-symbols-outlined">delete</span>
                         </button>
                         <button
                           className={cx("btn")}
@@ -202,16 +204,18 @@ function Departments() {
                             setIsOpenEditModal(true);
                           }}
                         >
-                          <span class="material-symbols-outlined">edit</span>
+                          <span className="material-symbols-outlined">edit</span>
                         </button>
-                        <DeleteModal
-                          title={`Xóa khoa ${department.name}`}
-                          isOpenDeleteModal={isOpenDeleteModal}
-                          id={department._id}
-                          handleCancleDelete={handleCancleDelete}
-                          handleDelete={handleDeleteDepartment}
-                        />
                       </div>
+                    )}
+                    {idActiveRow === department._id && (
+                      <DeleteModal
+                        title={`Xóa khoa ${department.name}`}
+                        isOpenDeleteModal={isOpenDeleteModal}
+                        id={department._id}
+                        handleCancleDelete={handleCancleDelete}
+                        handleDelete={handleDeleteDepartment}
+                      />
                     )}
                   </button>
                 </td>

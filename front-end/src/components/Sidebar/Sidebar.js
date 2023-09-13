@@ -16,6 +16,9 @@ function Sidebar() {
           <li className={cx("item")}>
             <Link to="/majors">Quản lý ngành</Link>
           </li>
+          <li className={cx("item")}>
+            <Link to="/teachers">Quản lý giáo viên</Link>
+          </li>
         </ul>
       </div>
     </div>
