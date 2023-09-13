@@ -1,7 +1,7 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar, DeleteModal, Modal } from "~/components";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
 
@@ -23,7 +23,7 @@ function Departments() {
   const [error, setError] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
-
+  const wrapperBtnRef = useRef(null);
   const { token } = useContext(HeaderContext);
 
   useEffect(() => {
@@ -39,6 +39,24 @@ function Departments() {
         setError("Không thể tải danh sách khoa.");
       });
   }, [token]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+        setIdActiveRow(null);
+      }
+    }
+
+    if (isOpenDeleteModal) {
+      document.removeEventListener("click", handleClickOutside);
+    } else {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpenDeleteModal]);
 
   const handleAddDepartment = () => {
     if (newDepartment.code && newDepartment.name && newDepartment.describe) {
@@ -184,40 +202,44 @@ function Departments() {
                   <div>{department.describe} </div>
                 </td>
 
-                <td>
+                <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
                     <span
                       className="material-symbols-outlined"
-                      onClick={() => setIdActiveRow(idActiveRow === department._id ? null : department._id)}
+                      onClick={(e) => {
+                        setIdActiveRow(department._id);
+                        e.stopPropagation();
+                      }}
                     >
                       more_horiz
                     </span>
-                    {idActiveRow === department._id && (
-                      <div className={cx("wrapper__btn")}>
-                        <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                          <span className="material-symbols-outlined">delete</span>
-                        </button>
-                        <button
-                          className={cx("btn")}
-                          onClick={() => {
-                            setEditDepartment(department);
-                            setIsOpenEditModal(true);
-                          }}
-                        >
-                          <span className="material-symbols-outlined">edit</span>
-                        </button>
-                      </div>
-                    )}
-                    {idActiveRow === department._id && (
-                      <DeleteModal
-                        title={`Xóa khoa ${department.name}`}
-                        isOpenDeleteModal={isOpenDeleteModal}
-                        id={department._id}
-                        handleCancleDelete={handleCancleDelete}
-                        handleDelete={handleDeleteDepartment}
-                      />
-                    )}
                   </button>
+
+                  {idActiveRow === department._id && (
+                    <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
+                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => {
+                          setEditDepartment(department);
+                          setIsOpenEditModal(true);
+                        }}
+                      >
+                        <span className="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  )}
+                  {idActiveRow === department._id && (
+                    <DeleteModal
+                      title={`Xóa khoa ${department.name}`}
+                      isOpenDeleteModal={isOpenDeleteModal}
+                      id={department._id}
+                      handleCancleDelete={handleCancleDelete}
+                      handleDelete={handleDeleteDepartment}
+                    />
+                  )}
                 </td>
               </tr>
             </tbody>

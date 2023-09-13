@@ -6,14 +6,14 @@ import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./Majors.module.scss";
+import styles from "./ThesisModules.module.scss";
 
 const cx = classNames.bind(styles);
 
-function Majors() {
-  const [majors, setMajors] = useState([]);
-  const [newMajor, setNewMajor] = useState({});
-  const [editMajor, setEditMajor] = useState({});
+function ThesisModules() {
+  const [thesisModules, setThesisModules] = useState([]);
+  const [newThesisModule, setNewThesisModule] = useState({});
+  const [editThesisModule, setEditThesisModule] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -29,16 +29,16 @@ function Majors() {
   const { token } = useContext(HeaderContext);
 
   useEffect(() => {
-    // Gọi API để lấy danh sách ngành
+    // Gọi API để lấy danh sách học phần KLTN
     axios
-      .get("http://localhost:3001/api/majors", {
+      .get("http://localhost:3001/api/thesisModules", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        setMajors(response.data);
+        setThesisModules(response.data);
       })
       .catch((err) => {
-        setError("Không thể tải danh sách ngành.");
+        setError("Không thể tải danh sách học phần KLTN.");
       });
   }, [token]);
 
@@ -59,25 +59,24 @@ function Majors() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, [isOpenDeleteModal]);
-
   const handleAddMajor = () => {
-    if (newMajor.code && newMajor.name && newMajor.nameDepartment && newMajor.nameHead) {
-      // Gọi API để thêm ngành mới
+    if (newThesisModule.code && newThesisModule.name && newThesisModule.nameMajor && newThesisModule.credit) {
+      // Gọi API để thêm học phần KLTN mới
       axios
-        .post("http://localhost:3001/api/majors", newMajor, {
+        .post("http://localhost:3001/api/thesisModules", newThesisModule, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           if (res.status !== 400) {
-            setMajors([...majors, res.data]);
+            setThesisModules([...thesisModules, res.data]);
             setIsOpenAddModal(false);
             setErrorAdd("");
-            setNewMajor({});
+            setNewThesisModule({});
           }
-          // Cập nhật danh sách ngành
+          // Cập nhật danh sách học phần KLTN
         })
         .catch((err) => {
-          setErrorAdd("Đã tồn tại thông tin ngành.");
+          setErrorAdd("Đã tồn tại thông tin học phần KLTN.");
         });
     } else {
       setErrorAdd("Vui lòng điền đầy đủ thông tin");
@@ -85,79 +84,73 @@ function Majors() {
   };
 
   const handleEdiMajor = () => {
-    // Gọi API để sửa ngành
+    // Gọi API để sửa học phần KLTN
 
-    if (editMajor.nameDepartment && editMajor.name && editMajor.code && editMajor.nameHead) {
+    if (editThesisModule.nameMajor && editThesisModule.name && editThesisModule.code && editThesisModule.credit) {
       axios
-        .put(`http://localhost:3001/api/majors/${editMajor._id}`, editMajor, {
+        .put(`http://localhost:3001/api/thesisModules/${editThesisModule._id}`, editThesisModule, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          // Cập nhật danh sách ngành
+          // Cập nhật danh sách học phần KLTN
           if (res.status !== 400) {
-            const updatedMajors = majors.map((major) => {
-              if (major._id === editMajor._id) {
-                return { ...major, ...editMajor };
+            const updatedThesisModules = thesisModules.map((thesisModule) => {
+              if (thesisModule._id === editThesisModule._id) {
+                return { ...thesisModule, ...editThesisModule };
               }
-              return major;
+              return thesisModule;
             });
-            setMajors(updatedMajors);
+            setThesisModules(updatedThesisModules);
 
-            setEditMajor({});
+            setEditThesisModule({});
             setErrorEdit("");
             setIdActiveRow(null);
             setIsOpenEditModal(false);
           }
         })
         .catch((err) => {
-          setErrorEdit("Ngành đã tồn tại.");
+          setErrorEdit("Học phần KLTN đã tồn tại.");
         });
     } else {
       setErrorEdit("Vui lòng điền đầy đủ thông tin");
     }
   };
 
-  const handleDeleteMajor = (id) => {
+  const handleDeleteThesisModule = (id) => {
     setIsOpenDeleteModal(false);
-    // Gọi API để xóa ngành
+    // Gọi API để xóa học phần KLTN
     axios
-      .delete(`http://localhost:3001/api/majors/${id}`, {
+      .delete(`http://localhost:3001/api/thesisModules/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
-        // Cập nhật danh sách ngành
-        const updatedMajors = majors.filter((major) => major._id !== id);
-        setMajors(updatedMajors);
+        // Cập nhật danh sách học phần KLTN
+        const updatedThesisModules = thesisModules.filter((thesisModule) => thesisModule._id !== id);
+        setThesisModules(updatedThesisModules);
         setError("");
       })
       .catch((err) => {
-        setError("Không thể xóa ngành.");
+        setError("Không thể xóa học phần KLTN.");
       });
   };
   const handleSearchMajor = () => {
     axios
-      .get(`http://localhost:3001/api/majors?searchQuery=${searchQuery}`, {
+      .get(`http://localhost:3001/api/thesisModules?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setMajors(res.data);
+        setThesisModules(res.data);
       })
       .catch((err) => {
-        setError("Không tìm kiếm được ngành");
+        setError("Không tìm kiếm được học phần KLTN");
       });
   };
 
-  const handleChangeEditNameDepartment = (value) => {
-    setEditMajor({ ...editMajor, nameDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  const handleChangeEditNameMajor = (value) => {
+    setEditThesisModule({ ...editThesisModule, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
-  const handleChangeAddNameDepartment = (value) => {
-    setNewMajor({ ...newMajor, nameDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
-  };
-  const handleChangeEditNameHead = (value) => {
-    setEditMajor({ ...editMajor, nameHead: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
-  };
-  const handleChangeAddNameHead = (value) => {
-    setNewMajor({ ...newMajor, nameHead: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  const handleChangeAddNameMajor = (value) => {
+    setNewThesisModule({ ...newThesisModule, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
@@ -165,29 +158,29 @@ function Majors() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewMajor({});
+    setNewThesisModule({});
     setErrorAdd("");
     setIdActiveRow(null);
   };
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
-    setEditMajor({});
+    setEditThesisModule({});
     setErrorEdit("");
     setIdActiveRow(null);
   };
   const handleChangeInputAdd = (value) => {
-    setNewMajor(value);
+    setNewThesisModule(value);
   };
   const handleChangeInputEdit = (value) => {
-    setEditMajor(value);
+    setEditThesisModule(value);
   };
   return (
     <DefaultLayout>
-      <h2 className={cx("title")}>Quản lý ngành</h2>
+      <h2 className={cx("title")}>Quản lý học phần KLTN</h2>
       <div className={cx("function")}>
         <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchMajor} />
         <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
-          Thêm ngành
+          Thêm học phần KLTN
         </button>
       </div>
 
@@ -196,44 +189,45 @@ function Majors() {
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã ngành</th>
+              <th>Mã học phần</th>
+              <th>Tên học phần</th>
               <th>Tên ngành</th>
-              <th>Thuộc khoa</th>
-              <th>Tên trưởng ngành</th>
+              <th>Số tín chỉ</th>
               <th>Chức năng</th>
             </tr>
           </thead>
 
-          {majors.map((major, index) => (
+          {thesisModules.map((thesisModule, index) => (
             <tbody key={index}>
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
 
                 <td>
-                  <div>{major.code} </div>
+                  <div>{thesisModule.code} </div>
                 </td>
                 <td>
-                  <div>{major.name} </div>
+                  <div>{thesisModule.name} </div>
                 </td>
                 <td>
-                  <div>{major.nameDepartment} </div>
+                  <div>{thesisModule.nameMajor} </div>
                 </td>
                 <td>
-                  <div>{major.nameHead} </div>
+                  <div>{thesisModule.credit} </div>
                 </td>
                 <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
                     <span
                       className="material-symbols-outlined"
                       onClick={(e) => {
-                        setIdActiveRow(major._id);
+                        setIdActiveRow(thesisModule._id);
                         e.stopPropagation();
                       }}
                     >
                       more_horiz
                     </span>
                   </button>
-                  {idActiveRow === major._id && (
+
+                  {idActiveRow === thesisModule._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
                         <span className="material-symbols-outlined">delete</span>
@@ -241,7 +235,7 @@ function Majors() {
                       <button
                         className={cx("btn")}
                         onClick={() => {
-                          setEditMajor(major);
+                          setEditThesisModule(thesisModule);
                           setIsOpenEditModal(true);
                         }}
                       >
@@ -249,13 +243,13 @@ function Majors() {
                       </button>
                     </div>
                   )}
-                  {idActiveRow === major._id && (
+                  {idActiveRow === thesisModule._id && (
                     <DeleteModal
-                      title={`Xóa ngành ${major.name}`}
+                      title={`Xóa học phần ${thesisModule.name}`}
                       isOpenDeleteModal={isOpenDeleteModal}
-                      id={major._id}
+                      id={thesisModule._id}
                       handleCancleDelete={handleCancleDelete}
-                      handleDelete={handleDeleteMajor}
+                      handleDelete={handleDeleteThesisModule}
                     />
                   )}
                 </td>
@@ -267,58 +261,47 @@ function Majors() {
 
       {isOpenAddModal && (
         <Modal
-          name="Thêm mới ngành"
+          name="Thêm mới học phần KLTN"
           fields={[
-            ["Mã ngành", "code"],
-            ["Tên ngành", "name"],
+            ["Mã học phần", "code"],
+            ["Tên học phần", "name"],
+            ["Số tín chỉ", "credit"],
           ]}
-          newData={newMajor}
+          newData={newThesisModule}
           error={errorAdd}
           handleCancle={handleCancleAdd}
           handleLogic={handleAddMajor}
           handleChangeInput={handleChangeInputAdd}
           indexsComboBox={[
             {
-              title: "Thuộc khoa",
+              title: "Thuộc ngành",
               index: 2,
-              onSelectionChange: handleChangeAddNameDepartment,
-              api: "departments",
-            },
-            {
-              title: "Trưởng ngành",
-              index: 3,
-              onSelectionChange: handleChangeAddNameHead,
-              api: "teachers",
+              onSelectionChange: handleChangeAddNameMajor,
+              api: "majors",
             },
           ]}
         />
       )}
       {isOpenEditModal && (
         <Modal
-          name="Sửa ngành"
+          name="Sửa học phần KLTN"
           fields={[
-            ["Mã ngành", "code"],
-            ["Tên ngành", "name"],
+            ["Mã học phần", "code"],
+            ["Tên học phần", "name"],
+            ["Số tín chỉ", "credit"],
           ]}
-          newData={editMajor}
+          newData={editThesisModule}
           error={errorEdit}
           handleCancle={handleCancleEdit}
           handleLogic={handleEdiMajor}
           handleChangeInput={handleChangeInputEdit}
           indexsComboBox={[
             {
-              title: "Thuộc khoa",
+              title: "Thuộc ngành",
               index: 2,
-              onSelectionChange: handleChangeEditNameDepartment,
-              api: "departments",
-              oldData: editMajor.nameDepartment,
-            },
-            {
-              title: "Trưởng ngành",
-              index: 3,
-              onSelectionChange: handleChangeEditNameHead,
-              api: "teachers",
-              oldData: editMajor.nameHead,
+              onSelectionChange: handleChangeEditNameMajor,
+              api: "majors",
+              oldData: editThesisModule.nameMajor,
             },
           ]}
         />
@@ -327,4 +310,4 @@ function Majors() {
   );
 }
 
-export default Majors;
+export default ThesisModules;

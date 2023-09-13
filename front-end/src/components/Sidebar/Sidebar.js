@@ -8,7 +8,7 @@ function Sidebar() {
   return (
     <div className={cx("sidebar")}>
       <div className={cx("list")}>
-        <h2 className={cx("title")}>Chức năng</h2>
+        <h2 className={cx("title")}>Quản lý đào tạo</h2>
         <ul>
           <li className={cx("item")}>
             <Link to="/departments">Quản lý khoa</Link>
@@ -18,6 +18,12 @@ function Sidebar() {
           </li>
           <li className={cx("item")}>
             <Link to="/teachers">Quản lý giáo viên</Link>
+          </li>
+          <li className={cx("item")}>
+            <Link to="/thesisModules">Quản lý học phần KLTN</Link>
+          </li>
+          <li className={cx("item")}>
+            <Link to="/schoolYears">Quản lý năm học</Link>
           </li>
         </ul>
       </div>

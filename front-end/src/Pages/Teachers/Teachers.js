@@ -1,12 +1,12 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar, DeleteModal, Modal } from "~/components";
 
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
 
-import classNames from "classnames";
-import styles from "./Teachers.scss";
+import classNames from "classnames/bind";
+import styles from "./Teachers.module.scss";
 
 const cx = classNames.bind(styles);
 
@@ -23,6 +23,7 @@ function Teachers() {
   const [error, setError] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
+  const wrapperBtnRef = useRef(null);
 
   const { token } = useContext(HeaderContext);
 
@@ -39,6 +40,24 @@ function Teachers() {
         setError("Không thể tải danh sách giáo viên.");
       });
   }, [token]);
+
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+        setIdActiveRow(null);
+      }
+    }
+
+    if (isOpenDeleteModal) {
+      document.removeEventListener("click", handleClickOutside);
+    } else {
+      document.addEventListener("click", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("click", handleClickOutside);
+    };
+  }, [isOpenDeleteModal]);
 
   const handleAddTeacher = () => {
     if (newTeacher.code && newTeacher.name && newTeacher.nameMajor && newTeacher.role) {
@@ -125,14 +144,14 @@ function Teachers() {
         setError("Không tìm kiếm được giáo viên");
       });
   };
-  const handleSelectionChangeEdit = (value) => {
+  const handleChangeEditNameMajor = (value) => {
     setEditTeacher({ ...editTeacher, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
-  const handleChangeAdd = (value) => {
+  const handleChangeAddNameMajor = (value) => {
     setNewTeacher({ ...newTeacher, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
 
-  const handleSelectionChangeEditSelf = (value) => {
+  const handleChangeEditSelf = (value) => {
     setEditTeacher({ ...editTeacher, role: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
   const handleChangeAddSelf = (value) => {
@@ -200,40 +219,44 @@ function Teachers() {
                 <td>
                   <div>{teacher.role} </div>
                 </td>
-                <td>
+                <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
                     <span
                       className="material-symbols-outlined"
-                      onClick={() => setIdActiveRow(idActiveRow === teacher._id ? null : teacher._id)}
+                      onClick={(e) => {
+                        setIdActiveRow(teacher._id);
+                        e.stopPropagation();
+                      }}
                     >
                       more_horiz
                     </span>
-                    {idActiveRow === teacher._id && (
-                      <div className={cx("wrapper__btn")}>
-                        <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                          <span className="material-symbols-outlined">delete</span>
-                        </button>
-                        <button
-                          className={cx("btn")}
-                          onClick={() => {
-                            setEditTeacher(teacher);
-                            setIsOpenEditModal(true);
-                          }}
-                        >
-                          <span className="material-symbols-outlined">edit</span>
-                        </button>
-                      </div>
-                    )}
-                    {idActiveRow === teacher._id && (
-                      <DeleteModal
-                        title={`Xóa giáo viên ${teacher.name}`}
-                        isOpenDeleteModal={isOpenDeleteModal}
-                        id={teacher._id}
-                        handleCancleDelete={handleCancleDelete}
-                        handleDelete={handleDeleteDepartment}
-                      />
-                    )}
                   </button>
+
+                  {idActiveRow === teacher._id && (
+                    <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
+                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
+                        <span className="material-symbols-outlined">delete</span>
+                      </button>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => {
+                          setEditTeacher(teacher);
+                          setIsOpenEditModal(true);
+                        }}
+                      >
+                        <span className="material-symbols-outlined">edit</span>
+                      </button>
+                    </div>
+                  )}
+                  {idActiveRow === teacher._id && (
+                    <DeleteModal
+                      title={`Xóa giáo viên ${teacher.name}`}
+                      isOpenDeleteModal={isOpenDeleteModal}
+                      id={teacher._id}
+                      handleCancleDelete={handleCancleDelete}
+                      handleDelete={handleDeleteDepartment}
+                    />
+                  )}
                 </td>
               </tr>
             </tbody>
@@ -254,7 +277,7 @@ function Teachers() {
           handleLogic={handleAddTeacher}
           handleChangeInput={handleChangeInputAdd}
           indexsComboBox={[
-            { title: "Thuộc ngành", index: 2, onSelectionChange: handleChangeAdd, api: "majors" },
+            { title: "Thuộc ngành", index: 2, onSelectionChange: handleChangeAddNameMajor, api: "majors" },
             {
               title: "Chức vụ",
               index: 3,
@@ -280,14 +303,14 @@ function Teachers() {
             {
               title: "Thuộc ngành",
               index: 2,
-              onSelectionChange: handleSelectionChangeEdit,
+              onSelectionChange: handleChangeEditNameMajor,
               api: "majors",
               oldData: editTeacher.nameMajor,
             },
             {
               title: "Chức vụ",
               index: 3,
-              onSelectionChange: handleSelectionChangeEditSelf,
+              onSelectionChange: handleChangeEditSelf,
               selfData: [{ name: "Trưởng khoa" }, { name: "Trưởng ngành" }, { name: "Giáo viên" }],
               oldData: editTeacher.role,
             },

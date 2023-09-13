@@ -13,14 +13,13 @@
   height: 40px;
   margin: 0 20px;
   display: flex;
+  justify-content: space-between;
   margin-bottom: 20px;
 }
 
 //
 
-.data,
-.data th,
-.data td {
+.data tr {
   border: 1px solid #908d8d;
 }
 
@@ -29,6 +28,10 @@
   text-align: center;
   table-layout: auto;
   width: 100%;
+  .column__functions {
+    width: 150px;
+    position: relative;
+  }
 }
 
 .data th,
@@ -58,7 +61,7 @@
   display: flex;
   gap: 15px;
   background-color: #6296c5;
-  right: -41px;
+  right: 23px;
   border-radius: 20px;
   z-index: 1;
 }
@@ -80,7 +83,6 @@
   border-radius: 5px;
 }
 .btn-add {
-  margin-left: 30px;
   padding: 10px 20px;
   background-color: #6296c5;
   font-weight: 800;

@@ -32,8 +32,10 @@ function ComboBox({ title, onSelectionChange, api, selfData, oldData }) {
       <div className={cx("wrap-input")}>
         <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>
           <option value="">Chọn một mục</option>
-          {data.map((item) => (
-            <option value={item.name}>{item.name}</option>
+          {data.map((item, index) => (
+            <option value={item.name} key={index}>
+              {item.name}
+            </option>
           ))}
         </select>
       </div>

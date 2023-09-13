@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { Home, Login, Departments, Majors, Teachers } from "./Pages";
+import { Home, Login, Departments, Majors, Teachers, ThesisModules, SchoolYears } from "./Pages";
 
 // import Register from "./components/Register/Register";
 
@@ -35,6 +35,8 @@ function App() {
             <Route path="/departments" element={<Departments />} />
             <Route path="/majors" element={<Majors />} />
             <Route path="/teachers" element={<Teachers />} />
+            <Route path="/thesisModules" element={<ThesisModules />} />
+            <Route path="/schoolYears" element={<SchoolYears />} />
           </Routes>
         </HeaderContext.Provider>
       </div>
