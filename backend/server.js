@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const dotenv = require("dotenv");
-
+const session = require("express-session");
 dotenv.config();
 const app = express();
 const port = process.env.PORT;
@@ -26,6 +26,13 @@ db.once("open", () => {
 
 app.use(cors());
 app.use(bodyParser.json());
+// app.use(
+//   session({
+//     secret: "your-secret-key", // Thay thế bằng một khóa bí mật thực tế
+//     resave: false,
+//     saveUninitialized: true,
+//   })
+// );
 
 app.use("/api", userRoutes);
 app.use("/api", departmentRoutes);

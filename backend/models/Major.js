@@ -15,7 +15,6 @@ const majorSchema = new mongoose.Schema({
   },
   nameHead: {
     type: String,
-    required: true,
   },
 });
 

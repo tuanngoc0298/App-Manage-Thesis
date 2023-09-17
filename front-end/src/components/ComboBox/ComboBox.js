@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import styles from "./ComboBox.module.scss";
 
 const cx = classNames.bind(styles);
-function ComboBox({ title, onSelectionChange, api, selfData, oldData }) {
+function ComboBox({ title, onSelectionChange, api, selfData, oldData, isRequired = true }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -27,7 +27,7 @@ function ComboBox({ title, onSelectionChange, api, selfData, oldData }) {
     <div className={cx("row")}>
       <span className={cx("field")}>
         {title}
-        <span style={{ color: "red" }}>*</span>
+        {isRequired && <span style={{ color: "red" }}>*</span>}
       </span>
       <div className={cx("wrap-input")}>
         <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>

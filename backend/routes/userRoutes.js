@@ -42,4 +42,15 @@ router.post("/register", async (req, res) => {
   }
 });
 
+router.post("/logout", (req, res) => {
+  req.session.destroy((err) => {
+    if (err) {
+      console.error(err);
+      res.json({ success: false });
+    } else {
+      res.json({ success: true });
+    }
+  });
+});
+
 module.exports = router;

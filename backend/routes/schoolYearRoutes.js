@@ -23,7 +23,7 @@ router.get("/schoolYears", async (req, res) => {
 // Định nghĩa route để thêm năm học mới
 router.post("/schoolYears", async (req, res) => {
   const { year, semester } = req.body;
-  const existingSchoolYear = await SchoolYear.findOne({ $or: [{ semester }, { year }] });
+  const existingSchoolYear = await SchoolYear.findOne({ $and: [{ semester }, { year }] });
 
   if (existingSchoolYear) {
     return res.status(400).json({ message: "Năm học đã tồn tại" });
@@ -41,7 +41,7 @@ router.post("/schoolYears", async (req, res) => {
 router.put("/schoolYears/:id", async (req, res) => {
   const { year, semester } = req.body;
   const { id } = req.params;
-  const existingSchoolYear = await SchoolYear.findOne({ _id: { $ne: id }, $or: [{ semester }, { year }] });
+  const existingSchoolYear = await SchoolYear.findOne({ _id: { $ne: id }, $and: [{ semester }, { year }] });
 
   if (existingSchoolYear) {
     return res.status(400).json({ message: "Năm học đã tồn tại" });

@@ -61,7 +61,7 @@ function Majors() {
   }, [isOpenDeleteModal]);
 
   const handleAddMajor = () => {
-    if (newMajor.code && newMajor.name && newMajor.nameDepartment && newMajor.nameHead) {
+    if (newMajor.code && newMajor.name && newMajor.nameDepartment) {
       // Gọi API để thêm ngành mới
       axios
         .post("http://localhost:3001/api/majors", newMajor, {
@@ -87,7 +87,7 @@ function Majors() {
   const handleEdiMajor = () => {
     // Gọi API để sửa ngành
 
-    if (editMajor.nameDepartment && editMajor.name && editMajor.code && editMajor.nameHead) {
+    if (editMajor.nameDepartment && editMajor.name && editMajor.code) {
       axios
         .put(`http://localhost:3001/api/majors/${editMajor._id}`, editMajor, {
           headers: { Authorization: `Bearer ${token}` },
@@ -289,6 +289,7 @@ function Majors() {
               index: 3,
               onSelectionChange: handleChangeAddNameHead,
               api: "teachers",
+              isRequired: false,
             },
           ]}
         />
@@ -319,6 +320,7 @@ function Majors() {
               onSelectionChange: handleChangeEditNameHead,
               api: "teachers",
               oldData: editMajor.nameHead,
+              isRequired: false,
             },
           ]}
         />

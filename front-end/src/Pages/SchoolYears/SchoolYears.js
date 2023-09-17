@@ -76,7 +76,7 @@ function SchoolYears() {
           }
         })
         .catch((err) => {
-          setErrorAdd("Đã tồn tại thông tin năm học.");
+          setErrorAdd("Đã tồn tại thông tin năm học/kỳ học.");
         });
     } else {
       setErrorAdd("Vui lòng điền đầy đủ thông tin");
@@ -108,7 +108,7 @@ function SchoolYears() {
           }
         })
         .catch((err) => {
-          setErrorEdit("Năm học đã tồn tại!.");
+          setErrorEdit("Năm học/kỳ học đã tồn tại!.");
         });
     } else {
       setErrorEdit("Vui lòng điền đầy đủ thông tin");
@@ -230,7 +230,7 @@ function SchoolYears() {
                   )}
                   {idActiveRow === teacher._id && (
                     <DeleteModal
-                      title={`Xóa năm học ${teacher.semester}`}
+                      title={`Xóa năm học ${teacher.year} học kỳ ${teacher.semester}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={teacher._id}
                       handleCancleDelete={handleCancleDelete}
