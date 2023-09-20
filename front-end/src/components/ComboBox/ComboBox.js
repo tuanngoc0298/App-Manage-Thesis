@@ -5,7 +5,7 @@ import classNames from "classnames/bind";
 import styles from "./ComboBox.module.scss";
 
 const cx = classNames.bind(styles);
-function ComboBox({ title, onSelectionChange, api, selfData, oldData, isRequired = true }) {
+function ComboBox({ title, onSelectionChange, api, selfData, oldData, isRequired = true, nameData = "name" }) {
   const [data, setData] = useState([]);
 
   useEffect(() => {
@@ -22,7 +22,7 @@ function ComboBox({ title, onSelectionChange, api, selfData, oldData, isRequired
   const handleChange = (event) => {
     onSelectionChange(event.target.value);
   };
-
+  const uniqueValues = new Set();
   return (
     <div className={cx("row")}>
       <span className={cx("field")}>
@@ -32,11 +32,17 @@ function ComboBox({ title, onSelectionChange, api, selfData, oldData, isRequired
       <div className={cx("wrap-input")}>
         <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>
           <option value="">Chọn một mục</option>
-          {data.map((item, index) => (
-            <option value={item.name} key={index}>
-              {item.name}
-            </option>
-          ))}
+          {data.map((item, index) => {
+            const value = item[nameData];
+            if (!uniqueValues.has(value)) {
+              uniqueValues.add(value); // Thêm giá trị vào Set để đánh dấu đã sử dụng
+              return (
+                <option value={value} key={index}>
+                  {value}
+                </option>
+              );
+            }
+          })}
         </select>
       </div>
     </div>

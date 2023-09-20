@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import images from "~/assets/img";
-
+import jwt_decode from "jwt-decode";
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
 
@@ -20,6 +20,13 @@ function Login({ onLogin }) {
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
 
+  function setCookie(cname, cvalue, exdays) {
+    const d = new Date();
+    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
+    let expires = "expires=" + d.toUTCString();
+    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
+  }
+
   const handleFocusName = () => {
     setIsFocusedName(true);
   };
@@ -36,11 +43,16 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:3001/api/login", { username, password });
-      onLogin(response.data.token, username);
+      await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
+        const { token } = res.data;
+        setCookie("token", token, 1);
+        const { username, role } = jwt_decode(token);
+        navigate("/home");
+        onLogin(token, username, role);
+      });
       setError("");
-      navigate("/home");
     } catch (err) {
+      console.log(err);
       setError("Tên đăng nhập hoặc mật khẩu không đúng.");
     }
   };

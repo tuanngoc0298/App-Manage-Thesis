@@ -6,14 +6,14 @@ import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./ThesisModules.module.scss";
+import styles from "./CapstoneProjects.module.scss";
 
 const cx = classNames.bind(styles);
 
-function ThesisModules() {
-  const [thesisModules, setThesisModules] = useState([]);
-  const [newThesisModule, setNewThesisModule] = useState({});
-  const [editThesisModule, setEditThesisModule] = useState({});
+function CapstoneProjects() {
+  const [capstoneProjects, setCapstoneProjects] = useState([]);
+  const [newCapstoneProject, setNewCapstoneProject] = useState({});
+  const [editCapstoneProject, setEditCapstoneProject] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -31,11 +31,11 @@ function ThesisModules() {
   useEffect(() => {
     // Gọi API để lấy danh sách học phần KLTN
     axios
-      .get("http://localhost:3001/api/thesisModules", {
+      .get("http://localhost:3001/api/capstoneProjects", {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
-        setThesisModules(response.data);
+        setCapstoneProjects(response.data);
       })
       .catch((err) => {
         setError("Không thể tải danh sách học phần KLTN.");
@@ -60,18 +60,23 @@ function ThesisModules() {
     };
   }, [isOpenDeleteModal]);
   const handleAddMajor = () => {
-    if (newThesisModule.code && newThesisModule.name && newThesisModule.nameMajor && newThesisModule.credit) {
+    if (
+      newCapstoneProject.code &&
+      newCapstoneProject.name &&
+      newCapstoneProject.nameMajor &&
+      newCapstoneProject.credit
+    ) {
       // Gọi API để thêm học phần KLTN mới
       axios
-        .post("http://localhost:3001/api/thesisModules", newThesisModule, {
+        .post("http://localhost:3001/api/capstoneProjects", newCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           if (res.status !== 400) {
-            setThesisModules([...thesisModules, res.data]);
+            setCapstoneProjects([...capstoneProjects, res.data]);
             setIsOpenAddModal(false);
             setErrorAdd("");
-            setNewThesisModule({});
+            setNewCapstoneProject({});
           }
           // Cập nhật danh sách học phần KLTN
         })
@@ -86,23 +91,28 @@ function ThesisModules() {
   const handleEdiMajor = () => {
     // Gọi API để sửa học phần KLTN
 
-    if (editThesisModule.nameMajor && editThesisModule.name && editThesisModule.code && editThesisModule.credit) {
+    if (
+      editCapstoneProject.nameMajor &&
+      editCapstoneProject.name &&
+      editCapstoneProject.code &&
+      editCapstoneProject.credit
+    ) {
       axios
-        .put(`http://localhost:3001/api/thesisModules/${editThesisModule._id}`, editThesisModule, {
+        .put(`http://localhost:3001/api/capstoneProjects/${editCapstoneProject._id}`, editCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
           // Cập nhật danh sách học phần KLTN
           if (res.status !== 400) {
-            const updatedThesisModules = thesisModules.map((thesisModule) => {
-              if (thesisModule._id === editThesisModule._id) {
-                return { ...thesisModule, ...editThesisModule };
+            const updatedCapstoneProjects = capstoneProjects.map((capstoneProject) => {
+              if (capstoneProject._id === editCapstoneProject._id) {
+                return { ...capstoneProject, ...editCapstoneProject };
               }
-              return thesisModule;
+              return capstoneProject;
             });
-            setThesisModules(updatedThesisModules);
+            setCapstoneProjects(updatedCapstoneProjects);
 
-            setEditThesisModule({});
+            setEditCapstoneProject({});
             setErrorEdit("");
             setIdActiveRow(null);
             setIsOpenEditModal(false);
@@ -116,41 +126,41 @@ function ThesisModules() {
     }
   };
 
-  const handleDeleteThesisModule = (id) => {
+  const handleDeleteCapstoneProject = (id) => {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa học phần KLTN
     axios
-      .delete(`http://localhost:3001/api/thesisModules/${id}`, {
+      .delete(`http://localhost:3001/api/capstoneProjects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách học phần KLTN
-        const updatedThesisModules = thesisModules.filter((thesisModule) => thesisModule._id !== id);
-        setThesisModules(updatedThesisModules);
+        const updatedCapstoneProjects = capstoneProjects.filter((capstoneProject) => capstoneProject._id !== id);
+        setCapstoneProjects(updatedCapstoneProjects);
         setError("");
       })
       .catch((err) => {
         setError("Không thể xóa học phần KLTN.");
       });
   };
-  const handleSearchMajor = () => {
+  const handleSearchCapstoneProject = () => {
     axios
-      .get(`http://localhost:3001/api/thesisModules?searchQuery=${searchQuery}`, {
+      .get(`http://localhost:3001/api/capstoneProjects?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
-        setThesisModules(res.data);
+        setCapstoneProjects(res.data);
       })
       .catch((err) => {
         setError("Không tìm kiếm được học phần KLTN");
       });
   };
 
-  const handleChangeEditNameMajor = (value) => {
-    setEditThesisModule({ ...editThesisModule, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  const handleChangeEditNameCapstoneProject = (value) => {
+    setEditCapstoneProject({ ...editCapstoneProject, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
-  const handleChangeAddNameMajor = (value) => {
-    setNewThesisModule({ ...newThesisModule, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  const handleChangeAddNameCapstoneProject = (value) => {
+    setNewCapstoneProject({ ...newCapstoneProject, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
@@ -158,27 +168,27 @@ function ThesisModules() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewThesisModule({});
+    setNewCapstoneProject({});
     setErrorAdd("");
     setIdActiveRow(null);
   };
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
-    setEditThesisModule({});
+    setEditCapstoneProject({});
     setErrorEdit("");
     setIdActiveRow(null);
   };
   const handleChangeInputAdd = (value) => {
-    setNewThesisModule(value);
+    setNewCapstoneProject(value);
   };
   const handleChangeInputEdit = (value) => {
-    setEditThesisModule(value);
+    setEditCapstoneProject(value);
   };
   return (
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý học phần KLTN</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchMajor} />
+        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchCapstoneProject} />
         <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
           Thêm học phần KLTN
         </button>
@@ -197,29 +207,29 @@ function ThesisModules() {
             </tr>
           </thead>
 
-          {thesisModules.map((thesisModule, index) => (
+          {capstoneProjects.map((capstoneProject, index) => (
             <tbody key={index}>
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
 
                 <td>
-                  <div>{thesisModule.code} </div>
+                  <div>{capstoneProject.code} </div>
                 </td>
                 <td>
-                  <div>{thesisModule.name} </div>
+                  <div>{capstoneProject.name} </div>
                 </td>
                 <td>
-                  <div>{thesisModule.nameMajor} </div>
+                  <div>{capstoneProject.nameMajor} </div>
                 </td>
                 <td>
-                  <div>{thesisModule.credit} </div>
+                  <div>{capstoneProject.credit} </div>
                 </td>
                 <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
                     <span
                       className="material-symbols-outlined"
                       onClick={(e) => {
-                        setIdActiveRow(thesisModule._id);
+                        setIdActiveRow(capstoneProject._id);
                         e.stopPropagation();
                       }}
                     >
@@ -227,7 +237,7 @@ function ThesisModules() {
                     </span>
                   </button>
 
-                  {idActiveRow === thesisModule._id && (
+                  {idActiveRow === capstoneProject._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
                         <span className="material-symbols-outlined">delete</span>
@@ -235,7 +245,7 @@ function ThesisModules() {
                       <button
                         className={cx("btn")}
                         onClick={() => {
-                          setEditThesisModule(thesisModule);
+                          setEditCapstoneProject(capstoneProject);
                           setIsOpenEditModal(true);
                         }}
                       >
@@ -243,13 +253,13 @@ function ThesisModules() {
                       </button>
                     </div>
                   )}
-                  {idActiveRow === thesisModule._id && (
+                  {idActiveRow === capstoneProject._id && (
                     <DeleteModal
-                      title={`Xóa học phần ${thesisModule.name}`}
+                      title={`Xóa học phần ${capstoneProject.name}`}
                       isOpenDeleteModal={isOpenDeleteModal}
-                      id={thesisModule._id}
+                      id={capstoneProject._id}
                       handleCancleDelete={handleCancleDelete}
-                      handleDelete={handleDeleteThesisModule}
+                      handleDelete={handleDeleteCapstoneProject}
                     />
                   )}
                 </td>
@@ -267,7 +277,7 @@ function ThesisModules() {
             ["Tên học phần", "name"],
             ["Số tín chỉ", "credit"],
           ]}
-          newData={newThesisModule}
+          newData={newCapstoneProject}
           error={errorAdd}
           handleCancle={handleCancleAdd}
           handleLogic={handleAddMajor}
@@ -276,7 +286,7 @@ function ThesisModules() {
             {
               title: "Thuộc ngành",
               index: 2,
-              onSelectionChange: handleChangeAddNameMajor,
+              onSelectionChange: handleChangeAddNameCapstoneProject,
               api: "majors",
             },
           ]}
@@ -290,7 +300,7 @@ function ThesisModules() {
             ["Tên học phần", "name"],
             ["Số tín chỉ", "credit"],
           ]}
-          newData={editThesisModule}
+          newData={editCapstoneProject}
           error={errorEdit}
           handleCancle={handleCancleEdit}
           handleLogic={handleEdiMajor}
@@ -299,9 +309,9 @@ function ThesisModules() {
             {
               title: "Thuộc ngành",
               index: 2,
-              onSelectionChange: handleChangeEditNameMajor,
+              onSelectionChange: handleChangeEditNameCapstoneProject,
               api: "majors",
-              oldData: editThesisModule.nameMajor,
+              oldData: editCapstoneProject.nameMajor,
             },
           ]}
         />
@@ -310,4 +320,4 @@ function ThesisModules() {
   );
 }
 
-export default ThesisModules;
+export default CapstoneProjects;

@@ -1,6 +1,6 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar, DeleteModal, Modal } from "~/components";
-
+import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
@@ -25,13 +25,12 @@ function Departments() {
   const [errorEdit, setErrorEdit] = useState("");
   const wrapperBtnRef = useRef(null);
   const { token } = useContext(HeaderContext);
+  const navigate = useNavigate();
 
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get("http://localhost:3001/api/departments", {
-        headers: { Authorization: `Bearer ${token}` },
-      })
+      .get("http://localhost:3001/api/departments", { withCredentials: true, baseURL: "http://localhost:3001" })
       .then((response) => {
         setDepartments(response.data);
       })

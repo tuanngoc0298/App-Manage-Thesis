@@ -1,5 +1,5 @@
 const mongoose = require("mongoose");
-const ThesisModuleSchema = new mongoose.Schema({
+const CapstoneProjectSchema = new mongoose.Schema({
   code: {
     type: String,
     required: true,
@@ -18,4 +18,4 @@ const ThesisModuleSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("ThesisModule", ThesisModuleSchema);
+module.exports = mongoose.model("CapstoneProject", CapstoneProjectSchema);
