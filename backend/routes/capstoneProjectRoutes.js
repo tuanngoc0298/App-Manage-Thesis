@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const capstoneProjectController = require("../controllers/capstoneProjectController");
+const capstoneProjectController = require("../controllers/HeadDepartment/capstoneProjectController");
 
 router.get("/capstoneProjects", capstoneProjectController.getAllCapstoneProjects);
 

@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const schoolYearController = require("../controllers/schoolYearController");
+const schoolYearController = require("../../controllers/HeadDepartment/schoolYearController");
 
 router.get("/schoolYears", schoolYearController.getAllSchoolYears);
 

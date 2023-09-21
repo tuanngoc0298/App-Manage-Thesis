@@ -2,8 +2,8 @@
 const express = require("express");
 const router = express.Router();
 
-const departmentController = require("../controllers/departmentController");
-const middlewareController = require("../controllers/middlewareController");
+const departmentController = require("../../controllers/HeadDepartment/departmentController");
+const middlewareController = require("../../controllers/middlewareController");
 
 // Định nghĩa route để lấy dữ liệu
 router.get("/departments", departmentController.getAllDepartments);

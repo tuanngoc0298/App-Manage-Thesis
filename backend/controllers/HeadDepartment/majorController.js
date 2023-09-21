@@ -1,4 +1,4 @@
-const Major = require("../models/Major");
+const Major = require("../../models/Major");
 
 const majorController = {
   // GET

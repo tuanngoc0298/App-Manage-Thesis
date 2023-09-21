@@ -1,6 +1,7 @@
-const Student = require("../models/Student");
+const Student = require("../../models/Student");
 const multer = require("multer");
 const XLSX = require("xlsx");
+const jwt = require("jsonwebtoken");
 
 const studentController = {
   // GET
@@ -37,10 +38,17 @@ const studentController = {
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
 
-    const data = XLSX.utils.sheet_to_json(worksheet);
-    await Student.deleteMany({});
+    let data = XLSX.utils.sheet_to_json(worksheet);
+    let newData;
+    const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+
+    const { major } = decoded.userInfo;
+    newData = data.map((item) => {
+      return { ...item, major: major };
+    });
+    await Student.deleteMany({ major: major });
     // Lưu dữ liệu vào MongoDB
-    await Student.insertMany(data)
+    await Student.insertMany(newData)
       .then(() => {
         res.status(200).json({ message: "Data imported successfully" });
       })

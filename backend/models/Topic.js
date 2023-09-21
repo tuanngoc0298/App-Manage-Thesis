@@ -1,23 +1,23 @@
 const mongoose = require("mongoose");
-const CapstoneProjectSchema = new mongoose.Schema({
-  code: {
-    type: String,
-    required: true,
-    unique: true,
-  },
+
+const topicSchema = new mongoose.Schema({
   name: {
     type: String,
     required: true,
     unique: true,
   },
+  describe: {
+    type: String,
+    required: true,
+  },
   nameMajor: {
     type: String,
     required: true,
   },
-  credit: {
+  nameTeacher: {
     type: String,
     required: true,
   },
 });
 
-module.exports = mongoose.model("CapstoneProject", CapstoneProjectSchema);
+module.exports = mongoose.model("Topic", topicSchema);

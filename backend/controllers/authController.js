@@ -36,8 +36,39 @@ const authController = {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Mật khẩu không đúng!" });
       }
+      let userInfo;
+      switch (user.role) {
+        case "admin": {
+          userInfo = user.adminInfo;
+          break;
+        }
+        case "NguoiPhuTrach": {
+          userInfo = user.NguoiPhuTrachInfo;
+          break;
+        }
+        case "SinhVien": {
+          userInfo = user.SinhVienInfo;
+          break;
+        }
+        case "GiaoVienHuongDan": {
+          userInfo = user.GiaoVienHuongDanInfo;
+          break;
+        }
+        case "GiaoVienPhanBien": {
+          userInfo = user.GiaoVienPhanBienInfo;
+          break;
+        }
+        case "HoiDongBaoVe": {
+          userInfo = user.HoiDongBaoVeInfo;
+          break;
+        }
+        case "PhongDaoTao": {
+          userInfo = user.PhongDaoTaoInfo;
+          break;
+        }
+      }
 
-      const token = jwt.sign({ _id: user._id, username: user.username, role: user.role }, process.env.JWT_ACCESS_KEY, {
+      const token = jwt.sign({ _id: user._id, userInfo: userInfo, role: user.role }, process.env.JWT_ACCESS_KEY, {
         expiresIn: "1d",
       });
       res.cookie("token", token);

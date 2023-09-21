@@ -10,8 +10,8 @@ function Register({ onRegister }) {
   const handleRegister = async () => {
     try {
       const response = await axios.post("http://localhost:3001/api/register", { username, password, role });
-      onRegister(response.data.token);
-      setError("");
+
+      setError("Đăng ký thành công");
     } catch (err) {
       setError("Đăng ký không thành công.");
     }
@@ -20,7 +20,7 @@ function Register({ onRegister }) {
   return (
     <div>
       <input type="text" placeholder="Tên đăng nhập" value={username} onChange={(e) => setUsername(e.target.value)} />
-      <input type="password" placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input type="text" placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} />
       <input type="text" placeholder="Vai trò" value={role} onChange={(e) => setRole(e.target.value)} />
       <button onClick={handleRegister}>Đăng ký</button>
       {error && <p>{error}</p>}

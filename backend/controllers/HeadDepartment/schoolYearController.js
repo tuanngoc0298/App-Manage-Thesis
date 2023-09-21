@@ -1,4 +1,4 @@
-const SchoolYear = require("../models/SchoolYear");
+const SchoolYear = require("../../models/SchoolYear");
 
 const schoolYearController = {
   // GET

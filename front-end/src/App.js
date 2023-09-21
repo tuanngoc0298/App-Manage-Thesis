@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { HeadDepartment, Manager, Instructor } from "./Pages";
+import { HeadDepartment, Manager, Instructor, Student } from "./Pages";
 
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
@@ -10,26 +10,10 @@ import { Login } from "~/components";
 
 export const HeaderContext = createContext();
 
-function getCookie(cname) {
-  let name = cname + "=";
-  let decodedCookie = decodeURIComponent(document.cookie);
-  let ca = decodedCookie.split(";");
-  for (let i = 0; i < ca.length; i++) {
-    let c = ca[i];
-    while (c.charAt(0) == " ") {
-      c = c.substring(1);
-    }
-    if (c.indexOf(name) == 0) {
-      return c.substring(name.length, c.length);
-    }
-  }
-  return "";
-}
-
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
 
-  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).username : "";
+  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).userInfo.name : "";
   const hasRole = Cookies.get("token") ? jwt_decode(Cookies.get("token")).role : "";
 
   const [username, setUsername] = useState(hasName);
@@ -61,7 +45,7 @@ function App() {
       content = <Manager />;
       break;
     case "SinhVien":
-      content = <p>Error occurred.</p>;
+      content = <Student />;
       break;
     case "GiaoVienHuongDan":
       content = <Instructor />;

@@ -2,7 +2,7 @@
 const express = require("express");
 const router = express.Router();
 
-const majorController = require("../controllers/majorController");
+const majorController = require("../../controllers/HeadDepartment/majorController");
 router.get("/majors", majorController.getAllMajors);
 
 // Định nghĩa route để thêm ngành mới

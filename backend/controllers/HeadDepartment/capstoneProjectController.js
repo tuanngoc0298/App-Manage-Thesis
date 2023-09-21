@@ -1,4 +1,4 @@
-const CapstoneProject = require("../models/CapstoneProject");
+const CapstoneProject = require("../../models/CapstoneProject");
 
 const capstoneProjectController = {
   // GET

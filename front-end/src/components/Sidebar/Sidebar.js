@@ -26,7 +26,16 @@ function Sidebar() {
       );
       break;
     case "SinhVien":
-      content = <p>Error occurred.</p>;
+      content = (
+        <div className={cx("list")}>
+          <h2 className={cx("title")}>Quản lý đào tạo</h2>
+          <ul>
+            <li className={cx("item")}>
+              <Link to="/chooseTopics">Lựa chọn đề tài</Link>
+            </li>
+          </ul>
+        </div>
+      );
       break;
     case "GiaoVienHuongDan":
       content = (
@@ -34,7 +43,7 @@ function Sidebar() {
           <h2 className={cx("title")}>Quản lý đào tạo</h2>
           <ul>
             <li className={cx("item")}>
-              <Link to="/registerTopic">Đăng ký đề tài</Link>
+              <Link to="/registerTopics">Đăng ký đề tài</Link>
             </li>
           </ul>
         </div>

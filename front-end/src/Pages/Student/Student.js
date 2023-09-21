@@ -1,12 +1,12 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { RegisterTopics } from "./";
+import { ChooseTopics } from "./";
 import { Home } from "~/components";
 
-function Instructor() {
+function Manager() {
   return (
     <Routes>
       <Route path="/home" element={<Home />} />
-      <Route path="/registerTopics" element={<RegisterTopics />} />
+      <Route path="/chooseTopics" element={<ChooseTopics />} />
       {/* <Route path="/majors" element={token ? <Majors /> : <Navigate to="/" />} />
       <Route path="/teachers" element={token ? <Teachers /> : <Navigate to="/" />} />
       <Route path="/CapstoneProjects" element={token ? <CapstoneProjects /> : <Navigate to="/" />} />
@@ -15,4 +15,4 @@ function Instructor() {
   );
 }
 
-export default Instructor;
+export default Manager;

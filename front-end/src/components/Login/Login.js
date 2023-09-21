@@ -5,6 +5,7 @@ import images from "~/assets/img";
 import jwt_decode from "jwt-decode";
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
+import Cookies from "js-cookie";
 
 const cx = classNames.bind(styles);
 
@@ -19,13 +20,6 @@ function Login({ onLogin }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
-
-  function setCookie(cname, cvalue, exdays) {
-    const d = new Date();
-    d.setTime(d.getTime() + exdays * 24 * 60 * 60 * 1000);
-    let expires = "expires=" + d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-  }
 
   const handleFocusName = () => {
     setIsFocusedName(true);
@@ -45,10 +39,14 @@ function Login({ onLogin }) {
     try {
       await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
         const { token } = res.data;
-        setCookie("token", token, 1);
-        const { username, role } = jwt_decode(token);
+        Cookies.set("token", token, { expires: 1 });
+        const {
+          userInfo: { name },
+          role,
+        } = jwt_decode(token);
+
         navigate("/home");
-        onLogin(token, username, role);
+        onLogin(token, name, role);
       });
       setError("");
     } catch (err) {
