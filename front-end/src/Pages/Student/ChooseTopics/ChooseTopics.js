@@ -72,24 +72,24 @@ function ChooseTopics() {
       });
   }
 
-  const handleRegisterTopic = () => {
-    axios
-      .post("http://localhost:3001/api/chooseTopics", newTopic, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        // Cập nhật danh sách đề tài
-        if (res.status !== 400) {
-          setTopics([...chooseTopics, res.data]);
-          setIsOpenAddModal(false);
-          setNewTopic({ nameMajor: major, nameTeacher: name });
-          setErrorAdd("");
-        }
-      })
-      .catch((err) => {
-        setErrorAdd("Đã tồn tại thông tin đề tài.");
-      });
-  };
+  // const handleRegisterTopic = () => {
+  //   axios
+  //     .post("http://localhost:3001/api/chooseTopics", newTopic, {
+  //       headers: { Authorization: `Bearer ${token}` },
+  //     })
+  //     .then((res) => {
+  //       // Cập nhật danh sách đề tài
+  //       if (res.status !== 400) {
+  //         setTopics([...chooseTopics, res.data]);
+  //         setIsOpenAddModal(false);
+  //         setNewTopic({ nameMajor: major, nameTeacher: name });
+  //         setErrorAdd("");
+  //       }
+  //     })
+  //     .catch((err) => {
+  //       setErrorAdd("Đã tồn tại thông tin đề tài.");
+  //     });
+  // };
 
   // const handleDeleteTopic = (id) => {
   //   setIsOpenDeleteModal(false);
@@ -180,7 +180,7 @@ function ChooseTopics() {
                     </span>
                   </button>
 
-                  {idActiveRow === topic._id && isSelectedTopicTab && (
+                  {/* {idActiveRow === topic._id && isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button className={cx("btn")} onClick={handleCancleRegisterTopic}>
                         Hủy đăng ký
@@ -193,7 +193,7 @@ function ChooseTopics() {
                         Đăng ký
                       </button>
                     </div>
-                  )}
+                  )} */}
                   {/* {idActiveRow === topic._id && (
                       <DeleteModal
                         title={`Hủy đăng ký đề tài ${topic.name}`}
