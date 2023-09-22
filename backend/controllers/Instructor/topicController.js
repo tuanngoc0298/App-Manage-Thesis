@@ -66,9 +66,9 @@ const topicController = {
       return res.status(400).json({ message: "Đề tài đã tồn tại" });
     }
     try {
-      const student = new Topic({ describe, name, nameMajor, nameTeacher });
-      await student.save();
-      res.status(201).json(student);
+      const topic = new Topic({ describe, name, nameMajor, nameTeacher });
+      await topic.save();
+      res.status(201).json(topic);
     } catch (error) {
       res.status(500).json({ error: "Lỗi khi thêm đề tài mới." });
     }
@@ -82,8 +82,8 @@ const topicController = {
       return res.status(400).json({ message: "Đề tài đã tồn tại" });
     }
     try {
-      const student = await Topic.findByIdAndUpdate(id, { describe, name, nameMajor, nameTeacher }, { new: true });
-      res.status(200).json(student);
+      const topic = await Topic.findByIdAndUpdate(id, { describe, name, nameMajor, nameTeacher }, { new: true });
+      res.status(200).json(topic);
     } catch (error) {
       res.status(500).json({ error: "Lỗi khi sửa đề tài." });
     }

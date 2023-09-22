@@ -15,6 +15,7 @@ const cx = classNames.bind(styles);
 function ChooseTopics() {
   const { major, name } = jwt_decode(Cookies.get("token")).userInfo;
 
+  let editTopic = {};
   const [topics, setTopics] = useState([]);
 
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -28,7 +29,7 @@ function ChooseTopics() {
   const wrapperBtnRef = useRef(null);
   const { token } = useContext(HeaderContext);
 
-  useEffect(getSelectedTopic, [token]);
+  useEffect(getSelectedTopic, []);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -72,51 +73,50 @@ function ChooseTopics() {
       });
   }
 
-  // const handleRegisterTopic = () => {
-  //   axios
-  //     .post("http://localhost:3001/api/chooseTopics", newTopic, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then((res) => {
-  //       // Cập nhật danh sách đề tài
-  //       if (res.status !== 400) {
-  //         setTopics([...chooseTopics, res.data]);
-  //         setIsOpenAddModal(false);
-  //         setNewTopic({ nameMajor: major, nameTeacher: name });
-  //         setErrorAdd("");
-  //       }
-  //     })
-  //     .catch((err) => {
-  //       setErrorAdd("Đã tồn tại thông tin đề tài.");
-  //     });
-  // };
+  const handleRegisterTopic = () => {
+    axios
+      .put(`http://localhost:3001/api/chooseTopics/${editTopic._id}`, editTopic, {
+        withCredentials: true,
+        baseURL: "http://localhost:3001",
+      })
+      .then((res) => {
+        // Cập nhật danh sách đề tài
+        editTopic = {};
+        setIdActiveRow(null);
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  // const handleDeleteTopic = (id) => {
-  //   setIsOpenDeleteModal(false);
-  //   // Gọi API để xóa đề tài
-  //   axios
-  //     .delete(`http://localhost:3001/api/topics/${id}`, {
-  //       headers: { Authorization: `Bearer ${token}` },
-  //     })
-  //     .then(() => {
-  //       // Cập nhật danh sách đề tài
-  //       const updatedStudent = topics.filter((topic) => topic._id !== id);
-  //       setTopics(updatedStudent);
-  //       setError("");
-  //     })
-  //     .catch((err) => {
-  //       setError("Không thể xóa đề tài.");
-  //     });
-  // };
+  const handleCancleRegisterTopic = () => {
+    setIsOpenDeleteModal(false);
+    // Gọi API để xóa đề tài
+    axios
+      .delete(`http://localhost:3001/api/chooseTopics/${editTopic._id}`, {
+        withCredentials: true,
+        baseURL: "http://localhost:3001",
+      })
+      .then((res) => {
+        // Cập nhật danh sách đề tài
+        editTopic = {};
+        setIdActiveRow(null);
+        getSelectedTopic();
+      })
+      .catch((err) => {
+        console.log(err);
+      });
+  };
 
-  // const handleCancleDelete = () => {
-  //   setIsOpenDeleteModal(false);
-  //   setIdActiveRow(null);
-  // };
+  const handleCancleDelete = () => {
+    setIsOpenDeleteModal(false);
+    setIdActiveRow(null);
+  };
   const handleSearchTopic = () => {
     axios
       .get(`http://localhost:3001/api/topicsByMajor?searchQuery=${searchQuery}`, {
-        headers: { Authorization: `Bearer ${token}` },
+        withCredentials: true,
+        baseURL: "http://localhost:3001",
       })
       .then((res) => {
         setTopics(res.data);
@@ -133,9 +133,11 @@ function ChooseTopics() {
         <button onClick={getSelectedTopic}>Đề tài đã chọn</button>
         <button onClick={getAllTopics}>Lựa chọn đề tài</button>
       </div>
-      <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTopic} />
-      </div>
+      {!isSelectedTopicTab && (
+        <div className={cx("function")}>
+          <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTopic} />
+        </div>
+      )}
 
       <div>
         <table className={cx("data")}>
@@ -180,7 +182,7 @@ function ChooseTopics() {
                     </span>
                   </button>
 
-                  {/* {idActiveRow === topic._id && isSelectedTopicTab && (
+                  {idActiveRow === topic._id && isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button className={cx("btn")} onClick={handleCancleRegisterTopic}>
                         Hủy đăng ký
@@ -189,11 +191,17 @@ function ChooseTopics() {
                   )}
                   {idActiveRow === topic._id && !isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={handleRegisterTopic}>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => {
+                          editTopic = topic;
+                          handleRegisterTopic();
+                        }}
+                      >
                         Đăng ký
                       </button>
                     </div>
-                  )} */}
+                  )}
                   {/* {idActiveRow === topic._id && (
                       <DeleteModal
                         title={`Hủy đăng ký đề tài ${topic.name}`}

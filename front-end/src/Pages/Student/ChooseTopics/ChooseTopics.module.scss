@@ -64,11 +64,10 @@
 }
 .wrapper__btn {
   position: absolute;
-  display: flex;
-  gap: 15px;
   background-color: #6296c5;
-  right: 23px;
-  border-radius: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  border-radius: 15px;
   z-index: 1;
 }
 .wrapper__btn::before {
@@ -84,7 +83,8 @@
   border-bottom: 8px solid #6296c5;
 }
 .btn {
-  padding: 5px 10px;
+  width: 80px;
+  padding: 8px 12px;
   color: #fff;
   border-radius: 5px;
 }

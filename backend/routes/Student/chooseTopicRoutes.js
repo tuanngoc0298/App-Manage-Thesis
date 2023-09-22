@@ -9,6 +9,7 @@ router.get("/topicsByMajor", chooseTopicController.getTopicsByMajor);
 router.get("/chooseTopics", chooseTopicController.getChooseTopic);
 
 // Định nghĩa route để đăng ký đề tài
-router.post("/chooseTopics", chooseTopicController.addTopic);
+router.put("/chooseTopics/:id", chooseTopicController.registerTopic);
+router.delete("/chooseTopics/:id", chooseTopicController.cancleRegisterTopic);
 
 module.exports = router;
