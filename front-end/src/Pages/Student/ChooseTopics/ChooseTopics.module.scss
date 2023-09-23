@@ -63,28 +63,19 @@
   position: relative;
 }
 .wrapper__btn {
+  width: 70%;
+
   position: absolute;
   background-color: #6296c5;
   left: 50%;
-  transform: translateX(-50%);
+  top: 50%;
+  transform: translate(-50%, -50%);
   border-radius: 15px;
   z-index: 1;
 }
-.wrapper__btn::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -8px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent; /* Độ rộng và màu cho cạnh trái */
-  border-right: 8px solid transparent; /* Độ rộng và màu cho cạnh phải */
-  border-bottom: 8px solid #6296c5;
-}
+
 .btn {
-  width: 80px;
-  padding: 8px 12px;
+  padding: 11px 12px;
   color: #fff;
   border-radius: 5px;
 }

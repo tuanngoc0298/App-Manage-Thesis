@@ -69,7 +69,7 @@ const authController = {
       }
 
       const token = jwt.sign({ _id: user._id, userInfo: userInfo, role: user.role }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: "1d",
+        expiresIn: 1800,
       });
       res.cookie("token", token);
       res.json({ token });

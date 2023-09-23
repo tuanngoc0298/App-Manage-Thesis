@@ -39,7 +39,7 @@ function Login({ onLogin }) {
     try {
       await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
         const { token } = res.data;
-        Cookies.set("token", token, { expires: 1 });
+        Cookies.set("token", token, { expires: 1 / 48 });
         const {
           userInfo: { name },
           role,

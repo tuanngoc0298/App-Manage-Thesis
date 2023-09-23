@@ -38,13 +38,30 @@ const studentController = {
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];
 
-    let data = XLSX.utils.sheet_to_json(worksheet);
+    let datas = XLSX.utils.sheet_to_json(worksheet);
+    // Lọc dữ liệu có đủ 4 trường thông tin
+    datas = datas.map((data) => {
+      if (!data.name || !data.code || !data.year || !data.semester) {
+        return null;
+      }
+
+      const validData = {
+        name: data.name,
+        code: data.code,
+        year: data.year,
+        semester: data.semester,
+      };
+      return validData;
+    });
+
+    if (datas.includes(null)) return res.status(500).json({ message: "Error: Data thiếu dữ liệu" });
+
     let newData;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-
     const { major } = decoded.userInfo;
-    newData = data.map((item) => {
-      return { ...item, major: major };
+
+    newData = datas.map((item) => {
+      return { ...item, major: major, state: "Đang làm" };
     });
     await Student.deleteMany({ major: major });
     // Lưu dữ liệu vào MongoDB

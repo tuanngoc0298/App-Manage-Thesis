@@ -16,8 +16,8 @@ function ManagerStudents() {
   const { major } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({ major: major });
-  const [editStudent, setEditStudent] = useState({ major: major });
+  const [newStudent, setNewStudent] = useState({ major: major, state: "Đang làm" });
+  const [editStudent, setEditStudent] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -29,6 +29,7 @@ function ManagerStudents() {
   const [isFilterByMajor, setIsFilterByMajor] = useState(true);
 
   const [error, setError] = useState("");
+  const [errorImport, setErrorImport] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
   const wrapperBtnRef = useRef(null);
@@ -63,7 +64,7 @@ function ManagerStudents() {
         setStudents(response.data);
       })
       .catch((err) => {
-        setError("Không thể tải danh sách học sinh.");
+        setError("Không thể tải danh sách sinh viên.");
       });
   }
 
@@ -78,7 +79,7 @@ function ManagerStudents() {
         setStudents(res.data);
       })
       .catch((err) => {
-        setError("Không tìm kiếm được học sinh");
+        setError("Không tìm kiếm được sinh viên");
       });
   }
 
@@ -93,45 +94,52 @@ function ManagerStudents() {
       const formData = new FormData();
       formData.append("file", file);
 
+      const form = document.getElementById("formImport");
+
       axios
         .post("http://localhost:3001/api/studentsUpload", formData, {
           withCredentials: true,
           baseURL: "http://localhost:3001",
         })
-        .then((response) => {
+        .then((res) => {
+          setErrorImport("");
           if (isFilterByMajor) getAllStudentsByMajor();
           else getAllStudents();
 
           setFile(null);
-          const form = document.getElementById("formImport");
           if (form) {
             form.reset();
           }
         })
+
         .catch((error) => {
-          console.error("Error:", error);
+          setFile(null);
+          if (form) {
+            form.reset();
+          }
+          setErrorImport(error.response?.data.message);
         });
     }
   };
 
   const handleAddStudent = () => {
     if (newStudent.code && newStudent.name && newStudent.year && newStudent.semester && newStudent.state) {
-      // Gọi API để thêm học sinh mới
+      // Gọi API để thêm sinh viên mới
       axios
         .post("http://localhost:3001/api/students", newStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          // Cập nhật danh sách học sinh
+          // Cập nhật danh sách sinh viên
           if (res.status !== 400) {
             setStudents([...students, res.data]);
             setIsOpenAddModal(false);
-            setNewStudent({ major: major });
+            setNewStudent({ major: major, state: "Đang làm" });
             setErrorAdd("");
           }
         })
         .catch((err) => {
-          setErrorAdd("Đã tồn tại thông tin học sinh.");
+          setErrorAdd("Đã tồn tại thông tin sinh viên.");
         });
     } else {
       setErrorAdd("Vui lòng điền đầy đủ thông tin");
@@ -139,14 +147,14 @@ function ManagerStudents() {
   };
 
   const handleEditStudent = () => {
-    // Gọi API để sửa học sinh
+    // Gọi API để sửa sinh viên
     if (editStudent.name && editStudent.code && editStudent.year && editStudent.semester && editStudent.state) {
       axios
         .put(`http://localhost:3001/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
-          // Cập nhật danh sách học sinh
+          // Cập nhật danh sách sinh viên
           if (res.status !== 400) {
             const updatedStudent = students.map((student) => {
               if (student._id === editStudent._id) {
@@ -172,19 +180,19 @@ function ManagerStudents() {
 
   const handleDeleteStudent = (id) => {
     setIsOpenDeleteModal(false);
-    // Gọi API để xóa học sinh
+    // Gọi API để xóa sinh viên
     axios
       .delete(`http://localhost:3001/api/students/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
-        // Cập nhật danh sách học sinh
+        // Cập nhật danh sách sinh viên
         const updatedStudent = students.filter((student) => student._id !== id);
         setStudents(updatedStudent);
         setError("");
       })
       .catch((err) => {
-        setError("Không thể xóa học sinh.");
+        setError("Không thể xóa sinh viên.");
       });
   };
   const handleSearchStudent = () => {
@@ -196,7 +204,7 @@ function ManagerStudents() {
         setStudents(res.data);
       })
       .catch((err) => {
-        setError("Không tìm kiếm được học sinh");
+        setError("Không tìm kiếm được sinh viên");
       });
   };
 
@@ -206,7 +214,7 @@ function ManagerStudents() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewStudent({ major: major });
+    setNewStudent({ major: major, state: "Đang làm" });
     setErrorAdd("");
     setIdActiveRow(null);
   };
@@ -251,6 +259,7 @@ function ManagerStudents() {
       </div>
       <div className={cx("function")}>
         <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchStudent} />
+        <div style={{ color: "red" }}>{errorImport}</div>
         {isFilterByMajor && (
           <div className={cx("function__allow")}>
             <form id="formImport" className={cx("importFile")}>
@@ -258,7 +267,7 @@ function ManagerStudents() {
               <button onClick={handleUpload}>Tải lên</button>
             </form>
             <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
-              Thêm học sinh
+              Thêm sinh viên
             </button>
           </div>
         )}
@@ -269,8 +278,8 @@ function ManagerStudents() {
           <thead>
             <tr>
               <th>STT</th>
-              <th>Mã học sinh</th>
-              <th>Tên học sinh</th>
+              <th>Mã sinh viên</th>
+              <th>Tên sinh viên</th>
               <th>Tên ngành</th>
               <th>Năm học</th>
               <th>Kỳ học</th>
@@ -333,7 +342,7 @@ function ManagerStudents() {
                     )}
                     {idActiveRow === student._id && (
                       <DeleteModal
-                        title={`Xóa học sinh ${student.name}`}
+                        title={`Xóa sinh viên ${student.name}`}
                         isOpenDeleteModal={isOpenDeleteModal}
                         id={student._id}
                         handleCancleDelete={handleCancleDelete}
@@ -350,10 +359,10 @@ function ManagerStudents() {
 
       {isOpenAddModal && (
         <Modal
-          name="Thêm mới học sinh"
+          name="Thêm mới sinh viên"
           fields={[
-            ["Mã học sinh", "code"],
-            ["Tên học sinh", "name"],
+            ["Mã sinh viên", "code"],
+            ["Tên sinh viên", "name"],
           ]}
           newData={newStudent}
           error={errorAdd}
@@ -375,26 +384,15 @@ function ManagerStudents() {
               api: "schoolYears",
               nameData: "semester",
             },
-            {
-              title: "Trạng thái",
-              index: 4,
-              onSelectionChange: handleChangeAddState,
-              selfData: [
-                { name: "Đang làm" },
-                { name: "Không làm" },
-                { name: "Hoàn thành KLTN" },
-                { name: "Không hoàn thành KLTN" },
-              ],
-            },
           ]}
         />
       )}
       {isOpenEditModal && (
         <Modal
-          name="Sửa học sinh"
+          name="Sửa sinh viên"
           fields={[
-            ["Mã học sinh", "code"],
-            ["Tên học sinh", "name"],
+            ["Mã sinh viên", "code"],
+            ["Tên sinh viên", "name"],
           ]}
           newData={editStudent}
           error={errorEdit}
@@ -407,7 +405,7 @@ function ManagerStudents() {
               index: 2,
               onSelectionChange: handleChangeEditYear,
               api: "schoolYears",
-              oldData: editStudent.nameMajor,
+              oldData: editStudent.year,
               nameData: "year",
             },
             {
@@ -415,20 +413,8 @@ function ManagerStudents() {
               index: 3,
               onSelectionChange: handleChangeEditSemester,
               api: "schoolYears",
-              oldData: editStudent.nameMajor,
+              oldData: editStudent.semester,
               nameData: "semester",
-            },
-            {
-              title: "Trạng thái",
-              index: 4,
-              onSelectionChange: handleChangeEditState,
-              selfData: [
-                { name: "Đang làm" },
-                { name: "Không làm" },
-                { name: "Hoàn thành KLTN" },
-                { name: "Không hoàn thành KLTN" },
-              ],
-              oldData: editStudent.state,
             },
           ]}
         />

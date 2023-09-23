@@ -13,41 +13,18 @@ import styles from "./ChooseTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function ChooseTopics() {
-  const { major, name } = jwt_decode(Cookies.get("token")).userInfo;
-
   let editTopic = {};
   const [topics, setTopics] = useState([]);
 
-  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
-  const [idActiveRow, setIdActiveRow] = useState(null);
 
   const [isSelectedTopicTab, setIsSelectedTopicTab] = useState(true);
 
   const [error, setError] = useState("");
 
   const wrapperBtnRef = useRef(null);
-  const { token } = useContext(HeaderContext);
 
   useEffect(getSelectedTopic, []);
-
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
-        setIdActiveRow(null);
-      }
-    }
-
-    if (isOpenDeleteModal) {
-      document.removeEventListener("click", handleClickOutside);
-    } else {
-      document.addEventListener("click", handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener("click", handleClickOutside);
-    };
-  }, [isOpenDeleteModal]);
 
   function getAllTopics() {
     setIsSelectedTopicTab(false);
@@ -82,7 +59,6 @@ function ChooseTopics() {
       .then((res) => {
         // Cập nhật danh sách đề tài
         editTopic = {};
-        setIdActiveRow(null);
       })
       .catch((err) => {
         console.log(err);
@@ -90,7 +66,6 @@ function ChooseTopics() {
   };
 
   const handleCancleRegisterTopic = () => {
-    setIsOpenDeleteModal(false);
     // Gọi API để xóa đề tài
     axios
       .delete(`http://localhost:3001/api/chooseTopics/${editTopic._id}`, {
@@ -100,7 +75,7 @@ function ChooseTopics() {
       .then((res) => {
         // Cập nhật danh sách đề tài
         editTopic = {};
-        setIdActiveRow(null);
+
         getSelectedTopic();
       })
       .catch((err) => {
@@ -108,10 +83,6 @@ function ChooseTopics() {
       });
   };
 
-  const handleCancleDelete = () => {
-    setIsOpenDeleteModal(false);
-    setIdActiveRow(null);
-  };
   const handleSearchTopic = () => {
     axios
       .get(`http://localhost:3001/api/topicsByMajor?searchQuery=${searchQuery}`, {
@@ -170,26 +141,14 @@ function ChooseTopics() {
                 )}
 
                 <td className={cx("column__functions")}>
-                  <button className={cx("btn-more")}>
-                    <span
-                      className="material-symbols-outlined"
-                      onClick={(e) => {
-                        setIdActiveRow(topic._id);
-                        e.stopPropagation();
-                      }}
-                    >
-                      more_horiz
-                    </span>
-                  </button>
-
-                  {idActiveRow === topic._id && isSelectedTopicTab && (
+                  {isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button className={cx("btn")} onClick={handleCancleRegisterTopic}>
                         Hủy đăng ký
                       </button>
                     </div>
                   )}
-                  {idActiveRow === topic._id && !isSelectedTopicTab && (
+                  {!isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
                       <button
                         className={cx("btn")}
@@ -202,15 +161,6 @@ function ChooseTopics() {
                       </button>
                     </div>
                   )}
-                  {/* {idActiveRow === topic._id && (
-                      <DeleteModal
-                        title={`Hủy đăng ký đề tài ${topic.name}`}
-                        isOpenDeleteModal={isOpenDeleteModal}
-                        id={topic._id}
-                        handleCancleDelete={handleCancleDelete}
-                        handleDelete={handleDeleteTopic}
-                      />
-                    )} */}
                 </td>
               </tr>
             </tbody>
