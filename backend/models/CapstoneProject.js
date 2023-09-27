@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 const CapstoneProjectSchema = new mongoose.Schema({
-  code: {
+  codeCapstoneProject: {
     type: String,
     required: true,
     unique: true,
   },
-  name: {
+  nameCapstoneProject: {
     type: String,
     required: true,
     unique: true,

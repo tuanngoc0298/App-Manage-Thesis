@@ -1,7 +1,7 @@
 import React, { useState, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
-import { HeadDepartment, Manager, Instructor, Student } from "./Pages";
+import { HeadDepartment, HeadMajor, Instructor, Student } from "./Pages";
 
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
@@ -13,15 +13,15 @@ export const HeaderContext = createContext();
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
 
-  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).userInfo.name : "";
+  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).nameUser : "";
   const hasRole = Cookies.get("token") ? jwt_decode(Cookies.get("token")).role : "";
 
-  const [username, setUsername] = useState(hasName);
+  const [userName, setUserName] = useState(hasName);
   const [userRole, setUserRole] = useState(hasRole);
 
-  const handleLogin = (newToken, username, role) => {
+  const handleLogin = (newToken, userName, role) => {
     setToken(newToken);
-    setUsername(username);
+    setUserName(userName);
     setUserRole(role);
   };
 
@@ -31,7 +31,7 @@ function App() {
 
   const handleLogout = () => {
     setToken(null);
-    setUsername(null);
+    setUserName(null);
     setUserRole(null);
     Cookies.remove("token");
   };
@@ -42,32 +42,24 @@ function App() {
       content = <p>Loading...</p>;
       break;
     case "NguoiPhuTrach":
-      content = <Manager />;
+      content = <HeadMajor />;
       break;
     case "SinhVien":
       content = <Student />;
       break;
-    case "GiaoVienHuongDan":
+    case "GiaoVien":
       content = <Instructor />;
-      break;
-    case "GiaoVienPhanBien":
-      content = <p>Error occurred.</p>;
-      break;
-    case "HoiDongBaoVe":
-      content = <p>Error occurred.</p>;
       break;
     case "PhongDaoTao":
       content = <HeadDepartment />;
       break;
-    default:
-      content = <p>Unknown status.</p>;
   }
   return (
     <Router>
       <div className="App">
         {!token && <Login onLogin={handleLogin} />}
-        <HeaderContext.Provider value={{ username, handleLogout, token, userRole }}>{content}</HeaderContext.Provider>
-        <Register />
+        <HeaderContext.Provider value={{ userName, handleLogout, token, userRole }}>{content}</HeaderContext.Provider>
+        {/* <Register /> */}
       </div>
     </Router>
   );

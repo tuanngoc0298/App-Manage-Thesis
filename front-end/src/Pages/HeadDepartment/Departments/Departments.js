@@ -58,7 +58,7 @@ function Departments() {
   }, [isOpenDeleteModal]);
 
   const handleAddDepartment = () => {
-    if (newDepartment.code && newDepartment.name && newDepartment.describe) {
+    if (newDepartment.codeDepartment && newDepartment.nameDepartment && newDepartment.describeDepartment) {
       // Gọi API để thêm khoa mới
       axios
         .post("http://localhost:3001/api/departments", newDepartment, {
@@ -83,7 +83,7 @@ function Departments() {
 
   const handleEditDepartment = () => {
     // Gọi API để sửa khoa
-    if (editDepartment.name && editDepartment.code && editDepartment.describe) {
+    if (editDepartment.nameDepartment && editDepartment.codeDepartment && editDepartment.describeDepartment) {
       axios
         .put(`http://localhost:3001/api/departments/${editDepartment._id}`, editDepartment, {
           headers: { Authorization: `Bearer ${token}` },
@@ -192,13 +192,13 @@ function Departments() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{department.code} </div>
+                  <div>{department.codeDepartment} </div>
                 </td>
                 <td>
-                  <div>{department.name} </div>
+                  <div>{department.nameDepartment} </div>
                 </td>
                 <td>
-                  <div>{department.describe} </div>
+                  <div>{department.describeDepartment} </div>
                 </td>
 
                 <td className={cx("column__functions")}>
@@ -232,7 +232,7 @@ function Departments() {
                   )}
                   {idActiveRow === department._id && (
                     <DeleteModal
-                      title={`Xóa khoa ${department.name}`}
+                      title={`Xóa khoa ${department.nameDepartment}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={department._id}
                       handleCancleDelete={handleCancleDelete}
@@ -248,11 +248,11 @@ function Departments() {
 
       {isOpenAddModal && (
         <Modal
-          name="Thêm mới khoa"
+          nameDepartment="Thêm mới khoa"
           fields={[
-            ["Mã khoa", "code"],
-            ["Tên khoa", "name"],
-            ["Mô tả khoa", "describe"],
+            ["Mã khoa", "codeDepartment"],
+            ["Tên khoa", "nameDepartment"],
+            ["Mô tả khoa", "describeDepartment"],
           ]}
           newData={newDepartment}
           error={errorAdd}
@@ -263,11 +263,11 @@ function Departments() {
       )}
       {isOpenEditModal && (
         <Modal
-          name="Sửa khoa"
+          nameDepartment="Sửa khoa"
           fields={[
-            ["Mã khoa", "code"],
-            ["Tên khoa", "name"],
-            ["Mô tả khoa", "describe"],
+            ["Mã khoa", "codeDepartment"],
+            ["Tên khoa", "nameDepartment"],
+            ["Mô tả khoa", "describeDepartment"],
           ]}
           newData={editDepartment}
           error={errorEdit}

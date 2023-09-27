@@ -1,5 +1,5 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
-import { SearchBar, DeleteModal, Modal } from "~/components";
+import { SearchBar, DeleteModal, Modal, ComboBox } from "~/components";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
@@ -13,10 +13,10 @@ import styles from "./ManagerStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function ManagerStudents() {
-  const { major } = jwt_decode(Cookies.get("token")).userInfo;
+  const major = jwt_decode(Cookies.get("token")).nameMajor;
 
   const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({ major: major, state: "Đang làm" });
+  const [newStudent, setNewStudent] = useState({ nameMajor: major, state: "Đăng ký đề tài" });
   const [editStudent, setEditStudent] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -28,6 +28,9 @@ function ManagerStudents() {
 
   const [isFilterByMajor, setIsFilterByMajor] = useState(true);
 
+  const [filterByYear, setFilterByYear] = useState("");
+  const [filterBySemester, setFilterBySemester] = useState("");
+
   const [error, setError] = useState("");
   const [errorImport, setErrorImport] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
@@ -36,7 +39,7 @@ function ManagerStudents() {
   const { token } = useContext(HeaderContext);
   const navigate = useNavigate();
 
-  useEffect(getAllStudentsByMajor, [token]);
+  useEffect(getAllStudents, [filterBySemester, filterByYear, isFilterByMajor]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -57,29 +60,19 @@ function ManagerStudents() {
   }, [isOpenDeleteModal]);
 
   function getAllStudents() {
-    setIsFilterByMajor(false);
+    setErrorImport("");
     axios
-      .get("http://localhost:3001/api/students", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(
+        `http://localhost:3001/api/students?searchQuery=${searchQuery}${
+          isFilterByMajor ? `&major=${major}` : ""
+        }&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: "http://localhost:3001" }
+      )
       .then((response) => {
         setStudents(response.data);
       })
       .catch((err) => {
         setError("Không thể tải danh sách sinh viên.");
-      });
-  }
-
-  function getAllStudentsByMajor() {
-    setIsFilterByMajor(true);
-
-    axios
-      .get(`http://localhost:3001/api/students?searchQuery=${major}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setStudents(res.data);
-      })
-      .catch((err) => {
-        setError("Không tìm kiếm được sinh viên");
       });
   }
 
@@ -103,8 +96,7 @@ function ManagerStudents() {
         })
         .then((res) => {
           setErrorImport("");
-          if (isFilterByMajor) getAllStudentsByMajor();
-          else getAllStudents();
+          if (isFilterByMajor) getAllStudents();
 
           setFile(null);
           if (form) {
@@ -123,7 +115,13 @@ function ManagerStudents() {
   };
 
   const handleAddStudent = () => {
-    if (newStudent.code && newStudent.name && newStudent.year && newStudent.semester && newStudent.state) {
+    if (
+      newStudent.codeStudent &&
+      newStudent.nameStudent &&
+      newStudent.year &&
+      newStudent.semester &&
+      newStudent.state
+    ) {
       // Gọi API để thêm sinh viên mới
       axios
         .post("http://localhost:3001/api/students", newStudent, {
@@ -134,7 +132,7 @@ function ManagerStudents() {
           if (res.status !== 400) {
             setStudents([...students, res.data]);
             setIsOpenAddModal(false);
-            setNewStudent({ major: major, state: "Đang làm" });
+            setNewStudent({ nameMajor: major, state: "Đăng ký đề tài" });
             setErrorAdd("");
           }
         })
@@ -148,7 +146,13 @@ function ManagerStudents() {
 
   const handleEditStudent = () => {
     // Gọi API để sửa sinh viên
-    if (editStudent.name && editStudent.code && editStudent.year && editStudent.semester && editStudent.state) {
+    if (
+      editStudent.nameStudent &&
+      editStudent.codeStudent &&
+      editStudent.year &&
+      editStudent.semester &&
+      editStudent.state
+    ) {
       axios
         .put(`http://localhost:3001/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
@@ -158,7 +162,7 @@ function ManagerStudents() {
           if (res.status !== 400) {
             const updatedStudent = students.map((student) => {
               if (student._id === editStudent._id) {
-                return { ...student, ...editStudent };
+                return { ...student, ...res.data };
               }
               return student;
             });
@@ -195,18 +199,6 @@ function ManagerStudents() {
         setError("Không thể xóa sinh viên.");
       });
   };
-  const handleSearchStudent = () => {
-    axios
-      .get(`http://localhost:3001/api/students?searchQuery=${searchQuery}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setStudents(res.data);
-      })
-      .catch((err) => {
-        setError("Không tìm kiếm được sinh viên");
-      });
-  };
 
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
@@ -214,7 +206,7 @@ function ManagerStudents() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewStudent({ major: major, state: "Đang làm" });
+    setNewStudent({ nameMajor: major, state: "Đăng ký đề tài" });
     setErrorAdd("");
     setIdActiveRow(null);
   };
@@ -224,11 +216,12 @@ function ManagerStudents() {
     setErrorEdit("");
     setIdActiveRow(null);
   };
-  const handleChangeEditState = (value) => {
-    setEditStudent({ ...editStudent, state: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  const handleChangeFilterYear = (value) => {
+    setFilterByYear(value);
   };
-  const handleChangeAddState = (value) => {
-    setNewStudent({ ...newStudent, state: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+
+  const handleChangeFilterSemester = (value) => {
+    setFilterBySemester(value);
   };
 
   const handleChangeEditYear = (value) => {
@@ -254,11 +247,27 @@ function ManagerStudents() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý sinh viên làm KLTN</h2>
       <div className={cx("tab")}>
-        <button onClick={getAllStudentsByMajor}>Sinh viên theo ngành</button>
-        <button onClick={getAllStudents}>Sinh viên toàn trường</button>
+        <button
+          onClick={() => {
+            setIsFilterByMajor(true);
+            setFilterBySemester("");
+            setFilterByYear("");
+          }}
+        >
+          Sinh viên theo ngành
+        </button>
+        <button
+          onClick={() => {
+            setIsFilterByMajor(false);
+            setFilterBySemester("");
+            setFilterByYear("");
+          }}
+        >
+          Sinh viên toàn trường
+        </button>
       </div>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchStudent} />
+        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudents} />
         <div style={{ color: "red" }}>{errorImport}</div>
         {isFilterByMajor && (
           <div className={cx("function__allow")}>
@@ -272,7 +281,26 @@ function ManagerStudents() {
           </div>
         )}
       </div>
-
+      <div className={cx("filter-comboBox")}>
+        <ComboBox
+          hasTitle={false}
+          onSelectionChange={handleChangeFilterYear}
+          api="schoolYears"
+          nameData="year"
+          customStyle={{ width: "200px", marginBottom: "20px" }}
+          oldData={filterByYear}
+          defaultDisplay="Chọn năm học"
+        />
+        <ComboBox
+          hasTitle={false}
+          onSelectionChange={handleChangeFilterSemester}
+          api="schoolYears"
+          nameData="semester"
+          customStyle={{ width: "200px", marginBottom: "20px" }}
+          oldData={filterBySemester}
+          defaultDisplay="Chọn kỳ học"
+        />
+      </div>
       <div>
         <table className={cx("data")}>
           <thead>
@@ -293,13 +321,13 @@ function ManagerStudents() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{student.code} </div>
+                  <div>{student.codeStudent} </div>
                 </td>
                 <td>
-                  <div>{student.name} </div>
+                  <div>{student.nameStudent} </div>
                 </td>
                 <td>
-                  <div>{student.major} </div>
+                  <div>{student.nameMajor} </div>
                 </td>
                 <td>
                   <div>{student.year} </div>
@@ -342,7 +370,7 @@ function ManagerStudents() {
                     )}
                     {idActiveRow === student._id && (
                       <DeleteModal
-                        title={`Xóa sinh viên ${student.name}`}
+                        title={`Xóa sinh viên ${student.nameStudent}`}
                         isOpenDeleteModal={isOpenDeleteModal}
                         id={student._id}
                         handleCancleDelete={handleCancleDelete}
@@ -361,8 +389,8 @@ function ManagerStudents() {
         <Modal
           name="Thêm mới sinh viên"
           fields={[
-            ["Mã sinh viên", "code"],
-            ["Tên sinh viên", "name"],
+            ["Mã sinh viên", "codeStudent"],
+            ["Tên sinh viên", "nameStudent"],
           ]}
           newData={newStudent}
           error={errorAdd}
@@ -391,8 +419,8 @@ function ManagerStudents() {
         <Modal
           name="Sửa sinh viên"
           fields={[
-            ["Mã sinh viên", "code"],
-            ["Tên sinh viên", "name"],
+            ["Mã sinh viên", "codeStudent"],
+            ["Tên sinh viên", "nameStudent"],
           ]}
           newData={editStudent}
           error={errorEdit}

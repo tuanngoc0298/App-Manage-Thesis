@@ -1,4 +1,5 @@
 const Topic = require("../../models/Topic");
+const TopicStudent = require("../../models/TopicStudent");
 const jwt = require("jsonwebtoken");
 const User = require("../../models/User");
 
@@ -6,22 +7,22 @@ const ChooseTopicController = {
   getTopicsByMajor: async (req, res) => {
     const { searchQuery } = req.query;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { major } = decoded.userInfo;
-
+    const { nameMajor } = decoded;
     try {
       if (searchQuery) {
         const topics = await Topic.find({
           $or: [
-            { name: { $regex: searchQuery, $options: "i" } },
-            { describe: { $regex: searchQuery, $options: "i" } },
+            { nameTopic: { $regex: searchQuery, $options: "i" } },
+            { describeTopic: { $regex: searchQuery, $options: "i" } },
             { nameTeacher: { $regex: searchQuery, $options: "i" } },
           ],
-          nameMajor: major,
+          nameMajor: nameMajor,
         });
 
         res.json(topics);
       } else {
-        const topics = await Topic.find({ nameMajor: major });
+        const topics = await Topic.find({ nameMajor: nameMajor });
+
         res.json(topics);
       }
     } catch (error) {
@@ -31,45 +32,45 @@ const ChooseTopicController = {
   },
   // GET
   getChooseTopic: async (req, res) => {
-    const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { _id } = decoded;
-
     try {
-      const user = await User.findById(_id);
-      const { nameTopic } = user.SinhVienInfo;
-      const topic = await Topic.find({ name: nameTopic });
-      res.json(topic);
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { codeUser } = decoded;
+      const topicStudent = await TopicStudent.findOne({ codeStudent: codeUser });
+      const topicSelected = await Topic.find({ nameTopic: topicStudent ? topicStudent.nameTopic : "" });
+
+      res.json(topicSelected);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Lỗi khi tải đề tài đăng ký." });
     }
   },
 
   // Đăng ký đề tài
   registerTopic: async (req, res) => {
-    const { name: nameTopic } = req.body;
-
-    const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { _id: idUser } = decoded;
     try {
-      const data = await User.findByIdAndUpdate(
-        idUser,
-        { $set: { "SinhVienInfo.nameTopic": nameTopic } },
-        { new: true }
-      );
+      const {
+        editTopic: { nameTopic },
+        codeUser,
+      } = req.body;
+      const topicStudent = new TopicStudent({ codeStudent: codeUser, nameTopic });
+      await topicStudent.save();
+
       res.status(200).json({ message: "Đăng ký thành công" });
     } catch (error) {
-      res.status(500).json({ error: "Lỗi khi thêm đề tài mới." });
+      res.status(500).json({ message: "Bạn chỉ được đăng ký 1 đề tài." });
     }
   },
-  // Đăng ký đề tài
+  // Hủy đăng ký đề tài
   cancleRegisterTopic: async (req, res) => {
-    const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { _id: idUser } = decoded;
     try {
-      await User.findByIdAndUpdate(idUser, { $set: { "SinhVienInfo.nameTopic": null } }, { new: true });
-      res.status(200).json({ message: "Đăng ký thành công" });
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { codeUser } = decoded;
+
+      await TopicStudent.findOneAndDelete({ codeStudent: codeUser });
+      res.status(200).json({ message: "Hủy đăng ký thành công" });
     } catch (error) {
-      res.status(500).json({ error: "Lỗi khi thêm đề tài mới." });
+      console.log(error);
+      res.status(500).json({ error: "Lỗi khi hủy đăng ký đề tài." });
     }
   },
 };

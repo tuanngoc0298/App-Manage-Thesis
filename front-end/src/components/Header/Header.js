@@ -9,7 +9,7 @@ import styles from "./Header.module.scss";
 const cx = classNames.bind(styles);
 function Header() {
   const navigate = useNavigate();
-  const { username, handleLogout } = useContext(HeaderContext);
+  const { userName, handleLogout } = useContext(HeaderContext);
   return (
     <header className={cx("header")}>
       <div className={cx("content")}>
@@ -17,7 +17,7 @@ function Header() {
         <div className={cx("title")}>Hệ thống quản lý khóa luận tốt nghiệp</div>
         <div className={cx("actions")}>
           <p>
-            Chào <span className={cx("actions-name")}>{username}</span> |{" "}
+            Chào <span className={cx("actions-name")}>{userName}</span> |{" "}
             <button className={cx("changePass")}>Đổi mật khẩu</button> |
             <button
               className={cx("logout")}

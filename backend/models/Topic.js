@@ -1,12 +1,12 @@
 const mongoose = require("mongoose");
 
 const topicSchema = new mongoose.Schema({
-  name: {
+  nameTopic: {
     type: String,
     required: true,
     unique: true,
   },
-  describe: {
+  describeTopic: {
     type: String,
     required: true,
   },
@@ -15,6 +15,14 @@ const topicSchema = new mongoose.Schema({
     required: true,
   },
   nameTeacher: {
+    type: String,
+    required: true,
+  },
+  year: {
+    type: String,
+    required: true,
+  },
+  semester: {
     type: String,
     required: true,
   },

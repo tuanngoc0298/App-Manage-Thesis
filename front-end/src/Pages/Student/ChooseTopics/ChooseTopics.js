@@ -1,18 +1,18 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar } from "~/components";
 
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import { HeaderContext } from "~/App";
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
-
 import classNames from "classnames/bind";
 import styles from "./ChooseTopics.module.scss";
 
 const cx = classNames.bind(styles);
 
 function ChooseTopics() {
+  const { codeUser, nameMajor } = jwt_decode(Cookies.get("token"));
+
   let editTopic = {};
   const [topics, setTopics] = useState([]);
 
@@ -21,12 +21,15 @@ function ChooseTopics() {
   const [isSelectedTopicTab, setIsSelectedTopicTab] = useState(true);
 
   const [error, setError] = useState("");
+  const [errorRegister, setErrorRegister] = useState("");
 
   const wrapperBtnRef = useRef(null);
 
   useEffect(getSelectedTopic, []);
 
   function getAllTopics() {
+    setErrorRegister("");
+
     setIsSelectedTopicTab(false);
     axios
       .get("http://localhost:3001/api/topicsByMajor", { withCredentials: true, baseURL: "http://localhost:3001" })
@@ -52,16 +55,21 @@ function ChooseTopics() {
 
   const handleRegisterTopic = () => {
     axios
-      .put(`http://localhost:3001/api/chooseTopics/${editTopic._id}`, editTopic, {
-        withCredentials: true,
-        baseURL: "http://localhost:3001",
-      })
+      .put(
+        `http://localhost:3001/api/chooseTopics/${editTopic._id}`,
+        { editTopic, codeUser },
+        {
+          withCredentials: true,
+          baseURL: "http://localhost:3001",
+        }
+      )
       .then((res) => {
         // Cập nhật danh sách đề tài
+        setErrorRegister(res.data.message);
         editTopic = {};
       })
       .catch((err) => {
-        console.log(err);
+        setErrorRegister(err.response.data.message);
       });
   };
 
@@ -107,6 +115,7 @@ function ChooseTopics() {
       {!isSelectedTopicTab && (
         <div className={cx("function")}>
           <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTopic} />
+          <div style={{ color: "red" }}>{errorRegister}</div>
         </div>
       )}
 
@@ -117,8 +126,7 @@ function ChooseTopics() {
               <th>STT</th>
               <th>Tên đề tài</th>
               <th>Mô tả</th>
-
-              {!isSelectedTopicTab && <th>Giáo viên hướng dẫn</th>}
+              <th>Giáo viên hướng dẫn</th>
               <th>Chức năng</th>
             </tr>
           </thead>
@@ -128,17 +136,14 @@ function ChooseTopics() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{topic.name} </div>
+                  <div>{topic.nameTopic} </div>
                 </td>
                 <td>
-                  <div>{topic.describe} </div>
+                  <div>{topic.describeTopic} </div>
                 </td>
-
-                {!isSelectedTopicTab && (
-                  <td>
-                    <div>{topic.nameTeacher} </div>
-                  </td>
-                )}
+                <td>
+                  <div>{topic.nameTeacher} </div>
+                </td>
 
                 <td className={cx("column__functions")}>
                   {isSelectedTopicTab && (

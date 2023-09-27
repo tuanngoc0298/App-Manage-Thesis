@@ -61,7 +61,7 @@ function Majors() {
   }, [isOpenDeleteModal]);
 
   const handleAddMajor = () => {
-    if (newMajor.code && newMajor.name && newMajor.nameDepartment) {
+    if (newMajor.codeMajor && newMajor.nameMajor && newMajor.nameDepartment) {
       // Gọi API để thêm ngành mới
       axios
         .post("http://localhost:3001/api/majors", newMajor, {
@@ -87,7 +87,7 @@ function Majors() {
   const handleEdiMajor = () => {
     // Gọi API để sửa ngành
 
-    if (editMajor.nameDepartment && editMajor.name && editMajor.code) {
+    if (editMajor.nameDepartment && editMajor.nameMajor && editMajor.codeMajor) {
       axios
         .put(`http://localhost:3001/api/majors/${editMajor._id}`, editMajor, {
           headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +97,7 @@ function Majors() {
           if (res.status !== 400) {
             const updatedMajors = majors.map((major) => {
               if (major._id === editMajor._id) {
-                return { ...major, ...editMajor };
+                return { ...major, ...res.data };
               }
               return major;
             });
@@ -153,12 +153,7 @@ function Majors() {
   const handleChangeAddNameDepartment = (value) => {
     setNewMajor({ ...newMajor, nameDepartment: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
-  const handleChangeEditNameHead = (value) => {
-    setEditMajor({ ...editMajor, nameHead: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
-  };
-  const handleChangeAddNameHead = (value) => {
-    setNewMajor({ ...newMajor, nameHead: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
-  };
+
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
     setIdActiveRow(null);
@@ -210,16 +205,16 @@ function Majors() {
                 <td className={cx("table__index")}>{index + 1}</td>
 
                 <td>
-                  <div>{major.code} </div>
+                  <div>{major.codeMajor} </div>
                 </td>
                 <td>
-                  <div>{major.name} </div>
+                  <div>{major.nameMajor} </div>
                 </td>
                 <td>
                   <div>{major.nameDepartment} </div>
                 </td>
                 <td>
-                  <div>{major.nameHead} </div>
+                  <div>{major.nameHeadMajor} </div>
                 </td>
                 <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
@@ -251,7 +246,7 @@ function Majors() {
                   )}
                   {idActiveRow === major._id && (
                     <DeleteModal
-                      title={`Xóa ngành ${major.name}`}
+                      title={`Xóa ngành ${major.nameMajor}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={major._id}
                       handleCancleDelete={handleCancleDelete}
@@ -269,8 +264,8 @@ function Majors() {
         <Modal
           name="Thêm mới ngành"
           fields={[
-            ["Mã ngành", "code"],
-            ["Tên ngành", "name"],
+            ["Mã ngành", "codeMajor"],
+            ["Tên ngành", "nameMajor"],
           ]}
           newData={newMajor}
           error={errorAdd}
@@ -283,13 +278,7 @@ function Majors() {
               index: 2,
               onSelectionChange: handleChangeAddNameDepartment,
               api: "departments",
-            },
-            {
-              title: "Trưởng ngành",
-              index: 3,
-              onSelectionChange: handleChangeAddNameHead,
-              api: "teachers",
-              isRequired: false,
+              nameData: "nameDepartment",
             },
           ]}
         />
@@ -298,8 +287,8 @@ function Majors() {
         <Modal
           name="Sửa ngành"
           fields={[
-            ["Mã ngành", "code"],
-            ["Tên ngành", "name"],
+            ["Mã ngành", "codeMajor"],
+            ["Tên ngành", "nameMajor"],
           ]}
           newData={editMajor}
           error={errorEdit}
@@ -313,14 +302,7 @@ function Majors() {
               onSelectionChange: handleChangeEditNameDepartment,
               api: "departments",
               oldData: editMajor.nameDepartment,
-            },
-            {
-              title: "Trưởng ngành",
-              index: 3,
-              onSelectionChange: handleChangeEditNameHead,
-              api: "teachers",
-              oldData: editMajor.nameHead,
-              isRequired: false,
+              nameData: "nameDepartment",
             },
           ]}
         />

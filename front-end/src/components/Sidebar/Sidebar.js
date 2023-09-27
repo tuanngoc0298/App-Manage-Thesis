@@ -33,11 +33,14 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/chooseTopics">Lựa chọn đề tài</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/suggestTopic">Đăng ký đề tài đề xuất</Link>
+            </li>
           </ul>
         </div>
       );
       break;
-    case "GiaoVienHuongDan":
+    case "GiaoVien":
       content = (
         <div className={cx("list")}>
           <h2 className={cx("title")}>Quản lý đào tạo</h2>

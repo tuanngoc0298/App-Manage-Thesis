@@ -1,5 +1,5 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
-import { SearchBar, DeleteModal, Modal } from "~/components";
+import { SearchBar, DeleteModal, Modal, ComboBox } from "~/components";
 import { useNavigate } from "react-router-dom";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
@@ -13,11 +13,11 @@ import styles from "./RegisterTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterTopic() {
-  const { major, name } = jwt_decode(Cookies.get("token")).userInfo;
+  const { nameUser, nameMajor } = jwt_decode(Cookies.get("token"));
 
   const [topics, setTopics] = useState([]);
-  const [newTopic, setNewTopic] = useState({ nameMajor: major, nameTeacher: name });
-  const [editTopic, setEditTopic] = useState({ nameMajor: major, nameTeacher: name });
+  const [newTopic, setNewTopic] = useState({ nameTeacher: nameUser });
+  const [editTopic, setEditTopic] = useState({ nameTeacher: nameUser });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -28,13 +28,17 @@ function RegisterTopic() {
 
   const [isFilterByUserName, setIsFilterByUserName] = useState(true);
 
+  const [filterByYear, setFilterByYear] = useState("");
+  const [filterBySemester, setFilterBySemester] = useState("");
+
   const [error, setError] = useState("");
+  const [errorImport, setErrorImport] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
   const wrapperBtnRef = useRef(null);
   const { token } = useContext(HeaderContext);
 
-  useEffect(getAllTopicsByUserName, [token]);
+  useEffect(getAllTopics, [filterBySemester, filterByYear, isFilterByUserName]);
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -55,29 +59,19 @@ function RegisterTopic() {
   }, [isOpenDeleteModal]);
 
   function getAllTopics() {
-    setIsFilterByUserName(false);
+    setErrorImport("");
     axios
-      .get("http://localhost:3001/api/topics", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(
+        `http://localhost:3001/api/topics?searchQuery=${searchQuery}${
+          isFilterByUserName ? `&nameTeacher=${nameUser}` : ""
+        }&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: "http://localhost:3001" }
+      )
       .then((response) => {
         setTopics(response.data);
       })
       .catch((err) => {
-        setError("Không thể tải danh sách đề tài.");
-      });
-  }
-
-  function getAllTopicsByUserName() {
-    setIsFilterByUserName(true);
-
-    axios
-      .get(`http://localhost:3001/api/topics?searchQuery=${name}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setTopics(res.data);
-      })
-      .catch((err) => {
-        setError("Không tìm kiếm được đề tài");
+        setError("Không thể tải danh sách sinh viên.");
       });
   }
 
@@ -91,6 +85,7 @@ function RegisterTopic() {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
+      const form = document.getElementById("formImport");
 
       axios
         .post("http://localhost:3001/api/topicsUpload", formData, {
@@ -98,23 +93,33 @@ function RegisterTopic() {
           baseURL: "http://localhost:3001",
         })
         .then((response) => {
-          if (isFilterByUserName) getAllTopicsByUserName();
-          else getAllTopics();
+          setErrorImport("");
+          if (isFilterByUserName) getAllTopics();
 
           setFile(null);
-          const form = document.getElementById("formImport");
           if (form) {
             form.reset();
           }
         })
         .catch((error) => {
-          console.error("Error:", error);
+          setFile(null);
+          if (form) {
+            form.reset();
+          }
+          setErrorImport(error.response?.data.message);
         });
     }
   };
 
   const handleAddTopic = () => {
-    if (newTopic.describe && newTopic.name && newTopic.nameMajor && newTopic.nameTeacher) {
+    if (
+      newTopic.describeTopic &&
+      newTopic.nameTopic &&
+      newTopic.nameMajor &&
+      newTopic.nameTeacher &&
+      newTopic.year &&
+      newTopic.semester
+    ) {
       // Gọi API để thêm đề tài mới
       axios
         .post("http://localhost:3001/api/topics", newTopic, {
@@ -125,7 +130,7 @@ function RegisterTopic() {
           if (res.status !== 400) {
             setTopics([...topics, res.data]);
             setIsOpenAddModal(false);
-            setNewTopic({ nameMajor: major, nameTeacher: name });
+            setNewTopic({ nameTeacher: nameUser });
             setErrorAdd("");
           }
         })
@@ -139,7 +144,14 @@ function RegisterTopic() {
 
   const handleEditTopic = () => {
     // Gọi API để sửa đề tài
-    if (editTopic.name && editTopic.describe && editTopic.nameMajor && editTopic.nameTeacher) {
+    if (
+      editTopic.nameTopic &&
+      editTopic.describeTopic &&
+      editTopic.nameMajor &&
+      editTopic.nameTeacher &&
+      editTopic.year &&
+      editTopic.semester
+    ) {
       axios
         .put(`http://localhost:3001/api/topics/${editTopic._id}`, editTopic, {
           headers: { Authorization: `Bearer ${token}` },
@@ -149,13 +161,13 @@ function RegisterTopic() {
           if (res.status !== 400) {
             const updatedStudent = topics.map((topic) => {
               if (topic._id === editTopic._id) {
-                return { ...topic, ...editTopic };
+                return { ...topic, ...res.data };
               }
               return topic;
             });
             setTopics(updatedStudent);
 
-            setEditTopic({ nameMajor: major, nameTeacher: name });
+            setEditTopic({ nameTeacher: nameUser });
             setErrorEdit("");
             setIdActiveRow(null);
             setIsOpenEditModal(false);
@@ -186,18 +198,6 @@ function RegisterTopic() {
         setError("Không thể xóa đề tài.");
       });
   };
-  const handleSearchTopic = () => {
-    axios
-      .get(`http://localhost:3001/api/topics?searchQuery=${searchQuery}`, {
-        headers: { Authorization: `Bearer ${token}` },
-      })
-      .then((res) => {
-        setTopics(res.data);
-      })
-      .catch((err) => {
-        setError("Không tìm kiếm được đề tài");
-      });
-  };
 
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
@@ -205,13 +205,13 @@ function RegisterTopic() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewTopic({ nameMajor: major, nameTeacher: name });
+    setNewTopic({ nameTeacher: nameUser });
     setErrorAdd("");
     setIdActiveRow(null);
   };
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
-    setEditTopic({ nameMajor: major, nameTeacher: name });
+    setEditTopic({ nameTeacher: nameUser });
     setErrorEdit("");
     setIdActiveRow(null);
   };
@@ -222,15 +222,61 @@ function RegisterTopic() {
   const handleChangeInputEdit = (value) => {
     setEditTopic(value);
   };
+
+  const handleChangeEditMajor = (value) => {
+    setEditTopic({ ...editTopic, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+  const handleChangeAddMajor = (value) => {
+    setNewTopic({ ...newTopic, nameMajor: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+
+  const handleChangeEditYear = (value) => {
+    setEditTopic({ ...editTopic, year: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+  const handleChangeAddYear = (value) => {
+    setNewTopic({ ...newTopic, year: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+
+  const handleChangeEditSemester = (value) => {
+    setEditTopic({ ...editTopic, semester: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+  const handleChangeAddSemester = (value) => {
+    setNewTopic({ ...newTopic, semester: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+
+  const handleChangeFilterYear = (value) => {
+    setFilterByYear(value);
+  };
+
+  const handleChangeFilterSemester = (value) => {
+    setFilterBySemester(value);
+  };
   return (
     <DefaultLayout>
       <h2 className={cx("title")}>Đăng ký đề tài hướng dẫn</h2>
       <div className={cx("tab")}>
-        <button onClick={getAllTopicsByUserName}>Đề tài đã đăng ký</button>
-        <button onClick={getAllTopics}>Đề tài toàn trường</button>
+        <button
+          onClick={() => {
+            setIsFilterByUserName(true);
+            setFilterBySemester("");
+            setFilterByYear("");
+          }}
+        >
+          Đề tài đã đăng ký
+        </button>
+        <button
+          onClick={() => {
+            setIsFilterByUserName(false);
+            setFilterBySemester("");
+            setFilterByYear("");
+          }}
+        >
+          Đề tài toàn trường
+        </button>
       </div>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTopic} />
+        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllTopics} />
+        <div style={{ color: "red" }}>{errorImport}</div>
         {isFilterByUserName && (
           <div className={cx("function__allow")}>
             <form id="formImport" className={cx("importFile")}>
@@ -243,7 +289,26 @@ function RegisterTopic() {
           </div>
         )}
       </div>
-
+      <div className={cx("filter-comboBox")}>
+        <ComboBox
+          hasTitle={false}
+          onSelectionChange={handleChangeFilterYear}
+          api="schoolYears"
+          nameData="year"
+          customStyle={{ width: "200px", marginBottom: "20px" }}
+          oldData={filterByYear}
+          defaultDisplay="Chọn năm học"
+        />
+        <ComboBox
+          hasTitle={false}
+          onSelectionChange={handleChangeFilterSemester}
+          api="schoolYears"
+          nameData="semester"
+          customStyle={{ width: "200px", marginBottom: "20px" }}
+          oldData={filterBySemester}
+          defaultDisplay="Chọn kỳ học"
+        />
+      </div>
       <div>
         <table className={cx("data")}>
           <thead>
@@ -253,6 +318,8 @@ function RegisterTopic() {
               <th>Mô tả</th>
               <th>Tên ngành</th>
               {!isFilterByUserName && <th>Giáo viên hướng dẫn</th>}
+              <th>Năm học</th>
+              <th>Học kỳ</th>
               {isFilterByUserName && <th>Chức năng</th>}
             </tr>
           </thead>
@@ -262,10 +329,10 @@ function RegisterTopic() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{topic.name} </div>
+                  <div>{topic.nameTopic} </div>
                 </td>
                 <td>
-                  <div>{topic.describe} </div>
+                  <div>{topic.describeTopic} </div>
                 </td>
                 <td>
                   <div>{topic.nameMajor} </div>
@@ -275,7 +342,12 @@ function RegisterTopic() {
                     <div>{topic.nameTeacher} </div>
                   </td>
                 )}
-
+                <td>
+                  <div>{topic.year} </div>
+                </td>
+                <td>
+                  <div>{topic.semester} </div>
+                </td>
                 {isFilterByUserName && (
                   <td className={cx("column__functions")}>
                     <button className={cx("btn-more")}>
@@ -308,7 +380,7 @@ function RegisterTopic() {
                     )}
                     {idActiveRow === topic._id && (
                       <DeleteModal
-                        title={`Xóa đề tài ${topic.name}`}
+                        title={`Xóa đề tài ${topic.nameTopic}`}
                         isOpenDeleteModal={isOpenDeleteModal}
                         id={topic._id}
                         handleCancleDelete={handleCancleDelete}
@@ -327,28 +399,77 @@ function RegisterTopic() {
         <Modal
           name="Thêm mới đề tài"
           fields={[
-            ["Tên đề tài", "name"],
-            ["Mô tả", "describe"],
+            ["Tên đề tài", "nameTopic"],
+            ["Mô tả", "describeTopic"],
           ]}
           newData={newTopic}
           error={errorAdd}
           handleCancle={handleCancleAdd}
           handleLogic={handleAddTopic}
           handleChangeInput={handleChangeInputAdd}
+          indexsComboBox={[
+            {
+              title: "Tên ngành",
+              index: 2,
+              onSelectionChange: handleChangeAddMajor,
+              api: `majors?major=${nameMajor}`,
+              nameData: "nameMajor",
+            },
+            {
+              title: "Năm học",
+              index: 3,
+              onSelectionChange: handleChangeAddYear,
+              api: "schoolYears",
+              nameData: "year",
+            },
+            {
+              title: "Kỳ học",
+              index: 4,
+              onSelectionChange: handleChangeAddSemester,
+              api: "schoolYears",
+              nameData: "semester",
+            },
+          ]}
         />
       )}
       {isOpenEditModal && (
         <Modal
           name="Sửa đề tài"
           fields={[
-            ["Tên đề tài", "name"],
-            ["Mô tả", "describe"],
+            ["Tên đề tài", "nameTopic"],
+            ["Mô tả", "describeTopic"],
           ]}
           newData={editTopic}
           error={errorEdit}
           handleCancle={handleCancleEdit}
           handleLogic={handleEditTopic}
           handleChangeInput={handleChangeInputEdit}
+          indexsComboBox={[
+            {
+              title: "Tên ngành",
+              index: 2,
+              onSelectionChange: handleChangeEditMajor,
+              api: `majors?major=${nameMajor}`,
+              nameData: "nameMajor",
+              oldData: editTopic.nameMajor,
+            },
+            {
+              title: "Năm học",
+              index: 3,
+              onSelectionChange: handleChangeEditYear,
+              api: "schoolYears",
+              oldData: editTopic.year,
+              nameData: "year",
+            },
+            {
+              title: "Kỳ học",
+              index: 4,
+              onSelectionChange: handleChangeEditSemester,
+              api: "schoolYears",
+              oldData: editTopic.semester,
+              nameData: "semester",
+            },
+          ]}
         />
       )}
     </DefaultLayout>

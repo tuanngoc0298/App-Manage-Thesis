@@ -6,8 +6,8 @@ const multer = require("multer");
 const storage = multer.memoryStorage();
 const upload = multer({ storage: storage });
 
-const studentController = require("../../controllers/Manager/studentController");
-
+const studentController = require("../../controllers/HeadMajor/studentController");
+// Get ALL Student
 router.get("/students", studentController.getAllStudents);
 
 // Import Student

@@ -1,23 +1,27 @@
 const mongoose = require("mongoose");
 
-const teacherSchema = new mongoose.Schema({
-  codeTeacher: {
+const suggestTopicSchema = new mongoose.Schema({
+  codeStudent: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  nameTopic: {
     type: String,
     required: true,
     unique: true,
   },
   nameTeacher: {
     type: String,
-    required: true,
   },
-  nameMajor: {
+  describe: {
     type: String,
     required: true,
   },
-  roleTeacher: {
+  state: {
     type: String,
     required: true,
   },
 });
 
-module.exports = mongoose.model("Teacher", teacherSchema);
+module.exports = mongoose.model("SuggestTopic", suggestTopicSchema);

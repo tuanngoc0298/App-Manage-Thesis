@@ -1,4 +1,5 @@
 const Teacher = require("../../models/Teacher");
+const Major = require("../../models/Major");
 
 const teacherController = {
   // GET
@@ -9,9 +10,9 @@ const teacherController = {
         const teachers = await Teacher.find({
           $or: [
             { nameMajor: { $regex: searchQuery, $options: "i" } },
-            { code: { $regex: searchQuery, $options: "i" } },
-            { name: { $regex: searchQuery, $options: "i" } },
-            { role: { $regex: searchQuery, $options: "i" } },
+            { codeTeacher: { $regex: searchQuery, $options: "i" } },
+            { nameTeacher: { $regex: searchQuery, $options: "i" } },
+            { roleTeacher: { $regex: searchQuery, $options: "i" } },
           ],
         });
         res.json(teachers);
@@ -25,14 +26,22 @@ const teacherController = {
   },
   // Add
   addTeacher: async (req, res) => {
-    const { nameMajor, name, code, role } = req.body;
-    const existingTeacher = await Teacher.findOne({ $or: [{ name }, { code }] });
-
-    if (existingTeacher) {
-      return res.status(400).json({ message: "Giáo viên đã tồn tại" });
-    }
     try {
-      const teacher = new Teacher({ nameMajor, name, code, role });
+      const { nameMajor, nameTeacher, codeTeacher, roleTeacher } = req.body;
+      const existingTeacher = await Teacher.findOne({ $or: [{ nameTeacher }, { codeTeacher }] });
+
+      if (existingTeacher) {
+        return res.status(400).json({ message: "Giáo viên đã tồn tại" });
+      }
+
+      if (roleTeacher === "Trưởng ngành") {
+        const duplicateHeadMajor = await Teacher.findOne({ $and: [{ nameMajor }, { roleTeacher: "Trưởng ngành" }] });
+        if (duplicateHeadMajor) {
+          return res.status(400).json({ message: "Mỗi ngành chỉ có 1 trưởng ngành" });
+        }
+        await Major.updateOne({ nameMajor }, { $set: { nameHeadMajor: nameTeacher } });
+      }
+      const teacher = new Teacher({ nameMajor, nameTeacher, codeTeacher, roleTeacher });
       await teacher.save();
       res.status(201).json(teacher);
     } catch (error) {
@@ -40,25 +49,48 @@ const teacherController = {
     }
   },
   editTeacher: async (req, res) => {
-    const { nameMajor, name, code, role } = req.body;
-    const { id } = req.params;
-    const existingTeacher = await Teacher.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
-
-    if (existingTeacher) {
-      return res.status(400).json({ message: "Giáo viên đã tồn tại" });
-    }
     try {
-      const teacher = await Teacher.findByIdAndUpdate(id, { nameMajor, name, code, role }, { new: true });
+      const { initialValueComboBox } = req.body;
+      const { nameMajor, nameTeacher, codeTeacher, roleTeacher } = req.body.editTeacher;
+      const { id } = req.params;
+      const existingTeacher = await Teacher.findOne({ _id: { $ne: id }, $or: [{ nameTeacher }, { codeTeacher }] });
+
+      if (existingTeacher) {
+        return res.status(400).json({ message: "Giáo viên đã tồn tại" });
+      }
+      if (roleTeacher === "Trưởng ngành") {
+        const duplicateHeadMajor = await Teacher.findOne({
+          _id: { $ne: id },
+          $and: [{ nameMajor }, { roleTeacher: "Trưởng ngành" }],
+        });
+        if (duplicateHeadMajor) {
+          return res.status(400).json({ message: "Mỗi ngành chỉ có 1 trưởng ngành" });
+        }
+        await Major.updateOne({ nameMajor }, { $set: { nameHeadMajor: nameTeacher } });
+      }
+
+      if (initialValueComboBox === "Trưởng ngành") {
+        if (roleTeacher !== "Trưởng ngành") {
+          await Major.updateOne({ nameMajor }, { $set: { nameHeadMajor: "" } });
+        }
+      }
+      const teacher = await Teacher.findByIdAndUpdate(
+        id,
+        { nameMajor, nameTeacher, codeTeacher, roleTeacher },
+        { new: true }
+      );
       res.status(200).json(teacher);
     } catch (error) {
       res.status(500).json({ error: "Lỗi khi sửa giáo viên." });
     }
   },
   deleteTeacher: async (req, res) => {
-    const { id } = req.params;
-
     try {
-      await Teacher.findByIdAndRemove(id);
+      const { id } = req.params;
+      const headMajor = await Teacher.findByIdAndRemove(id);
+      if (headMajor.roleTeacher === "Trưởng ngành") {
+        await Major.updateOne({ nameMajor: headMajor.nameMajor }, { $set: { nameHeadMajor: "" } });
+      }
       res.json({ message: "Xóa giáo viên thành công!" });
     } catch (error) {
       res.status(500).json({ error: "Lỗi khi xóa giáo viên." });

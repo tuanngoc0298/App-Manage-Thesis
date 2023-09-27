@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import images from "~/assets/img";
-import jwt_decode from "jwt-decode";
+
 import classNames from "classnames/bind";
 import styles from "./Login.module.scss";
 import Cookies from "js-cookie";
@@ -38,19 +38,13 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
-        const { token } = res.data;
+        const { token, nameUser, role } = res.data;
         Cookies.set("token", token, { expires: 1 / 48 });
-        const {
-          userInfo: { name },
-          role,
-        } = jwt_decode(token);
-
+        onLogin(token, nameUser, role);
         navigate("/home");
-        onLogin(token, name, role);
       });
       setError("");
     } catch (err) {
-      console.log(err);
       setError("Tên đăng nhập hoặc mật khẩu không đúng.");
     }
   };

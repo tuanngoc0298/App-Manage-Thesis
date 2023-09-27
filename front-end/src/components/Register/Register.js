@@ -5,11 +5,12 @@ function Register({ onRegister }) {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
+  const [userCode, setUserCode] = useState("");
   const [error, setError] = useState("");
 
   const handleRegister = async () => {
     try {
-      const response = await axios.post("http://localhost:3001/api/register", { username, password, role });
+      await axios.post("http://localhost:3001/api/register", { username, password, role, userCode });
 
       setError("Đăng ký thành công");
     } catch (err) {
@@ -21,6 +22,7 @@ function Register({ onRegister }) {
     <div>
       <input type="text" placeholder="Tên đăng nhập" value={username} onChange={(e) => setUsername(e.target.value)} />
       <input type="text" placeholder="Mật khẩu" value={password} onChange={(e) => setPassword(e.target.value)} />
+      <input type="text" placeholder="Mã người dùng" value={userCode} onChange={(e) => setUserCode(e.target.value)} />
       <input type="text" placeholder="Vai trò" value={role} onChange={(e) => setRole(e.target.value)} />
       <button onClick={handleRegister}>Đăng ký</button>
       {error && <p>{error}</p>}

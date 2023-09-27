@@ -20,6 +20,7 @@ function Teachers() {
   const [searchQuery, setSearchQuery] = useState("");
   const [idActiveRow, setIdActiveRow] = useState(null);
 
+  const [initialValueComboBox, setInitialValueComboBox] = useState("");
   const [error, setError] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
@@ -60,7 +61,7 @@ function Teachers() {
   }, [isOpenDeleteModal]);
 
   const handleAddTeacher = () => {
-    if (newTeacher.code && newTeacher.name && newTeacher.nameMajor && newTeacher.role) {
+    if (newTeacher.codeTeacher && newTeacher.nameTeacher && newTeacher.nameMajor && newTeacher.roleTeacher) {
       // Gọi API để thêm giáo viên mới
       axios
         .post("http://localhost:3001/api/teachers", newTeacher, {
@@ -76,7 +77,7 @@ function Teachers() {
           }
         })
         .catch((err) => {
-          setErrorAdd("Đã tồn tại thông tin giáo viên.");
+          setErrorAdd(err.response.data.message);
         });
     } else {
       setErrorAdd("Vui lòng điền đầy đủ thông tin");
@@ -85,11 +86,15 @@ function Teachers() {
 
   const handleEditTeacher = () => {
     // Gọi API để sửa giáo viên
-    if (editTeacher.name && editTeacher.code && editTeacher.nameMajor && editTeacher.role) {
+    if (editTeacher.nameTeacher && editTeacher.codeTeacher && editTeacher.nameMajor && editTeacher.roleTeacher) {
       axios
-        .put(`http://localhost:3001/api/teachers/${editTeacher._id}`, editTeacher, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .put(
+          `http://localhost:3001/api/teachers/${editTeacher._id}`,
+          { editTeacher, initialValueComboBox },
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((res) => {
           // Cập nhật danh sách giáo viên
           if (res.status !== 400) {
@@ -108,7 +113,7 @@ function Teachers() {
           }
         })
         .catch((err) => {
-          setErrorEdit("Giáo viên đã tồn tại!.");
+          setErrorEdit(err.response.data.message);
         });
     } else {
       setErrorEdit("Vui lòng điền đầy đủ thông tin");
@@ -152,10 +157,13 @@ function Teachers() {
   };
 
   const handleChangeEditSelf = (value) => {
-    setEditTeacher({ ...editTeacher, role: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+    setEditTeacher({ ...editTeacher, roleTeacher: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
   };
   const handleChangeAddSelf = (value) => {
-    setNewTeacher({ ...newTeacher, role: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+    setNewTeacher({ ...newTeacher, roleTeacher: value }); // Lưu giá trị đã chọn vào trạng thái của thành phần cha
+  };
+  const handleChangeInitialValueComboBox = (value) => {
+    setInitialValueComboBox(value);
   };
 
   const handleCancleDelete = () => {
@@ -180,6 +188,7 @@ function Teachers() {
   const handleChangeInputEdit = (value) => {
     setEditTeacher(value);
   };
+
   return (
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý giáo viên</h2>
@@ -208,16 +217,16 @@ function Teachers() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{teacher.code} </div>
+                  <div>{teacher.codeTeacher} </div>
                 </td>
                 <td>
-                  <div>{teacher.name} </div>
+                  <div>{teacher.nameTeacher} </div>
                 </td>
                 <td>
                   <div>{teacher.nameMajor} </div>
                 </td>
                 <td>
-                  <div>{teacher.role} </div>
+                  <div>{teacher.roleTeacher} </div>
                 </td>
                 <td className={cx("column__functions")}>
                   <button className={cx("btn-more")}>
@@ -250,7 +259,7 @@ function Teachers() {
                   )}
                   {idActiveRow === teacher._id && (
                     <DeleteModal
-                      title={`Xóa giáo viên ${teacher.name}`}
+                      title={`Xóa giáo viên ${teacher.nameTeacher}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={teacher._id}
                       handleCancleDelete={handleCancleDelete}
@@ -268,8 +277,8 @@ function Teachers() {
         <Modal
           name="Thêm mới giáo viên"
           fields={[
-            ["Mã giáo viên", "code"],
-            ["Tên giáo viên", "name"],
+            ["Mã giáo viên", "codeTeacher"],
+            ["Tên giáo viên", "nameTeacher"],
           ]}
           newData={newTeacher}
           error={errorAdd}
@@ -277,7 +286,13 @@ function Teachers() {
           handleLogic={handleAddTeacher}
           handleChangeInput={handleChangeInputAdd}
           indexsComboBox={[
-            { title: "Thuộc ngành", index: 2, onSelectionChange: handleChangeAddNameMajor, api: "majors" },
+            {
+              title: "Thuộc ngành",
+              index: 2,
+              onSelectionChange: handleChangeAddNameMajor,
+              api: "majors",
+              nameData: "nameMajor",
+            },
             {
               title: "Chức vụ",
               index: 3,
@@ -291,8 +306,8 @@ function Teachers() {
         <Modal
           name="Sửa giáo viên"
           fields={[
-            ["Mã giáo viên", "code"],
-            ["Tên giáo viên", "name"],
+            ["Mã giáo viên", "codeTeacher"],
+            ["Tên giáo viên", "nameTeacher"],
           ]}
           newData={editTeacher}
           error={errorEdit}
@@ -306,13 +321,15 @@ function Teachers() {
               onSelectionChange: handleChangeEditNameMajor,
               api: "majors",
               oldData: editTeacher.nameMajor,
+              nameData: "nameMajor",
             },
             {
               title: "Chức vụ",
               index: 3,
               onSelectionChange: handleChangeEditSelf,
               selfData: [{ name: "Trưởng khoa" }, { name: "Trưởng ngành" }, { name: "Giáo viên" }],
-              oldData: editTeacher.role,
+              oldData: editTeacher.roleTeacher,
+              onGetInitialValue: handleChangeInitialValueComboBox,
             },
           ]}
         />

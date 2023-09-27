@@ -1,8 +1,8 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { ManagerStudents } from "./";
+import { ManagerStudents } from ".";
 import { Home } from "~/components";
 
-function Manager() {
+function HeadMajor() {
   return (
     <Routes>
       <Route path="/home" element={<Home />} />
@@ -15,4 +15,4 @@ function Manager() {
   );
 }
 
-export default Manager;
+export default HeadMajor;

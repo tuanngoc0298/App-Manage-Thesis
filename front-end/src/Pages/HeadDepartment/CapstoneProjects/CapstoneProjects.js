@@ -61,8 +61,8 @@ function CapstoneProjects() {
   }, [isOpenDeleteModal]);
   const handleAddMajor = () => {
     if (
-      newCapstoneProject.code &&
-      newCapstoneProject.name &&
+      newCapstoneProject.codeCapstoneProject &&
+      newCapstoneProject.nameCapstoneProject &&
       newCapstoneProject.nameMajor &&
       newCapstoneProject.credit
     ) {
@@ -93,8 +93,8 @@ function CapstoneProjects() {
 
     if (
       editCapstoneProject.nameMajor &&
-      editCapstoneProject.name &&
-      editCapstoneProject.code &&
+      editCapstoneProject.nameCapstoneProject &&
+      editCapstoneProject.codeCapstoneProject &&
       editCapstoneProject.credit
     ) {
       axios
@@ -106,7 +106,7 @@ function CapstoneProjects() {
           if (res.status !== 400) {
             const updatedCapstoneProjects = capstoneProjects.map((capstoneProject) => {
               if (capstoneProject._id === editCapstoneProject._id) {
-                return { ...capstoneProject, ...editCapstoneProject };
+                return { ...capstoneProject, ...res.data };
               }
               return capstoneProject;
             });
@@ -213,10 +213,10 @@ function CapstoneProjects() {
                 <td className={cx("table__index")}>{index + 1}</td>
 
                 <td>
-                  <div>{capstoneProject.code} </div>
+                  <div>{capstoneProject.codeCapstoneProject} </div>
                 </td>
                 <td>
-                  <div>{capstoneProject.name} </div>
+                  <div>{capstoneProject.nameCapstoneProject} </div>
                 </td>
                 <td>
                   <div>{capstoneProject.nameMajor} </div>
@@ -255,7 +255,7 @@ function CapstoneProjects() {
                   )}
                   {idActiveRow === capstoneProject._id && (
                     <DeleteModal
-                      title={`Xóa học phần ${capstoneProject.name}`}
+                      title={`Xóa học phần ${capstoneProject.nameCapstoneProject}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={capstoneProject._id}
                       handleCancleDelete={handleCancleDelete}
@@ -273,8 +273,8 @@ function CapstoneProjects() {
         <Modal
           name="Thêm mới học phần KLTN"
           fields={[
-            ["Mã học phần", "code"],
-            ["Tên học phần", "name"],
+            ["Mã học phần", "codeCapstoneProject"],
+            ["Tên học phần", "nameCapstoneProject"],
             ["Số tín chỉ", "credit"],
           ]}
           newData={newCapstoneProject}
@@ -288,6 +288,7 @@ function CapstoneProjects() {
               index: 2,
               onSelectionChange: handleChangeAddNameCapstoneProject,
               api: "majors",
+              nameData: "nameMajor",
             },
           ]}
         />
@@ -296,8 +297,8 @@ function CapstoneProjects() {
         <Modal
           name="Sửa học phần KLTN"
           fields={[
-            ["Mã học phần", "code"],
-            ["Tên học phần", "name"],
+            ["Mã học phần", "codeCapstoneProject"],
+            ["Tên học phần", "nameCapstoneProject"],
             ["Số tín chỉ", "credit"],
           ]}
           newData={editCapstoneProject}
@@ -312,6 +313,7 @@ function CapstoneProjects() {
               onSelectionChange: handleChangeEditNameCapstoneProject,
               api: "majors",
               oldData: editCapstoneProject.nameMajor,
+              nameData: "nameMajor",
             },
           ]}
         />

@@ -9,8 +9,8 @@ const capstoneProjectController = {
         const capstoneProjects = await CapstoneProject.find({
           $or: [
             { nameMajor: { $regex: searchQuery, $options: "i" } },
-            { code: { $regex: searchQuery, $options: "i" } },
-            { name: { $regex: searchQuery, $options: "i" } },
+            { codeCapstoneProject: { $regex: searchQuery, $options: "i" } },
+            { nameCapstoneProject: { $regex: searchQuery, $options: "i" } },
             { credit: { $regex: searchQuery, $options: "i" } },
           ],
         });
@@ -25,14 +25,16 @@ const capstoneProjectController = {
   },
   // ADD
   addCapstoneProject: async (req, res) => {
-    const { nameMajor, name, code, credit } = req.body;
-    const existingCapstoneProject = await CapstoneProject.findOne({ $or: [{ name }, { code }] });
+    const { nameMajor, nameCapstoneProject, codeCapstoneProject, credit } = req.body;
+    const existingCapstoneProject = await CapstoneProject.findOne({
+      $or: [{ nameCapstoneProject }, { codeCapstoneProject }],
+    });
 
     if (existingCapstoneProject) {
       return res.status(400).json({ message: "Học phần KLTN đã tồn tại" });
     }
     try {
-      const capstoneProject = new CapstoneProject({ nameMajor, name, code, credit });
+      const capstoneProject = new CapstoneProject({ nameMajor, nameCapstoneProject, codeCapstoneProject, credit });
       await capstoneProject.save();
       res.status(201).json(capstoneProject);
     } catch (error) {
@@ -41,9 +43,12 @@ const capstoneProjectController = {
   },
   // EDIT
   editCapstoneProject: async (req, res) => {
-    const { nameMajor, name, code, credit } = req.body;
+    const { nameMajor, nameCapstoneProject, codeCapstoneProject, credit } = req.body;
     const { id } = req.params;
-    const existingCapstoneProject = await CapstoneProject.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
+    const existingCapstoneProject = await CapstoneProject.findOne({
+      _id: { $ne: id },
+      $or: [{ nameCapstoneProject }, { codeCapstoneProject }],
+    });
 
     if (existingCapstoneProject) {
       return res.status(400).json({ message: "Học phần KLTN đã tồn tại" });
@@ -51,7 +56,7 @@ const capstoneProjectController = {
     try {
       const capstoneProject = await CapstoneProject.findByIdAndUpdate(
         id,
-        { nameMajor, name, code, credit },
+        { nameMajor, nameCapstoneProject, codeCapstoneProject, credit },
         { new: true }
       );
       res.status(200).json(capstoneProject);

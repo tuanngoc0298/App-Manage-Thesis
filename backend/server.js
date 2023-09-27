@@ -15,11 +15,13 @@ const authRoutes = require("./routes/authRoutes");
 const departmentRoutes = require("./routes/HeadDepartment/departmentRoutes");
 const majorRoutes = require("./routes/HeadDepartment/majorRoutes");
 const teacherRoutes = require("./routes/HeadDepartment/teacherRoutes");
-const capstoneProjectRoutes = require("./routes/capstoneProjectRoutes");
+const capstoneProjectRoutes = require("./routes/HeadDepartment/capstoneProjectRoutes");
 const schoolYearRoutes = require("./routes/HeadDepartment/schoolYearRoutes");
-const studentRoutes = require("./routes/Manager/studentRoutes");
+const studentRoutes = require("./routes/HeadMajor/studentRoutes");
 const topicRoutes = require("./routes/Instructor/topicRoutes");
 const chooseTopicRoutes = require("./routes/Student/chooseTopicRoutes");
+const suggestTopicRoutes = require("./routes/Student/suggestTopicRoutes");
+
 // Kết nối đến cơ sở dữ liệu MongoDB
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
 const db = mongoose.connection;
@@ -59,6 +61,7 @@ app.use("/api", studentRoutes);
 app.use("/api", topicRoutes);
 // Sinh vien
 app.use("/api", chooseTopicRoutes);
+app.use("/api", suggestTopicRoutes);
 
 app.listen(port, () => {
   console.log(`Server đang lắng nghe tại http://localhost:${port}`);

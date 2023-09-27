@@ -8,9 +8,9 @@ const departmentController = {
       if (searchQuery) {
         const departments = await Department.find({
           $or: [
-            { code: { $regex: searchQuery, $options: "i" } },
-            { name: { $regex: searchQuery, $options: "i" } },
-            { describe: { $regex: searchQuery, $options: "i" } },
+            { codeDepartment: { $regex: searchQuery, $options: "i" } },
+            { nameDepartment: { $regex: searchQuery, $options: "i" } },
+            { describeDepartment: { $regex: searchQuery, $options: "i" } },
           ],
         });
         res.json(departments);
@@ -24,34 +24,42 @@ const departmentController = {
   },
   // ADD
   addDepartment: async (req, res) => {
-    const { name, code, describe } = req.body;
-    const existingDepartment = await Department.findOne({ $or: [{ name }, { code }] });
+    const { nameDepartment, codeDepartment, describeDepartment } = req.body;
+    const existingDepartment = await Department.findOne({ $or: [{ nameDepartment }, { codeDepartment }] });
 
     if (existingDepartment) {
       return res.status(400).json({ error: "Khoa đã tồn tại" });
     }
 
     try {
-      const department = new Department({ name, code, describe });
+      const department = new Department({ nameDepartment, codeDepartment, describeDepartment });
       await department.save();
       res.status(201).json(department);
     } catch (error) {
+      console.log(error);
       res.status(500).json({ error: "Lỗi khi thêm khoa mới." });
     }
   },
   // EDIT
   editDepartment: async (req, res) => {
-    const { name, code, describe } = req.body;
+    const { nameDepartment, codeDepartment, describeDepartment } = req.body;
     const { id } = req.params;
 
-    const existingDepartment = await Department.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
+    const existingDepartment = await Department.findOne({
+      _id: { $ne: id },
+      $or: [{ nameDepartment }, { codeDepartment }],
+    });
 
     if (existingDepartment) {
       return res.status(400).json({ error: "Khoa đã tồn tại" });
     }
 
     try {
-      const department = await Department.findByIdAndUpdate(id, { name, code, describe }, { new: true });
+      const department = await Department.findByIdAndUpdate(
+        id,
+        { nameDepartment, codeDepartment, describeDepartment },
+        { new: true }
+      );
       res.status(200).json(department);
     } catch (error) {
       res.status(500).json({ error: "Lỗi khi sửa khoa." });

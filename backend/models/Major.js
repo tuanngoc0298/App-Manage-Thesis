@@ -5,17 +5,17 @@ const majorSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  code: {
+  codeMajor: {
     type: String,
     required: true,
     unique: true,
   },
-  name: {
+  nameMajor: {
     type: String,
     required: true,
     unique: true,
   },
-  nameHead: {
+  nameHeadMajor: {
     type: String,
   },
 });

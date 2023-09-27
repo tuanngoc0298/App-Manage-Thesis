@@ -1,11 +1,16 @@
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const Admin = require("../models/Admin");
+const HeadDepartment = require("../models/HeadDepartment");
+
+const Teacher = require("../models/Teacher");
+const Student = require("../models/Student");
 
 const authController = {
   // REGISTER
   registerUser: async (req, res) => {
-    const { username, password, role } = req.body;
+    const { username, password, role, userCode } = req.body;
     try {
       const existingUser = await User.findOne({ username });
 
@@ -15,7 +20,7 @@ const authController = {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = await new User({ username, password: hashedPassword, role });
+      const user = await new User({ username, password: hashedPassword, role, userCode });
       await user.save();
       res.status(201).json({ message: "Đăng ký thành công!" });
     } catch (error) {
@@ -36,43 +41,44 @@ const authController = {
       if (!passwordMatch) {
         return res.status(401).json({ error: "Mật khẩu không đúng!" });
       }
-      let userInfo;
-      switch (user.role) {
-        case "admin": {
-          userInfo = user.adminInfo;
-          break;
-        }
-        case "NguoiPhuTrach": {
-          userInfo = user.NguoiPhuTrachInfo;
-          break;
-        }
-        case "SinhVien": {
-          userInfo = user.SinhVienInfo;
-          break;
-        }
-        case "GiaoVienHuongDan": {
-          userInfo = user.GiaoVienHuongDanInfo;
-          break;
-        }
-        case "GiaoVienPhanBien": {
-          userInfo = user.GiaoVienPhanBienInfo;
-          break;
-        }
-        case "HoiDongBaoVe": {
-          userInfo = user.HoiDongBaoVeInfo;
-          break;
-        }
-        case "PhongDaoTao": {
-          userInfo = user.PhongDaoTaoInfo;
-          break;
-        }
-      }
 
-      const token = jwt.sign({ _id: user._id, userInfo: userInfo, role: user.role }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: 1800,
-      });
+      let nameUser, userInfo;
+
+      switch (user.role) {
+        case "admin":
+          userInfo = await Admin.findOne({ codeAdmin: user.codeUser });
+          nameUser = userInfo.nameAdmin;
+          break;
+        case "NguoiPhuTrach":
+          userInfo = await Teacher.findOne({ codeTeacher: user.codeUser });
+          nameUser = userInfo.nameTeacher;
+
+          break;
+        case "SinhVien":
+          userInfo = await Student.findOne({ codeStudent: user.codeUser });
+          nameUser = userInfo.nameStudent;
+
+          break;
+        case "GiaoVien":
+          userInfo = await Teacher.findOne({ codeTeacher: user.codeUser });
+          nameUser = userInfo.nameTeacher;
+
+          break;
+        case "PhongDaoTao":
+          userInfo = await HeadDepartment.findOne({ codeHeadDepartment: user.codeUser });
+          nameUser = userInfo.nameHeadDepartment;
+
+          break;
+      }
+      const token = jwt.sign(
+        { _id: user._id, role: user.role, nameUser: nameUser, nameMajor: userInfo.nameMajor, codeUser: user.codeUser },
+        process.env.JWT_ACCESS_KEY,
+        {
+          expiresIn: 1800,
+        }
+      );
       res.cookie("token", token);
-      res.json({ token });
+      res.json({ token, role: user.role, nameUser: nameUser });
     } catch (error) {
       res.status(500).json({ error: "Đã xảy ra lỗi khi đăng nhập!" });
     }

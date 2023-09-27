@@ -1,16 +1,16 @@
 const mongoose = require("mongoose");
 
 const studentSchema = new mongoose.Schema({
-  code: {
+  codeStudent: {
     type: String,
     require: true,
     unique: true,
   },
-  name: {
+  nameStudent: {
     type: String,
     require: true,
   },
-  major: {
+  nameMajor: {
     type: String,
     require: true,
   },
