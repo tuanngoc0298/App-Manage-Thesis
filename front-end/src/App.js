@@ -13,7 +13,7 @@ export const HeaderContext = createContext();
 function App() {
   const [token, setToken] = useState(Cookies.get("token"));
 
-  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).nameUser : "";
+  const hasName = Cookies.get("token") ? jwt_decode(Cookies.get("token")).userInfo.name : "";
   const hasRole = Cookies.get("token") ? jwt_decode(Cookies.get("token")).role : "";
 
   const [userName, setUserName] = useState(hasName);

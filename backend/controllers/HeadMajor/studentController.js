@@ -7,10 +7,10 @@ const studentController = {
   // GET
   getAllStudents: async (req, res) => {
     try {
-      const { searchQuery, major, year, semester } = req.query;
+      const { searchQuery, nameMajor, year, semester } = req.query;
       const query = {};
-      if (major) {
-        query.nameMajor = major;
+      if (nameMajor) {
+        query.nameMajor = nameMajor;
       }
       if (year) {
         query.year = year;
@@ -20,8 +20,8 @@ const studentController = {
       }
       if (searchQuery) {
         query.$or = [
-          { codeStudent: { $regex: searchQuery, $options: "i" } },
-          { nameStudent: { $regex: searchQuery, $options: "i" } },
+          { code: { $regex: searchQuery, $options: "i" } },
+          { name: { $regex: searchQuery, $options: "i" } },
           { nameMajor: { $regex: searchQuery, $options: "i" } },
           { year: { $regex: searchQuery, $options: "i" } },
           { semester: { $regex: searchQuery, $options: "i" } },
@@ -48,13 +48,13 @@ const studentController = {
     let datas = XLSX.utils.sheet_to_json(worksheet);
     // Lọc dữ liệu có đủ 4 trường thông tin
     datas = datas.map((data) => {
-      if (!data.nameStudent || !data.codeStudent || !data.year || !data.semester) {
+      if (!data.name || !data.code || !data.year || !data.semester) {
         return null;
       }
 
       const validData = {
-        nameStudent: data.nameStudent,
-        codeStudent: data.codeStudent,
+        name: data.name,
+        code: data.code,
         year: data.year,
         semester: data.semester,
       };
@@ -65,12 +65,12 @@ const studentController = {
 
     let newData;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { nameMajor } = decoded;
+    const { nameMajor } = decoded.userInfo;
 
     newData = datas.map((item) => {
-      return { ...item, nameMajor: nameMajor, state: "Đăng ký đề tài" };
+      return { ...item, nameMajor, state: "Đăng ký đề tài" };
     });
-    await Student.deleteMany({ nameMajor: nameMajor });
+    await Student.deleteMany({ nameMajor });
     // Lưu dữ liệu vào MongoDB
     await Student.insertMany(newData)
       .then(() => {
@@ -82,14 +82,14 @@ const studentController = {
   },
   // Add
   addStudent: async (req, res) => {
-    const { year, nameStudent, codeStudent, semester, nameMajor, state } = req.body;
-    const existingStudent = await Student.findOne({ $or: [{ nameStudent }, { codeStudent }] });
+    const { year, name, code, semester, nameMajor, state } = req.body;
+    const existingStudent = await Student.findOne({ $or: [{ name }, { code }] });
 
     if (existingStudent) {
       return res.status(400).json({ message: "Học sinh đã tồn tại" });
     }
     try {
-      const student = new Student({ year, nameStudent, codeStudent, semester, nameMajor, state });
+      const student = new Student({ year, name, code, semester, nameMajor, state });
       await student.save();
       res.status(201).json(student);
     } catch (error) {
@@ -97,9 +97,9 @@ const studentController = {
     }
   },
   editStudent: async (req, res) => {
-    const { year, nameStudent, codeStudent, semester, nameMajor, state } = req.body;
+    const { year, name, code, semester, nameMajor, state } = req.body;
     const { id } = req.params;
-    const existingStudent = await Student.findOne({ _id: { $ne: id }, $or: [{ nameStudent }, { codeStudent }] });
+    const existingStudent = await Student.findOne({ _id: { $ne: id }, $or: [{ name }, { code }] });
 
     if (existingStudent) {
       return res.status(400).json({ message: "Học sinh đã tồn tại" });
@@ -107,7 +107,7 @@ const studentController = {
     try {
       const student = await Student.findByIdAndUpdate(
         id,
-        { year, nameStudent, codeStudent, semester, nameMajor, state },
+        { year, name, code, semester, nameMajor, state },
         { new: true }
       );
       res.status(200).json(student);

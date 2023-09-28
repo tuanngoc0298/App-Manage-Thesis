@@ -4,31 +4,82 @@ import styles from "./Modal.module.scss";
 
 const cx = classNames.bind(styles);
 
-function Modal({ name, fields, newData, error, handleCancle, handleLogic, handleChangeInput, indexsComboBox }) {
-  let newFields = fields.map(([title, key], index) => (
-    <div className={cx("row")} key={index}>
-      <span className={cx("field")}>
-        {title}
-        <span style={{ color: "red" }}>*</span>
-      </span>
-      <div className={cx("wrap-input")}>
-        <input
-          type="text"
-          value={newData[key]}
-          onChange={(e) => handleChangeInput({ ...newData, [key]: e.target.value })}
-        />
+function Modal({
+  name,
+  fields,
+  details,
+  newData,
+  error,
+  handleCancle,
+  handleLogic,
+  handleChangeInput,
+  indexsComboBox,
+  handleApproveTopic,
+}) {
+  let newFields;
+  if (fields) {
+    newFields = fields.map(([title, key], index) => (
+      <div className={cx("row")} key={index}>
+        <span className={cx("field")}>
+          {title}
+          <span style={{ color: "red" }}>*</span>
+        </span>
+        <div className={cx("wrap-input")}>
+          <input
+            type="text"
+            value={newData[key]}
+            onChange={(e) => handleChangeInput({ ...newData, [key]: e.target.value })}
+          />
+        </div>
       </div>
-    </div>
-  ));
-  if (indexsComboBox) {
-    indexsComboBox.forEach((item) => {
-      newFields.splice(item.index, 0, <ComboBox {...item} />);
-    });
+    ));
+    if (indexsComboBox) {
+      indexsComboBox.forEach((item) => {
+        newFields.splice(item.index, 0, <ComboBox {...item} />);
+      });
+    }
   }
 
+  if (details) {
+    newFields = (
+      <div>
+        <div className={cx("wrap-details")}>
+          {details.map(([key, value], index) => (
+            <div key={index}>
+              <span className={cx("details__title")}>{key}</span>: {value}
+            </div>
+          ))}
+        </div>
+        {indexsComboBox ? (
+          <div>
+            <ComboBox {...indexsComboBox} />
+          </div>
+        ) : (
+          <div className={cx("details__checkBox")}>
+            <label>
+              <input
+                type="radio"
+                checked={handleApproveTopic.isApprove === "Duyệt"}
+                onChange={() => handleApproveTopic.setIsApprove("Duyệt")}
+              />{" "}
+              Phê duyệt
+            </label>
+            <label>
+              <input
+                type="radio"
+                checked={handleApproveTopic.isApprove === "Từ chối"}
+                onChange={() => handleApproveTopic.setIsApprove("Từ chối")}
+              />{" "}
+              Từ chối
+            </label>
+          </div>
+        )}
+      </div>
+    );
+  }
   return (
     <div>
-      <div className={cx("modal")}>
+      <div className={cx("modal", `${details ? "custom" : ""}`)}>
         <div className={cx("title")}>{name}</div>
         <div className={cx("form")}>
           {newFields}

@@ -13,11 +13,11 @@ import styles from "./RegisterTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterTopic() {
-  const { nameUser, nameMajor } = jwt_decode(Cookies.get("token"));
+  const { name, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [topics, setTopics] = useState([]);
-  const [newTopic, setNewTopic] = useState({ nameTeacher: nameUser });
-  const [editTopic, setEditTopic] = useState({ nameTeacher: nameUser });
+  const [newTopic, setNewTopic] = useState({ nameTeacher: name });
+  const [editTopic, setEditTopic] = useState({ nameTeacher: name });
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
@@ -63,7 +63,7 @@ function RegisterTopic() {
     axios
       .get(
         `http://localhost:3001/api/topics?searchQuery=${searchQuery}${
-          isFilterByUserName ? `&nameTeacher=${nameUser}` : ""
+          isFilterByUserName ? `&nameTeacher=${name}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: "http://localhost:3001" }
       )
@@ -130,7 +130,7 @@ function RegisterTopic() {
           if (res.status !== 400) {
             setTopics([...topics, res.data]);
             setIsOpenAddModal(false);
-            setNewTopic({ nameTeacher: nameUser });
+            setNewTopic({ nameTeacher: name });
             setErrorAdd("");
           }
         })
@@ -167,14 +167,14 @@ function RegisterTopic() {
             });
             setTopics(updatedStudent);
 
-            setEditTopic({ nameTeacher: nameUser });
+            setEditTopic({ nameTeacher: name });
             setErrorEdit("");
             setIdActiveRow(null);
             setIsOpenEditModal(false);
           }
         })
         .catch((err) => {
-          setErrorEdit("Học sinh đã tồn tại!.");
+          setErrorEdit("Đề tài đã tồn tại!.");
         });
     } else {
       setErrorEdit("Vui lòng điền đầy đủ thông tin");
@@ -205,13 +205,13 @@ function RegisterTopic() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewTopic({ nameTeacher: nameUser });
+    setNewTopic({ nameTeacher: name });
     setErrorAdd("");
     setIdActiveRow(null);
   };
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
-    setEditTopic({ nameTeacher: nameUser });
+    setEditTopic({ nameTeacher: name });
     setErrorEdit("");
     setIdActiveRow(null);
   };
@@ -412,7 +412,7 @@ function RegisterTopic() {
               title: "Tên ngành",
               index: 2,
               onSelectionChange: handleChangeAddMajor,
-              api: `majors?major=${nameMajor}`,
+              api: `majors?nameMajor=${nameMajor}`,
               nameData: "nameMajor",
             },
             {

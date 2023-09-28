@@ -4,9 +4,9 @@ const majorController = {
   // GET
   getAllMajors: async (req, res) => {
     try {
-      const { searchQuery, major } = req.query;
-      if (major) {
-        const dataMajor = await Major.findOne({ nameMajor: major });
+      const { searchQuery, nameMajor } = req.query;
+      if (nameMajor) {
+        const dataMajor = await Major.findOne({ nameMajor });
         const majorsByDepartment = await Major.find({ nameDepartment: dataMajor.nameDepartment });
         return res.status(200).json(majorsByDepartment);
       }
@@ -32,7 +32,7 @@ const majorController = {
     try {
       const { nameDepartment, nameMajor, codeMajor } = req.body;
       const existingMajor = await Major.findOne({ $or: [{ nameMajor }, { codeMajor }] });
-      console.log(nameMajor);
+
       if (existingMajor) {
         return res.status(400).json({ message: "Ngành đã tồn tại" });
       }
@@ -41,7 +41,7 @@ const majorController = {
         nameDepartment,
         nameMajor,
         codeMajor,
-        nameHeadMajor: headMajor ? headMajor.nameTeacher : "",
+        nameHeadMajor: headMajor ? headMajor.name : "",
       });
       await major.save();
       res.status(201).json(major);
@@ -63,7 +63,7 @@ const majorController = {
       const headMajor = await Teacher.findOne({ $and: [{ roleTeacher: "Trưởng ngành" }, { nameMajor: nameMajor }] });
       const major = await Major.findByIdAndUpdate(
         id,
-        { nameDepartment, nameMajor, codeMajor, nameHeadMajor: headMajor ? headMajor.nameTeacher : "" },
+        { nameDepartment, nameMajor, codeMajor, nameHeadMajor: headMajor ? headMajor.name : "" },
         { new: true }
       );
 

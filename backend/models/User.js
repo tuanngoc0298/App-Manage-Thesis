@@ -15,7 +15,7 @@ const userSchema = new mongoose.Schema({
     enum: ["admin", "NguoiPhuTrach", "SinhVien", "GiaoVien", "PhongDaoTao"],
     require: true,
   },
-  codeUser: {
+  code: {
     type: String,
     require: true,
   },

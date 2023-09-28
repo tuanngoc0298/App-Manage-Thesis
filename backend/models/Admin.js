@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const adminSchema = new mongoose.Schema({
-  codeAdmin: {
+  code: {
     type: String,
     require: true,
   },
-  nameAdmin: {
+  name: {
     type: String,
     require: true,
   },

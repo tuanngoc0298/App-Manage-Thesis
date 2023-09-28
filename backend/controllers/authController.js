@@ -20,7 +20,7 @@ const authController = {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = await new User({ username, password: hashedPassword, role, userCode });
+      const user = await new User({ username, password: hashedPassword, role, code: userCode });
       await user.save();
       res.status(201).json({ message: "Đăng ký thành công!" });
     } catch (error) {
@@ -42,43 +42,30 @@ const authController = {
         return res.status(401).json({ error: "Mật khẩu không đúng!" });
       }
 
-      let nameUser, userInfo;
+      let userInfo;
 
       switch (user.role) {
         case "admin":
-          userInfo = await Admin.findOne({ codeAdmin: user.codeUser });
-          nameUser = userInfo.nameAdmin;
+          userInfo = await Admin.findOne({ code: user.code });
           break;
         case "NguoiPhuTrach":
-          userInfo = await Teacher.findOne({ codeTeacher: user.codeUser });
-          nameUser = userInfo.nameTeacher;
-
+          userInfo = await Teacher.findOne({ code: user.code });
           break;
         case "SinhVien":
-          userInfo = await Student.findOne({ codeStudent: user.codeUser });
-          nameUser = userInfo.nameStudent;
-
+          userInfo = await Student.findOne({ code: user.code });
           break;
         case "GiaoVien":
-          userInfo = await Teacher.findOne({ codeTeacher: user.codeUser });
-          nameUser = userInfo.nameTeacher;
-
+          userInfo = await Teacher.findOne({ code: user.code });
           break;
         case "PhongDaoTao":
-          userInfo = await HeadDepartment.findOne({ codeHeadDepartment: user.codeUser });
-          nameUser = userInfo.nameHeadDepartment;
-
+          userInfo = await HeadDepartment.findOne({ code: user.code });
           break;
       }
-      const token = jwt.sign(
-        { _id: user._id, role: user.role, nameUser: nameUser, nameMajor: userInfo.nameMajor, codeUser: user.codeUser },
-        process.env.JWT_ACCESS_KEY,
-        {
-          expiresIn: 1800,
-        }
-      );
+      const token = jwt.sign({ _id: user._id, role: user.role, userInfo }, process.env.JWT_ACCESS_KEY, {
+        expiresIn: 1800,
+      });
       res.cookie("token", token);
-      res.json({ token, role: user.role, nameUser: nameUser });
+      res.json({ token, role: user.role, userInfo });
     } catch (error) {
       res.status(500).json({ error: "Đã xảy ra lỗi khi đăng nhập!" });
     }

@@ -23,7 +23,10 @@ function ComboBox({
   useEffect(() => {
     if (api) {
       axios
-        .get(`http://localhost:3001/api/${api}`)
+        .get(`http://localhost:3001/api/${api}`, {
+          withCredentials: true,
+          baseURL: "http://localhost:3001",
+        })
         .then((res) => {
           setData(res.data);
         })

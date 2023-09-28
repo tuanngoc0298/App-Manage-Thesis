@@ -11,16 +11,20 @@ const session = require("express-session");
 const app = express();
 const port = process.env.PORT;
 
-const authRoutes = require("./routes/authRoutes");
-const departmentRoutes = require("./routes/HeadDepartment/departmentRoutes");
-const majorRoutes = require("./routes/HeadDepartment/majorRoutes");
-const teacherRoutes = require("./routes/HeadDepartment/teacherRoutes");
-const capstoneProjectRoutes = require("./routes/HeadDepartment/capstoneProjectRoutes");
-const schoolYearRoutes = require("./routes/HeadDepartment/schoolYearRoutes");
-const studentRoutes = require("./routes/HeadMajor/studentRoutes");
-const topicRoutes = require("./routes/Instructor/topicRoutes");
-const chooseTopicRoutes = require("./routes/Student/chooseTopicRoutes");
-const suggestTopicRoutes = require("./routes/Student/suggestTopicRoutes");
+const {
+  authRoutes,
+  departmentRoutes,
+  majorRoutes,
+  teacherRoutes,
+  capstoneProjectRoutes,
+  schoolYearRoutes,
+  studentRoutes,
+  topicRoutes,
+  chooseTopicRoutes,
+  suggestTopicRoutes,
+  approveSuggestTopicRoutes,
+  assignTeacherRoutes,
+} = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
 mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
@@ -56,9 +60,11 @@ app.use("/api", capstoneProjectRoutes);
 app.use("/api", schoolYearRoutes);
 // Nguoi Phu Trach
 app.use("/api", studentRoutes);
+app.use("/api", assignTeacherRoutes);
 
 // GiaoVienHuongDan
 app.use("/api", topicRoutes);
+app.use("/api", approveSuggestTopicRoutes);
 // Sinh vien
 app.use("/api", chooseTopicRoutes);
 app.use("/api", suggestTopicRoutes);

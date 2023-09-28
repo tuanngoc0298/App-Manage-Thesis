@@ -3,6 +3,7 @@ const router = express.Router();
 
 const suggestTopicController = require("../../controllers/Student/suggestTopicController");
 
+// Get tất cả suggestTopic
 router.get("/suggestTopic", suggestTopicController.getSuggestTopic);
 
 // Định nghĩa route để thêm giáo viên mới

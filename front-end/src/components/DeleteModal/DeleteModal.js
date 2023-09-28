@@ -4,7 +4,7 @@ import styles from "./DeleteModal.module.scss";
 
 const cx = classNames.bind(styles);
 
-function DeleteModal({ title, isOpenDeleteModal, id, handleCancleDelete, handleDelete }) {
+function DeleteModal({ title, isOpenDeleteModal, id, handleCancleDelete, handleDelete, error }) {
   return (
     <div>
       {isOpenDeleteModal && (
@@ -12,6 +12,7 @@ function DeleteModal({ title, isOpenDeleteModal, id, handleCancleDelete, handleD
           <div className={cx("modal")}>
             <div className={cx("title")}>{title}</div>
             <div className={cx("form")}>
+              {error && <div className={cx("message")}>{error}</div>}
               <div className={cx("btns")}>
                 <button className={cx("btn")} onClick={handleCancleDelete}>
                   Hủy

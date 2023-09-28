@@ -38,13 +38,18 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
-        const { token, nameUser, role } = res.data;
+        const {
+          token,
+          userInfo: { name },
+          role,
+        } = res.data;
         Cookies.set("token", token, { expires: 1 / 48 });
-        onLogin(token, nameUser, role);
+        onLogin(token, name, role);
         navigate("/home");
       });
       setError("");
     } catch (err) {
+      console.log(err);
       setError("Tên đăng nhập hoặc mật khẩu không đúng.");
     }
   };

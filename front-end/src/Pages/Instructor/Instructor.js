@@ -1,5 +1,5 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { RegisterTopics } from "./";
+import { RegisterTopics, ApproveSuggestTopics } from "./";
 import { Home } from "~/components";
 
 function Instructor() {
@@ -7,8 +7,8 @@ function Instructor() {
     <Routes>
       <Route path="/home" element={<Home />} />
       <Route path="/registerTopics" element={<RegisterTopics />} />
-      {/* <Route path="/majors" element={token ? <Majors /> : <Navigate to="/" />} />
-      <Route path="/teachers" element={token ? <Teachers /> : <Navigate to="/" />} />
+      <Route path="/approveSuggestTopics" element={<ApproveSuggestTopics />} />
+      {/* <Route path="/teachers" element={token ? <Teachers /> : <Navigate to="/" />} />
       <Route path="/CapstoneProjects" element={token ? <CapstoneProjects /> : <Navigate to="/" />} />
       <Route path="/schoolYears" element={token ? <SchoolYears /> : <Navigate to="/" />} /> */}
     </Routes>

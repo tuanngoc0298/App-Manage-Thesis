@@ -1,0 +1,122 @@
+.title {
+  line-height: 35px;
+  font-size: 1.5rem;
+  text-indent: 7px;
+  color: #175765;
+  font-weight: bold;
+  background: #dbe3e4;
+  margin-bottom: 21px;
+}
+
+// Search, add
+.function {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px 10px;
+}
+.function__allow {
+  display: flex;
+  gap: 100px;
+}
+.filter-comboBox {
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+  margin-right: 30px;
+}
+
+.btn-add {
+  padding: 10px 20px;
+  background-color: #6296c5;
+  font-weight: 800;
+}
+//
+
+.data tr {
+  border: 1px solid #908d8d;
+}
+
+.data {
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: auto;
+  width: 100%;
+  .column__functions {
+    width: 150px;
+    position: relative;
+  }
+}
+
+.data th,
+.data td {
+  height: 50px;
+}
+
+.data .table__index {
+  width: 50px;
+}
+.data thead {
+  background: #6296c5;
+  color: #fff;
+}
+
+.input {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+}
+.btn-more {
+  position: relative;
+}
+.wrapper__btn {
+  width: 70%;
+
+  position: absolute;
+  background-color: #6296c5;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  z-index: 1;
+  &:hover {
+    background-color: #227bc9;
+  }
+}
+
+.btn {
+  padding: 11px 12px;
+  color: #fff;
+  border-radius: 5px;
+  width: 100%;
+}
+
+.importFile {
+  display: flex;
+
+  align-items: center;
+  input {
+    width: 180px;
+  }
+  button {
+    color: #fff;
+    padding: 5px 10px;
+    background: #6296c5;
+    border-radius: 5px;
+    margin-left: 10px;
+  }
+}
+
+.tab {
+  border-bottom: 1px solid #ccc;
+
+  button {
+    padding: 10px;
+    border-right: 1px solid #908d8d;
+    background-color: rgb(204 204 204 / 28%);
+    &:hover {
+      background-color: rgb(204 204 204);
+    }
+  }
+}

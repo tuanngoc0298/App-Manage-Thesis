@@ -61,7 +61,7 @@ function Teachers() {
   }, [isOpenDeleteModal]);
 
   const handleAddTeacher = () => {
-    if (newTeacher.codeTeacher && newTeacher.nameTeacher && newTeacher.nameMajor && newTeacher.roleTeacher) {
+    if (newTeacher.code && newTeacher.name && newTeacher.nameMajor && newTeacher.roleTeacher) {
       // Gọi API để thêm giáo viên mới
       axios
         .post("http://localhost:3001/api/teachers", newTeacher, {
@@ -86,7 +86,7 @@ function Teachers() {
 
   const handleEditTeacher = () => {
     // Gọi API để sửa giáo viên
-    if (editTeacher.nameTeacher && editTeacher.codeTeacher && editTeacher.nameMajor && editTeacher.roleTeacher) {
+    if (editTeacher.name && editTeacher.code && editTeacher.nameMajor && editTeacher.roleTeacher) {
       axios
         .put(
           `http://localhost:3001/api/teachers/${editTeacher._id}`,
@@ -217,10 +217,10 @@ function Teachers() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{teacher.codeTeacher} </div>
+                  <div>{teacher.code} </div>
                 </td>
                 <td>
-                  <div>{teacher.nameTeacher} </div>
+                  <div>{teacher.name} </div>
                 </td>
                 <td>
                   <div>{teacher.nameMajor} </div>
@@ -259,7 +259,7 @@ function Teachers() {
                   )}
                   {idActiveRow === teacher._id && (
                     <DeleteModal
-                      title={`Xóa giáo viên ${teacher.nameTeacher}`}
+                      title={`Xóa giáo viên ${teacher.name}`}
                       isOpenDeleteModal={isOpenDeleteModal}
                       id={teacher._id}
                       handleCancleDelete={handleCancleDelete}
@@ -277,8 +277,8 @@ function Teachers() {
         <Modal
           name="Thêm mới giáo viên"
           fields={[
-            ["Mã giáo viên", "codeTeacher"],
-            ["Tên giáo viên", "nameTeacher"],
+            ["Mã giáo viên", "code"],
+            ["Tên giáo viên", "name"],
           ]}
           newData={newTeacher}
           error={errorAdd}
@@ -306,8 +306,8 @@ function Teachers() {
         <Modal
           name="Sửa giáo viên"
           fields={[
-            ["Mã giáo viên", "codeTeacher"],
-            ["Tên giáo viên", "nameTeacher"],
+            ["Mã giáo viên", "code"],
+            ["Tên giáo viên", "name"],
           ]}
           newData={editTeacher}
           error={errorEdit}

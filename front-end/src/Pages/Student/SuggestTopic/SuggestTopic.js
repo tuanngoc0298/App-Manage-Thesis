@@ -13,10 +13,10 @@ import styles from "./SuggestTopic.module.scss";
 const cx = classNames.bind(styles);
 
 function SuggestTopic() {
-  const { nameMajor, nameUser } = jwt_decode(Cookies.get("token"));
+  const { code } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [topic, setTopic] = useState();
-  const [newSuggestTopic, setNewSuggestTopic] = useState({ state: "Đang chờ duyệt" });
+  const [newSuggestTopic, setNewSuggestTopic] = useState({ state: "Đang chờ duyệt", code });
   const [editSuggestTopic, setEditSuggestTopic] = useState({});
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -24,7 +24,7 @@ function SuggestTopic() {
   const [isOpenDeleteModal, setIsOpenDeleteModal] = useState(false);
   const [idActiveRow, setIdActiveRow] = useState(null);
 
-  const [error, setError] = useState("");
+  const [errorDelete, setErrorDelete] = useState("");
   const [errorAdd, setErrorAdd] = useState("");
   const [errorEdit, setErrorEdit] = useState("");
   const wrapperBtnRef = useRef(null);
@@ -56,9 +56,7 @@ function SuggestTopic() {
       .then((res) => {
         setTopic(res.data);
       })
-      .catch((err) => {
-        setError("Không thể tải danh sách đề tài.");
-      });
+      .catch((err) => {});
   }
 
   const handleAddSuggestTopic = () => {
@@ -74,8 +72,8 @@ function SuggestTopic() {
 
           setTopic(res.data);
           setIsOpenAddModal(false);
-          setNewSuggestTopic({ state: "Đang chờ duyệt" });
-          setErrorAdd("Đề xuất thành công");
+          setNewSuggestTopic({ state: "Đang chờ duyệt", code });
+          setErrorAdd("");
         })
         .catch((err) => {
           setErrorAdd(err.response.data.message);
@@ -87,7 +85,7 @@ function SuggestTopic() {
 
   const handleEditTopic = () => {
     // Gọi API để sửa đề tài
-    if (editSuggestTopic.nameTopic && editSuggestTopic.describe && editSuggestTopic.nameTeacher) {
+    if (editSuggestTopic.nameTopic && editSuggestTopic.describe) {
       axios
         .put(`http://localhost:3001/api/suggestTopic/${editSuggestTopic._id}`, editSuggestTopic, {
           withCredentials: true,
@@ -104,7 +102,7 @@ function SuggestTopic() {
           setIsOpenEditModal(false);
         })
         .catch((err) => {
-          setErrorEdit("Đề tài đề xuất đã tồn tại!.");
+          setErrorEdit(err.response.data.message);
         });
     } else {
       setErrorEdit("Vui lòng điền đầy đủ thông tin");
@@ -112,7 +110,6 @@ function SuggestTopic() {
   };
 
   const handleDeleteTopic = (id) => {
-    setIsOpenDeleteModal(false);
     // Gọi API để xóa đề tài
     axios
       .delete(`http://localhost:3001/api/suggestTopic/${id}`, {
@@ -121,22 +118,24 @@ function SuggestTopic() {
       })
       .then(() => {
         // Cập nhật danh sách đề tài
+        setIsOpenDeleteModal(false);
 
         setTopic();
-        setError("");
+        setErrorDelete("");
       })
       .catch((err) => {
-        setError("Không thể xóa đề tài.");
+        setErrorDelete(err.response.data.message);
       });
   };
 
   const handleCancleDelete = () => {
     setIsOpenDeleteModal(false);
     setIdActiveRow(null);
+    setErrorDelete("");
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewSuggestTopic({ state: "Đang chờ duyệt" });
+    setNewSuggestTopic({ state: "Đang chờ duyệt", code });
     setErrorAdd("");
     setIdActiveRow(null);
   };
@@ -236,6 +235,7 @@ function SuggestTopic() {
                       id={topic._id}
                       handleCancleDelete={handleCancleDelete}
                       handleDelete={handleDeleteTopic}
+                      error={errorDelete}
                     />
                   )}
                 </td>
@@ -262,7 +262,7 @@ function SuggestTopic() {
               title: "Giáo viên hướng dẫn",
               index: 2,
               onSelectionChange: handleChangeAddNameTeacher,
-              api: "teachers",
+              api: "teachersByDepartment",
               nameData: "name",
             },
           ]}
@@ -285,7 +285,7 @@ function SuggestTopic() {
               title: "Giáo viên hướng dẫn",
               index: 2,
               onSelectionChange: handleChangeEditNameTeacher,
-              api: "teachers",
+              api: "teachersByDepartment",
               nameData: "name",
               oldData: editSuggestTopic.nameTeacher,
             },

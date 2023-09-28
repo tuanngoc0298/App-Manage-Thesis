@@ -25,7 +25,7 @@
 }
 
 .title {
-  width: 590px;
+  width: 100%;
   height: 70px;
   background: #6296c5;
   color: #fff;
@@ -89,4 +89,32 @@
   margin-bottom: 20px;
   font-size: 1.5rem;
   color: red;
+}
+
+.wrap-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia thành 2 cột bằng độ rộng tự đều */
+  gap: 30px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.5;
+  .details__title {
+    color: #000;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    width: 100px;
+    display: inline-block;
+  }
+}
+
+.custom {
+  width: 80rem;
+  max-width: 80rem;
+}
+
+.details__checkBox {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px 0;
 }

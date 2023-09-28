@@ -13,10 +13,10 @@ import styles from "./ManagerStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function ManagerStudents() {
-  const major = jwt_decode(Cookies.get("token")).nameMajor;
+  const { nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({ nameMajor: major, state: "Đăng ký đề tài" });
+  const [newStudent, setNewStudent] = useState({ nameMajor, state: "Đăng ký đề tài" });
   const [editStudent, setEditStudent] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -64,7 +64,7 @@ function ManagerStudents() {
     axios
       .get(
         `http://localhost:3001/api/students?searchQuery=${searchQuery}${
-          isFilterByMajor ? `&major=${major}` : ""
+          isFilterByMajor ? `&nameMajor=${nameMajor}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: "http://localhost:3001" }
       )
@@ -115,13 +115,7 @@ function ManagerStudents() {
   };
 
   const handleAddStudent = () => {
-    if (
-      newStudent.codeStudent &&
-      newStudent.nameStudent &&
-      newStudent.year &&
-      newStudent.semester &&
-      newStudent.state
-    ) {
+    if (newStudent.code && newStudent.name && newStudent.year && newStudent.semester && newStudent.state) {
       // Gọi API để thêm sinh viên mới
       axios
         .post("http://localhost:3001/api/students", newStudent, {
@@ -132,7 +126,7 @@ function ManagerStudents() {
           if (res.status !== 400) {
             setStudents([...students, res.data]);
             setIsOpenAddModal(false);
-            setNewStudent({ nameMajor: major, state: "Đăng ký đề tài" });
+            setNewStudent({ nameMajor, state: "Đăng ký đề tài" });
             setErrorAdd("");
           }
         })
@@ -146,13 +140,7 @@ function ManagerStudents() {
 
   const handleEditStudent = () => {
     // Gọi API để sửa sinh viên
-    if (
-      editStudent.nameStudent &&
-      editStudent.codeStudent &&
-      editStudent.year &&
-      editStudent.semester &&
-      editStudent.state
-    ) {
+    if (editStudent.name && editStudent.code && editStudent.year && editStudent.semester && editStudent.state) {
       axios
         .put(`http://localhost:3001/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
@@ -206,7 +194,7 @@ function ManagerStudents() {
   };
   const handleCancleAdd = () => {
     setIsOpenAddModal(false);
-    setNewStudent({ nameMajor: major, state: "Đăng ký đề tài" });
+    setNewStudent({ nameMajor, state: "Đăng ký đề tài" });
     setErrorAdd("");
     setIdActiveRow(null);
   };
@@ -321,10 +309,10 @@ function ManagerStudents() {
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{student.codeStudent} </div>
+                  <div>{student.code} </div>
                 </td>
                 <td>
-                  <div>{student.nameStudent} </div>
+                  <div>{student.name} </div>
                 </td>
                 <td>
                   <div>{student.nameMajor} </div>
@@ -370,7 +358,7 @@ function ManagerStudents() {
                     )}
                     {idActiveRow === student._id && (
                       <DeleteModal
-                        title={`Xóa sinh viên ${student.nameStudent}`}
+                        title={`Xóa sinh viên ${student.name}`}
                         isOpenDeleteModal={isOpenDeleteModal}
                         id={student._id}
                         handleCancleDelete={handleCancleDelete}
@@ -389,8 +377,8 @@ function ManagerStudents() {
         <Modal
           name="Thêm mới sinh viên"
           fields={[
-            ["Mã sinh viên", "codeStudent"],
-            ["Tên sinh viên", "nameStudent"],
+            ["Mã sinh viên", "code"],
+            ["Tên sinh viên", "name"],
           ]}
           newData={newStudent}
           error={errorAdd}
@@ -419,8 +407,8 @@ function ManagerStudents() {
         <Modal
           name="Sửa sinh viên"
           fields={[
-            ["Mã sinh viên", "codeStudent"],
-            ["Tên sinh viên", "nameStudent"],
+            ["Mã sinh viên", "code"],
+            ["Tên sinh viên", "name"],
           ]}
           newData={editStudent}
           error={errorEdit}

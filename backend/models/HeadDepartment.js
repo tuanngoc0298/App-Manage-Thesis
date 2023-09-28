@@ -1,11 +1,11 @@
 const mongoose = require("mongoose");
 
 const headDepartmentSchema = new mongoose.Schema({
-  codeHeadDepartment: {
+  code: {
     type: String,
     require: true,
   },
-  nameHeadDepartment: {
+  name: {
     type: String,
     require: true,
   },

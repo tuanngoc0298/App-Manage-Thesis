@@ -4,7 +4,10 @@ const router = express.Router();
 
 const teacherController = require("../../controllers/HeadDepartment/teacherController");
 
+// Get tất cả giáo viên
 router.get("/teachers", teacherController.getAllTeachers);
+
+router.get("/teachersByDepartment", teacherController.getAllTeachersByDepartment);
 
 // Định nghĩa route để thêm giáo viên mới
 router.post("/teachers", teacherController.addTeacher);

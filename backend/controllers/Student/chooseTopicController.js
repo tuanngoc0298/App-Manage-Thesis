@@ -1,13 +1,13 @@
 const Topic = require("../../models/Topic");
 const TopicStudent = require("../../models/TopicStudent");
+const SuggestTopic = require("../../models/SuggestTopic");
 const jwt = require("jsonwebtoken");
-const User = require("../../models/User");
 
 const ChooseTopicController = {
   getTopicsByMajor: async (req, res) => {
     const { searchQuery } = req.query;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { nameMajor } = decoded;
+    const { nameMajor } = decoded.userInfo;
     try {
       if (searchQuery) {
         const topics = await Topic.find({
@@ -16,12 +16,12 @@ const ChooseTopicController = {
             { describeTopic: { $regex: searchQuery, $options: "i" } },
             { nameTeacher: { $regex: searchQuery, $options: "i" } },
           ],
-          nameMajor: nameMajor,
+          nameMajor,
         });
 
         res.json(topics);
       } else {
-        const topics = await Topic.find({ nameMajor: nameMajor });
+        const topics = await Topic.find({ nameMajor });
 
         res.json(topics);
       }
@@ -34,8 +34,8 @@ const ChooseTopicController = {
   getChooseTopic: async (req, res) => {
     try {
       const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-      const { codeUser } = decoded;
-      const topicStudent = await TopicStudent.findOne({ codeStudent: codeUser });
+      const { code } = decoded.userInfo;
+      const topicStudent = await TopicStudent.findOne({ codeStudent: code });
       const topicSelected = await Topic.find({ nameTopic: topicStudent ? topicStudent.nameTopic : "" });
 
       res.json(topicSelected);
@@ -50,12 +50,16 @@ const ChooseTopicController = {
     try {
       const {
         editTopic: { nameTopic },
-        codeUser,
+        code,
       } = req.body;
-      const topicStudent = new TopicStudent({ codeStudent: codeUser, nameTopic });
-      await topicStudent.save();
 
-      res.status(200).json({ message: "Đăng ký thành công" });
+      if (!(await SuggestTopic.exists({ codeStudent: code }))) {
+        const topicStudent = new TopicStudent({ codeStudent: code, nameTopic });
+        await topicStudent.save();
+        res.status(200).json({ message: "Đăng ký thành công" });
+      } else {
+        res.status(500).json({ message: "Bạn phải hủy đăng ký đề tài đề xuất trước" });
+      }
     } catch (error) {
       res.status(500).json({ message: "Bạn chỉ được đăng ký 1 đề tài." });
     }
@@ -64,9 +68,9 @@ const ChooseTopicController = {
   cancleRegisterTopic: async (req, res) => {
     try {
       const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-      const { codeUser } = decoded;
+      const { code } = decoded.userInfo;
 
-      await TopicStudent.findOneAndDelete({ codeStudent: codeUser });
+      await TopicStudent.findOneAndDelete({ codeStudent: code });
       res.status(200).json({ message: "Hủy đăng ký thành công" });
     } catch (error) {
       console.log(error);

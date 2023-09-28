@@ -11,7 +11,7 @@ import styles from "./ChooseTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function ChooseTopics() {
-  const { codeUser, nameMajor } = jwt_decode(Cookies.get("token"));
+  const { code, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   let editTopic = {};
   const [topics, setTopics] = useState([]);
@@ -57,7 +57,7 @@ function ChooseTopics() {
     axios
       .put(
         `http://localhost:3001/api/chooseTopics/${editTopic._id}`,
-        { editTopic, codeUser },
+        { editTopic, code },
         {
           withCredentials: true,
           baseURL: "http://localhost:3001",

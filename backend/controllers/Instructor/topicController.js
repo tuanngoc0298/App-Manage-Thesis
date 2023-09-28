@@ -63,13 +63,13 @@ const topicController = {
 
     let newData;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { nameUser } = decoded;
+    const { name } = decoded.userInfo;
 
     newData = datas.map((item) => {
-      return { ...item, nameTeacher: nameUser };
+      return { ...item, nameTeacher: name };
     });
 
-    await Topic.deleteMany({ nameTeacher: nameUser });
+    await Topic.deleteMany({ nameTeacher: name });
 
     // Lưu dữ liệu vào MongoDB
     await Topic.insertMany(newData)
