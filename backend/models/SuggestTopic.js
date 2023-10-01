@@ -21,6 +21,7 @@ const suggestTopicSchema = new mongoose.Schema({
   state: {
     type: String,
     required: true,
+    enum: ["Đang chờ duyệt", "Phê duyệt", "Phân công"],
   },
 });
 

@@ -1,5 +1,6 @@
 const Student = require("../../models/Student");
 const SuggestTopic = require("../../models/SuggestTopic");
+const TopicStudent = require("../../models/TopicStudent");
 const jwt = require("jsonwebtoken");
 
 const approveSuggestTopicController = {
@@ -54,6 +55,7 @@ const approveSuggestTopicController = {
             nameStudent: "$topic.name",
             year: "$topic.year",
             semester: "$topic.semester",
+            nameMajor: "$topic.nameMajor",
           },
         },
         {
@@ -69,10 +71,21 @@ const approveSuggestTopicController = {
   },
 
   approveSuggestTopic: async (req, res) => {
+    const { id } = req.params;
+    const {
+      isApprove,
+      editSuggestTopic: { codeStudent, nameTopic, nameTeacher, year, semester },
+    } = req.body;
     try {
-      const { id } = req.params;
-      const { isApprove } = req.body;
       if (isApprove === "Duyệt") {
+        const topicStudent = new TopicStudent({
+          codeStudent,
+          nameTopic,
+          nameTeacher,
+          yearTopic: year,
+          semesterTopic: semester,
+        });
+        await topicStudent.save();
         await SuggestTopic.findByIdAndUpdate(id, { state: "Phê duyệt" });
         res.status(200).json({ message: "Phê duyệt thành công" });
       }

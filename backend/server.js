@@ -24,6 +24,11 @@ const {
   suggestTopicRoutes,
   approveSuggestTopicRoutes,
   assignTeacherRoutes,
+  instructedStudentRoutes,
+  reportProgressRoutes,
+  approveReportProgressRoutes,
+  registerPresentProjectRoutes,
+  approveRegisterPresentRoutes,
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
@@ -35,21 +40,17 @@ db.once("open", () => {
   console.log("Kết nối MongoDB thành công!");
 });
 
-app.use(express.json());
+// app.use(express.json());
+// app.use(bodyParser.json());
 app.use(cookieParser());
-app.use(bodyParser.json());
+
+app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(express.json({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 const corsOptions = {
   origin: "http://localhost:3000",
   credentials: true, //access-control-allow-credentials:true
 };
 app.use(cors(corsOptions));
-// app.use(
-//   session({
-//     secret: "your-secret-key", // Thay thế bằng một khóa bí mật thực tế
-//     resave: false,
-//     saveUninitialized: true,
-//   })
-// );
 
 // PhongDaoTao
 app.use("/api", authRoutes);
@@ -61,14 +62,19 @@ app.use("/api", schoolYearRoutes);
 // Nguoi Phu Trach
 app.use("/api", studentRoutes);
 app.use("/api", assignTeacherRoutes);
+app.use("/api", instructedStudentRoutes);
 
 // GiaoVienHuongDan
 app.use("/api", topicRoutes);
 app.use("/api", approveSuggestTopicRoutes);
+app.use("/api", approveReportProgressRoutes);
+app.use("/api", approveRegisterPresentRoutes);
+
 // Sinh vien
 app.use("/api", chooseTopicRoutes);
 app.use("/api", suggestTopicRoutes);
-
+app.use("/api", reportProgressRoutes);
+app.use("/api", registerPresentProjectRoutes);
 app.listen(port, () => {
   console.log(`Server đang lắng nghe tại http://localhost:${port}`);
 });

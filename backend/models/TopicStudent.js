@@ -10,8 +10,42 @@ const topicStudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  state: {
+  nameTeacher: {
     type: String,
+    required: true,
+  },
+  yearTopic: {
+    type: String,
+    required: true,
+  },
+  semesterTopic: {
+    type: String,
+    required: true,
+  },
+  completeLevel: {
+    type: String,
+  },
+  comment: {
+    type: String,
+  },
+  file: {
+    nameFile: String,
+    data: Buffer,
+  },
+  commentFinal: {
+    type: String,
+  },
+  fileFinal: {
+    nameFile: String,
+    data: Buffer,
+  },
+  stateReportProgress: {
+    type: String,
+    enum: ["Đang chờ duyệt", "Phê duyệt", "Không phê duyệt"],
+  },
+  statePresentProject: {
+    type: String,
+    enum: ["Đang chờ duyệt", "Phê duyệt", "Không phê duyệt"],
   },
 });
 

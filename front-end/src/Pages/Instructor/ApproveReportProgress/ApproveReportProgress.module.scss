@@ -1,0 +1,257 @@
+.title {
+  line-height: 35px;
+  font-size: 1.5rem;
+  text-indent: 7px;
+  color: #175765;
+  font-weight: bold;
+  background: #dbe3e4;
+  margin-bottom: 21px;
+}
+
+// Search, add
+.function {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px 10px;
+}
+.function__allow {
+  display: flex;
+  gap: 100px;
+}
+.filter-comboBox {
+  display: flex;
+  justify-content: flex-end;
+  gap: 30px;
+  margin-right: 30px;
+}
+
+.btn-add {
+  padding: 10px 20px;
+  background-color: #6296c5;
+  font-weight: 800;
+}
+//
+
+.data tr {
+  border: 1px solid #908d8d;
+}
+
+.data {
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: auto;
+  width: 100%;
+  .column__functions {
+    width: 150px;
+    position: relative;
+  }
+}
+
+.data th,
+.data td {
+  height: 50px;
+}
+
+.data .table__index {
+  width: 50px;
+}
+.data thead {
+  background: #6296c5;
+  color: #fff;
+}
+
+.input {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+}
+.btn-more {
+  position: relative;
+}
+.wrapper__btn {
+  width: 70%;
+
+  position: absolute;
+  background-color: #6296c5;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 15px;
+  z-index: 1;
+  &:hover {
+    background-color: #227bc9;
+  }
+}
+
+.btn {
+  padding: 11px 12px;
+  color: #fff;
+  border-radius: 5px;
+  width: 100%;
+}
+.form__comment {
+  margin-top: 10px;
+  .form__textArea {
+    margin-top: 10px;
+    width: 100%;
+    height: 250px;
+    font-size: 1.6rem;
+    padding: 10px;
+  }
+}
+
+.tab {
+  border-bottom: 1px solid #ccc;
+
+  button {
+    padding: 10px;
+    border-right: 1px solid #908d8d;
+    background-color: rgb(204 204 204 / 28%);
+    &:hover {
+      background-color: rgb(204 204 204);
+    }
+  }
+}
+
+// Modal
+
+.modal {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  min-width: 80rem;
+  box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+  transition: all 0.5s;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+
+  z-index: 100;
+  transition: all 0.5s;
+}
+.hidden {
+  opacity: 0;
+  visibility: hidden;
+}
+
+.title-modal {
+  width: 100%;
+  height: 70px;
+  background: #6296c5;
+  color: #fff;
+  font-size: 2.5rem;
+  font-weight: 800;
+  letter-spacing: 1.05px;
+  text-align: center;
+  line-height: 7rem;
+}
+.form {
+  background-color: #fff;
+  padding: 60px;
+}
+.row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 50px;
+  .field {
+    color: #000;
+    font-size: 1.5rem;
+    font-weight: 800;
+    letter-spacing: 0.7px;
+    margin-right: 20px;
+  }
+  .wrap-input {
+    border-radius: 20px;
+    border: 1px solid #000;
+    background: #fff;
+    width: 300px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+  }
+  input {
+    width: 80%;
+    height: 100%;
+    font-size: 2rem;
+  }
+}
+
+.btns {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  .btn-modal {
+    width: 130px;
+    height: 40px;
+    border: 1px solid #000;
+    background: #d9d9d9;
+    color: #000;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: 1.05px;
+    font-family: Inter;
+  }
+}
+
+.message {
+  text-align: center;
+  margin-bottom: 20px;
+  font-size: 1.5rem;
+  color: red;
+}
+
+.wrap-details {
+  display: grid;
+  grid-template-columns: 1fr 1fr; /* Chia thành 2 cột bằng độ rộng tự đều */
+  gap: 30px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.5;
+}
+.details__linkDownload {
+  display: inline-flex;
+  align-items: center;
+  .linkDownload {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-left: 5px;
+  }
+}
+.details__title {
+  color: #000;
+  font-weight: 800;
+  letter-spacing: 0.7px;
+  display: inline-block;
+  margin-right: 20px;
+}
+.custom {
+  width: 80rem;
+  max-width: 80rem;
+}
+
+.details__checkBox {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+  margin: 40px 0;
+}
+
+.uploadFile {
+  text-align: center;
+  margin-bottom: 50px;
+  span {
+    font-weight: 800;
+    font-size: 1.7rem;
+    margin-right: 10px;
+  }
+}

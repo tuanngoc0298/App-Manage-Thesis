@@ -1,5 +1,7 @@
 const Student = require("../../models/Student");
 const SuggestTopic = require("../../models/SuggestTopic");
+const TopicStudent = require("../../models/TopicStudent");
+
 const jwt = require("jsonwebtoken");
 
 const assignTeacherController = {
@@ -51,7 +53,6 @@ const assignTeacherController = {
             codeStudent: 1,
             nameTopic: 1,
             describe: 1,
-            nameTeacher: 1,
             nameStudent: "$topic.name",
             year: "$topic.year",
             semester: "$topic.semester",
@@ -62,7 +63,7 @@ const assignTeacherController = {
           $match: query,
         },
       ]);
-
+      console.log(data);
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -73,7 +74,19 @@ const assignTeacherController = {
   assignTeacher: async (req, res) => {
     try {
       const { id } = req.params;
-      const { valNameTeacher: nameTeacher } = req.body;
+      const {
+        valNameTeacher: nameTeacher,
+        editSuggestTopic: { codeStudent, nameTopic, year, semester },
+      } = req.body;
+      const topicStudent = new TopicStudent({
+        codeStudent,
+        nameTopic,
+        nameTeacher,
+        yearTopic: year,
+        semesterTopic: semester,
+      });
+      await topicStudent.save();
+
       await SuggestTopic.findByIdAndUpdate(id, { nameTeacher });
       res.status(200).json({ message: "Phê duyệt thành công" });
     } catch (error) {

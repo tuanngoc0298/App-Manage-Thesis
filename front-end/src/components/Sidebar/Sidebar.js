@@ -39,9 +39,16 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/suggestTopic">Đề tài đề xuất</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/reportProgress">Báo cáo tiến độ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/registerPresent">Đăng ký bảo vệ</Link>
+            </li>
           </ul>
         </div>
       );
+
       break;
     case "GiaoVien":
       content = (
@@ -53,6 +60,15 @@ function Sidebar() {
             </li>
             <li className={cx("item")}>
               <Link to="/approveSuggestTopics">Duyệt đề tài đề xuất</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/instructedStudents">Danh sách sinh viên hướng dẫn</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/approveReportProgess">Kiểm tra tiến độ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/approveRegisterPresent">Duyệt đăng ký bảo vệ</Link>
             </li>
           </ul>
         </div>

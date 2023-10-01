@@ -52,7 +52,7 @@ function AssignTeachers() {
       axios
         .put(
           `http://localhost:3001/api/assignTeachers/${editSuggestTopic._id}`,
-          { valNameTeacher },
+          { valNameTeacher, editSuggestTopic },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -167,7 +167,7 @@ function AssignTeachers() {
 
       {isOpenAssignModal && (
         <Modal
-          name="Duyệt đề tài đề xuất"
+          name="Phân công giáo viên hướng dẫn"
           details={[
             ["Mã SV", editSuggestTopic.codeStudent],
             ["Tên SV", editSuggestTopic.nameStudent],
@@ -185,6 +185,7 @@ function AssignTeachers() {
             api: "teachersByDepartment",
             nameData: "name",
             customStyle: { justifyContent: "center", marginTop: "40px" },
+            defaultDisplay: "Chọn giáo viên",
           }}
         />
       )}

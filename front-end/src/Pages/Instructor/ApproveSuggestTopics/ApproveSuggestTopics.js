@@ -1,7 +1,7 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar, Modal, ComboBox } from "~/components";
 
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
 
@@ -50,7 +50,7 @@ function ApproveSuggestTopics() {
       axios
         .put(
           `http://localhost:3001/api/approveSuggesttopics/${editSuggestTopic._id}`,
-          { isApprove },
+          { editSuggestTopic, isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
@@ -72,7 +72,7 @@ function ApproveSuggestTopics() {
   const handleCancleApprove = () => {
     setIsOpenApproveModal(false);
     setIsApprove("");
-
+    setEditSuggestTopic({});
     setErrorApprove("");
   };
 
@@ -117,9 +117,8 @@ function ApproveSuggestTopics() {
             <tr>
               <th>STT</th>
               <th>Mã sinh viên</th>
-
               <th>Tên đề tài</th>
-
+              <th>Tên ngành</th>
               <th>Năm học</th>
               <th>Kỳ học</th>
               <th>Chức năng</th>
@@ -136,6 +135,9 @@ function ApproveSuggestTopics() {
 
                 <td>
                   <div>{suggestTopic.nameTopic} </div>
+                </td>
+                <td>
+                  <div>{suggestTopic.nameMajor} </div>
                 </td>
 
                 <td>
@@ -171,6 +173,7 @@ function ApproveSuggestTopics() {
             ["Mã SV", editSuggestTopic.codeStudent],
             ["Tên SV", editSuggestTopic.nameStudent],
             ["Tên đề tài", editSuggestTopic.nameTopic],
+            ["Tên ngành", editSuggestTopic.nameMajor],
             ["Mô tả", editSuggestTopic.describe],
             ["Năm học", editSuggestTopic.year],
             ["Kỳ học", editSuggestTopic.semester],

@@ -15,6 +15,7 @@ function Modal({
   handleChangeInput,
   indexsComboBox,
   handleApproveTopic,
+  handleFileChange,
 }) {
   let newFields;
   if (fields) {
@@ -27,7 +28,7 @@ function Modal({
         <div className={cx("wrap-input")}>
           <input
             type="text"
-            value={newData[key]}
+            value={newData && newData[key]}
             onChange={(e) => handleChangeInput({ ...newData, [key]: e.target.value })}
           />
         </div>
@@ -46,7 +47,7 @@ function Modal({
         <div className={cx("wrap-details")}>
           {details.map(([key, value], index) => (
             <div key={index}>
-              <span className={cx("details__title")}>{key}</span>: {value}
+              <span className={cx("details__title")}>{key}:</span> {value}
             </div>
           ))}
         </div>
@@ -83,6 +84,12 @@ function Modal({
         <div className={cx("title")}>{name}</div>
         <div className={cx("form")}>
           {newFields}
+          {handleFileChange && (
+            <div id="formUpload" className={cx("uploadFile")}>
+              <span>Tải lên: </span>
+              <input type="file" accept=".zip" onChange={handleFileChange} />
+            </div>
+          )}
           {error && <div className={cx("message")}>{error}</div>}
           <div className={cx("btns")}>
             <button className={cx("btn")} onClick={handleCancle}>

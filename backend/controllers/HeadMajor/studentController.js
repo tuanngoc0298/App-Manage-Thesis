@@ -40,7 +40,6 @@ const studentController = {
     if (!req.file) {
       return res.status(400).json({ message: "No file uploaded" });
     }
-
     const workbook = XLSX.read(req.file.buffer, { type: "buffer" });
     const sheetName = workbook.SheetNames[0];
     const worksheet = workbook.Sheets[sheetName];

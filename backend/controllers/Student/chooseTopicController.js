@@ -7,7 +7,8 @@ const ChooseTopicController = {
   getTopicsByMajor: async (req, res) => {
     const { searchQuery } = req.query;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-    const { nameMajor } = decoded.userInfo;
+    const { nameMajor, year, semester } = decoded.userInfo;
+    console.log(year, semester);
     try {
       if (searchQuery) {
         const topics = await Topic.find({
@@ -17,11 +18,13 @@ const ChooseTopicController = {
             { nameTeacher: { $regex: searchQuery, $options: "i" } },
           ],
           nameMajor,
+          year,
+          semester,
         });
 
         res.json(topics);
       } else {
-        const topics = await Topic.find({ nameMajor });
+        const topics = await Topic.find({ nameMajor, year, semester });
 
         res.json(topics);
       }
@@ -49,12 +52,20 @@ const ChooseTopicController = {
   registerTopic: async (req, res) => {
     try {
       const {
-        editTopic: { nameTopic },
+        editTopic: { nameTopic, nameTeacher },
         code,
       } = req.body;
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { year, semester } = decoded.userInfo;
 
       if (!(await SuggestTopic.exists({ codeStudent: code }))) {
-        const topicStudent = new TopicStudent({ codeStudent: code, nameTopic });
+        const topicStudent = new TopicStudent({
+          codeStudent: code,
+          nameTopic,
+          nameTeacher,
+          yearTopic: year,
+          semesterTopic: semester,
+        });
         await topicStudent.save();
         res.status(200).json({ message: "Đăng ký thành công" });
       } else {

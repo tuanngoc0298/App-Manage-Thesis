@@ -86,9 +86,7 @@ function ManagerStudents() {
     if (file) {
       const formData = new FormData();
       formData.append("file", file);
-
       const form = document.getElementById("formImport");
-
       axios
         .post("http://localhost:3001/api/studentsUpload", formData, {
           withCredentials: true,
