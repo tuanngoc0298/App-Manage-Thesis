@@ -47,7 +47,8 @@ function Modal({
         <div className={cx("wrap-details")}>
           {details.map(([key, value], index) => (
             <div key={index}>
-              <span className={cx("details__title")}>{key}:</span> {value}
+              <span className={cx("details__title")}>{key}:</span>{" "}
+              <span className={cx("details__content")}>{value}</span>
             </div>
           ))}
         </div>

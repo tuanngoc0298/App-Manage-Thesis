@@ -6,16 +6,16 @@ import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./AssignTeachers.module.scss";
+import styles from "./AssignCounterTeachers.module.scss";
 
 const cx = classNames.bind(styles);
 
-function AssignTeachers() {
-  const [suggestTopics, setSuggestTopics] = useState([]);
+function AssignCounterTeachers() {
+  const [requests, setRequests] = useState([]);
 
   const [valNameTeacher, setValNameTeacher] = useState("");
 
-  const [editSuggestTopic, setEditSuggestTopic] = useState({});
+  const [editRequest, setEditRequest] = useState({});
 
   const [isOpenAssignModal, setIsOpenAssignModal] = useState(false);
 
@@ -35,11 +35,11 @@ function AssignTeachers() {
   function getAllStudentsNeedAssign() {
     axios
       .get(
-        `http://localhost:3001/api/assignTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        `http://localhost:3001/api/assignCounterTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: "http://localhost:3001" }
       )
       .then((res) => {
-        setSuggestTopics(res.data);
+        setRequests(res.data);
       })
       .catch((err) => {
         setError("Không thể tải danh sách đề tài đề xuất.");
@@ -51,14 +51,14 @@ function AssignTeachers() {
     if (valNameTeacher) {
       axios
         .put(
-          `http://localhost:3001/api/assignTeachers/${editSuggestTopic._id}`,
-          { valNameTeacher, editSuggestTopic },
+          `http://localhost:3001/api/assignCounterTeachers/${editRequest._id}`,
+          { valNameTeacher, editRequest },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
         .then((res) => {
-          setEditSuggestTopic({});
+          setEditRequest({});
           setValNameTeacher("");
           setIsOpenAssignModal(false);
           getAllStudentsNeedAssign();
@@ -91,7 +91,7 @@ function AssignTeachers() {
   };
   return (
     <DefaultLayout>
-      <h2 className={cx("title")}>Phân công giáo viên hướng dẫn</h2>
+      <h2 className={cx("title")}>Phân công giáo viên phản biện</h2>
 
       <div className={cx("function")}>
         <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudentsNeedAssign} />
@@ -122,8 +122,8 @@ function AssignTeachers() {
             <tr>
               <th>STT</th>
               <th>Mã sinh viên</th>
-              <th>Tên đề tài</th>
-              <th>Giáo viên hướng dẫn</th>
+              <th>Tên sinh viên</th>
+              <th>Giáo viên phản biện</th>
               <th>Năm học</th>
               <th>Kỳ học</th>
 
@@ -131,7 +131,7 @@ function AssignTeachers() {
             </tr>
           </thead>
 
-          {suggestTopics.map((suggestTopic, index) => (
+          {requests.map((suggestTopic, index) => (
             <tbody key={index}>
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
@@ -139,10 +139,10 @@ function AssignTeachers() {
                   <div>{suggestTopic.codeStudent} </div>
                 </td>
                 <td>
-                  <div>{suggestTopic.nameTopic} </div>
+                  <div>{suggestTopic.nameStudent} </div>
                 </td>
                 <td>
-                  <div>{suggestTopic.nameTeacher} </div>
+                  <div>{suggestTopic.nameCounterTeacher} </div>
                 </td>
                 <td>
                   <div>{suggestTopic.year} </div>
@@ -156,7 +156,7 @@ function AssignTeachers() {
                     <button
                       className={cx("btn")}
                       onClick={() => {
-                        setEditSuggestTopic(suggestTopic);
+                        setEditRequest(suggestTopic);
                         setIsOpenAssignModal(true);
                       }}
                     >
@@ -172,15 +172,14 @@ function AssignTeachers() {
 
       {isOpenAssignModal && (
         <Modal
-          name="Phân công giáo viên hướng dẫn"
+          name="Phân công giáo viên phản biện"
           details={[
-            ["Mã SV", editSuggestTopic.codeStudent],
-            ["Tên SV", editSuggestTopic.nameStudent],
-            ["Tên đề tài", editSuggestTopic.nameTopic],
-            ["GV hướng dẫn", editSuggestTopic.nameTeacher],
-            ["Mô tả", editSuggestTopic.describe],
-            ["Năm học", editSuggestTopic.year],
-            ["Kỳ học", editSuggestTopic.semester],
+            ["Mã SV", editRequest.codeStudent],
+            ["Tên SV", editRequest.nameStudent],
+            ["Tên đề tài", editRequest.nameTopic],
+            ["GV phản biện", editRequest.nameCounterTeacher],
+            ["Năm học", editRequest.year],
+            ["Kỳ học", editRequest.semester],
           ]}
           error={errorAssign}
           handleCancle={handleCancleAssign}
@@ -188,7 +187,7 @@ function AssignTeachers() {
           indexsComboBox={{
             title: "Tên giáo viên",
             onSelectionChange: handleChangNameTeacher,
-            api: "teachersByDepartment",
+            api: `teachersByDepartment?nameTeacher=${editRequest.nameTeacher}`,
             nameData: "name",
             customStyle: { justifyContent: "center", marginTop: "40px" },
             defaultDisplay: "Chọn giáo viên",
@@ -199,4 +198,4 @@ function AssignTeachers() {
   );
 }
 
-export default AssignTeachers;
+export default AssignCounterTeachers;

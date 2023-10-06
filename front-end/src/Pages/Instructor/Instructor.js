@@ -5,6 +5,7 @@ import {
   InstructedStudents,
   ApproveReportProgress,
   ApproveRegisterPresent,
+  ApproveFinalReport,
 } from "./";
 import { Home } from "~/components";
 
@@ -17,6 +18,7 @@ function Instructor() {
       <Route path="/instructedStudents" element={<InstructedStudents />} />
       <Route path="/approveReportProgess" element={<ApproveReportProgress />} />
       <Route path="/approveRegisterPresent" element={<ApproveRegisterPresent />} />
+      <Route path="/approveFinalReport" element={<ApproveFinalReport />} />
     </Routes>
   );
 }

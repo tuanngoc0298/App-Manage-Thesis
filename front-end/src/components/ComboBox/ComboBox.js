@@ -16,6 +16,7 @@ function ComboBox({
   onGetInitialValue,
   hasTitle = true,
   customStyle,
+  customInput,
   defaultDisplay = "Chọn một mục",
 }) {
   const [data, setData] = useState([]);
@@ -46,10 +47,10 @@ function ComboBox({
       {hasTitle && (
         <span className={cx("field")}>
           {title}
-          {isRequired && <span style={{ color: "red" }}>*</span>}
+          {isRequired && <span style={{ color: "red" }}>*</span>}:
         </span>
       )}
-      <div className={cx("wrap-input")}>
+      <div className={cx("wrap-input")} style={customInput}>
         <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>
           <option value="">{defaultDisplay}</option>
           {data.map((item, index) => {

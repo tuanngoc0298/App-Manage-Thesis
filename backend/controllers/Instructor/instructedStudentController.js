@@ -10,10 +10,10 @@ const instructedStudentController = {
       const query = {};
 
       if (year) {
-        query.year = year;
+        query.yearTopic = year;
       }
       if (semester) {
-        query.semester = semester;
+        query.semesterTopic = semester;
       }
       if (searchQuery) {
         query.$or = [

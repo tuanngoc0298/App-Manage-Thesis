@@ -4,16 +4,15 @@ const TopicStudent = require("../../models/TopicStudent");
 
 const jwt = require("jsonwebtoken");
 
-const assignTeacherController = {
+const assignCounterTeacherController = {
   // GET
   getAllStudentsNeedAssign: async (req, res) => {
+    const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+
+    const { searchQuery, year, semester } = req.query;
+    const { nameMajor } = decoded.userInfo;
+    const query = { nameMajor };
     try {
-      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
-
-      const { searchQuery, year, semester } = req.query;
-      const { nameMajor } = decoded.userInfo;
-      const query = { nameMajor };
-
       if (year) {
         query.year = year;
       }
@@ -29,10 +28,11 @@ const assignTeacherController = {
         ];
       }
 
-      const data = await SuggestTopic.aggregate([
+      const data = await TopicStudent.aggregate([
         {
           $match: {
-            state: "Phân công",
+            statePresentProject: "Đã được phê duyệt",
+            nameCounterTeacher: { $exists: false },
           },
         },
         {
@@ -51,8 +51,8 @@ const assignTeacherController = {
             _id: 1, // Loại bỏ trường _id nếu bạn không muốn giữ nó
             codeStudent: 1,
             nameTopic: 1,
-            describe: 1,
             nameTeacher: 1,
+            nameCounterTeacher: 1,
             nameStudent: "$topic.name",
             year: "$topic.year",
             semester: "$topic.semester",
@@ -63,42 +63,17 @@ const assignTeacherController = {
           $match: query,
         },
       ]);
-      res.json(data);
+      res.status(200).json(data);
     } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "Lỗi khi tải danh sách Đề tài đề xuất." });
+      res.status(500).json({ error: "Lỗi khi tải danh sách sinh viên đăng ký bảo vệ." });
     }
   },
 
-  assignTeacher: async (req, res) => {
+  assignCounterTeacher: async (req, res) => {
     try {
       const { id } = req.params;
-      const {
-        valNameTeacher: nameTeacher,
-        editSuggestTopic: { codeStudent, nameTopic, year, semester },
-      } = req.body;
-      const condition = await TopicStudent.exists({ codeStudent });
-      if (!condition) {
-        const topicStudent = new TopicStudent({
-          codeStudent,
-          nameTopic,
-          nameTeacher,
-          yearTopic: year,
-          semesterTopic: semester,
-        });
-        await topicStudent.save();
-      } else {
-        await TopicStudent.updateOne(
-          { codeStudent },
-          {
-            $set: {
-              nameTeacher,
-            },
-          }
-        );
-      }
-
-      await SuggestTopic.findByIdAndUpdate(id, { nameTeacher });
+      const { valNameTeacher: nameCounterTeacher } = req.body;
+      await TopicStudent.findByIdAndUpdate(id, { nameCounterTeacher });
       res.status(200).json({ message: "Phê duyệt thành công" });
     } catch (error) {
       console.log(error);
@@ -107,4 +82,4 @@ const assignTeacherController = {
   },
 };
 
-module.exports = assignTeacherController;
+module.exports = assignCounterTeacherController;

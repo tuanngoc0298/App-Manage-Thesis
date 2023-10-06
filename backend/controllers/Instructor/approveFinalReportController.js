@@ -4,15 +4,15 @@ const Report = require("../../models/Report");
 
 const jwt = require("jsonwebtoken");
 
-const approveReportProgressController = {
+const approveFinalReportController = {
   // GET
-  getAllLatestReports: async (req, res) => {
+  getAllFinalReports: async (req, res) => {
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
     const { name } = decoded.userInfo;
 
     try {
       const { searchQuery, year, semester, stateApprove } = req.query;
-      const query = { nameTeacher: name };
+      const query = {};
       let stateReport;
       if (stateApprove) {
         stateReport = { $ne: "Đang chờ duyệt" };
@@ -33,21 +33,18 @@ const approveReportProgressController = {
         ];
       }
 
-      const data = await Report.aggregate([
-        { $sort: { codeStudent: 1, time: -1 } },
-        { $match: { stateReportProgress: stateReport } },
+      const data = await TopicStudent.aggregate([
         {
-          $group: {
-            _id: "$codeStudent",
-            latestReport: { $first: "$$ROOT" }, // Chọn bản ghi report mới nhất từ mỗi nhóm
+          $match: {
+            nameCounterTeacher: name,
+            stateApproveProject: stateReport,
           },
         },
-
         {
           $lookup: {
-            from: TopicStudent.collection.name,
-            localField: "_id",
-            foreignField: "codeStudent",
+            from: Student.collection.name,
+            localField: "codeStudent",
+            foreignField: "code",
             as: "topic",
           },
         },
@@ -55,30 +52,16 @@ const approveReportProgressController = {
           $unwind: "$topic",
         },
         {
-          $lookup: {
-            from: Student.collection.name,
-            localField: "_id",
-            foreignField: "code",
-            as: "student",
-          },
-        },
-        {
-          $unwind: "$student",
-        },
-        {
           $project: {
-            _id: "$latestReport._id",
-            codeStudent: "$latestReport.codeStudent",
-            nameStudent: "$student.name",
-            nameTeacher: "$topic.nameTeacher",
-            nameTopic: "$topic.nameTopic",
-            yearTopic: "$topic.yearTopic",
-            semesterTopic: "$topic.semesterTopic",
-            completeLevel: "$latestReport.completeLevel",
-            comment: "$latestReport.comment",
-            file: "$latestReport.file",
-            stateReportProgress: "$latestReport.stateReportProgress",
-            time: "$latestReport.time",
+            _id: 1,
+            codeStudent: 1,
+            nameStudent: "$topic.name",
+            nameTopic: 1,
+            yearTopic: 1,
+            semesterTopic: 1,
+            fileFinal: 1,
+            commentFinal: 1,
+            stateApproveProject: 1,
           },
         },
         {
@@ -92,35 +75,18 @@ const approveReportProgressController = {
       res.status(500).json({ error: "Lỗi khi tải báo cáo tiến độ" });
     }
   },
-  getAllReportsDetail: async (req, res) => {
-    try {
-      if (req.params.id) {
-        const { id } = req.params;
-        const reportsDetail = await Report.findById(id);
-        const data = await Report.find({
-          codeStudent: reportsDetail.codeStudent,
-          stateReportProgress: { $ne: "Đang chờ duyệt" },
-        }).sort({ time: 1 });
 
-        res.status(200).json(data);
-      } else {
-        res.status(500).json("Không thể tải chi tiết báo cáo.");
-      }
-    } catch (err) {
-      res.status(500).send("Không thể tải chi tiết báo cáo.");
-    }
-  },
-  // IMPORT
+  // download
   downLoadFile: async (req, res) => {
     const { id } = req.params;
 
     try {
-      const report = await Report.findById(id);
+      const report = await TopicStudent.findById(id);
       if (!report) {
         res.status(404).send("Không tìm thấy báo cáo cho mã sinh viên này.");
         return;
       }
-      const { nameFile, data } = report.file;
+      const { nameFile, data } = report.fileFinal;
       // Thiết lập đối tượng tệp để tải xuống
       res.setHeader("Content-Disposition", `attachment; filename=${nameFile}`);
       res.setHeader("Content-Type", "application/zip");
@@ -129,17 +95,25 @@ const approveReportProgressController = {
       res.status(500).send("Đã xảy ra lỗi.");
     }
   },
-  approveReportProgress: async (req, res) => {
+  approveFinalReport: async (req, res) => {
     const { id } = req.params;
-    const { isApprove, comment } = req.body;
+    const { isApprove, commentFinal } = req.body;
     try {
       if (isApprove === "Duyệt") {
-        await Report.findByIdAndUpdate(id, { comment, stateReportProgress: "Đã được phê duyệt" });
+        await TopicStudent.findByIdAndUpdate(id, {
+          commentFinal,
+          stateApproveProject: "Đã được phê duyệt",
+          statePresentProject: "Được bảo vệ khóa luận",
+        });
         res.status(200).send("Phê duyệt thành công.");
       }
       if (isApprove === "Từ chối") {
-        if (comment) {
-          await Report.findByIdAndUpdate(id, { comment, stateReportProgress: "Không phê duyệt" });
+        if (commentFinal) {
+          await TopicStudent.findByIdAndUpdate(id, {
+            commentFinal,
+            stateApproveProject: "Không phê duyệt",
+            statePresentProject: "Không phê duyệt",
+          });
           res.status(200).send("Từ chối phê duyệt thành công.");
         } else {
           res.status(500).send("Bạn phải nhận xét trước khi Từ chối phê duyệt.");
@@ -151,4 +125,4 @@ const approveReportProgressController = {
   },
 };
 
-module.exports = approveReportProgressController;
+module.exports = approveFinalReportController;

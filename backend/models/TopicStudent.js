@@ -14,6 +14,9 @@ const topicStudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nameCounterTeacher: {
+    type: String,
+  },
   yearTopic: {
     type: String,
     required: true,
@@ -22,16 +25,6 @@ const topicStudentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  completeLevel: {
-    type: String,
-  },
-  comment: {
-    type: String,
-  },
-  file: {
-    nameFile: String,
-    data: Buffer,
-  },
   commentFinal: {
     type: String,
   },
@@ -39,13 +32,43 @@ const topicStudentSchema = new mongoose.Schema({
     nameFile: String,
     data: Buffer,
   },
-  stateReportProgress: {
-    type: String,
-    enum: ["Đang chờ duyệt", "Phê duyệt", "Không phê duyệt"],
-  },
+
   statePresentProject: {
     type: String,
-    enum: ["Đang chờ duyệt", "Phê duyệt", "Không phê duyệt"],
+    enum: ["Đang chờ duyệt", "Đã được phê duyệt", "Không phê duyệt", "Được bảo vệ khóa luận"],
+  },
+  stateApproveProject: {
+    type: String,
+    enum: ["Đang chờ duyệt", "Đã được phê duyệt", "Không phê duyệt"],
+  },
+
+  protectionCouncil: {
+    nameCouncil: {
+      type: String,
+      required: true,
+    },
+
+    describeCouncil: {
+      type: String,
+    },
+    members: {
+      chairperson: String,
+      secretary: String,
+      commissioner: String,
+    },
+    shift: {
+      type: String,
+    },
+    time: {
+      type: String,
+    },
+    roomCode: {
+      type: String,
+    },
+    stateProtection: {
+      type: String,
+      enum: ["Chưa bảo vệ", "Đã bảo vệ"],
+    },
   },
 });
 

@@ -4,8 +4,6 @@ import { Modal } from "~/components";
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
-import jwt_decode from "jwt-decode";
-import Cookies from "js-cookie";
 
 import classNames from "classnames/bind";
 import styles from "./ReportProgress.module.scss";
@@ -13,9 +11,7 @@ import styles from "./ReportProgress.module.scss";
 const cx = classNames.bind(styles);
 
 function ReportProgress() {
-  const { code } = jwt_decode(Cookies.get("token")).userInfo;
-
-  const [topic, setTopic] = useState({});
+  const [topics, setTopics] = useState([]);
   const [completeLevel, setCompleteLevel] = useState("");
   const [reportFile, setReportFile] = useState(null);
 
@@ -31,7 +27,7 @@ function ReportProgress() {
     axios
       .get("http://localhost:3001/api/reportProgress", { withCredentials: true, baseURL: "http://localhost:3001" })
       .then((res) => {
-        setTopic(res.data);
+        setTopics(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -46,7 +42,7 @@ function ReportProgress() {
       formData.append("file", reportFile);
 
       axios
-        .put(`http://localhost:3001/api/reportProgress/${topic._id}`, formData, {
+        .post(`http://localhost:3001/api/reportProgress`, formData, {
           withCredentials: true,
           baseURL: "http://localhost:3001",
           headers: {
@@ -98,18 +94,21 @@ function ReportProgress() {
         <table className={cx("data")}>
           <thead>
             <tr>
+              <th>STT</th>
               <th>Trạng thái</th>
               <th>Mức độ hoàn thành</th>
               <th>
                 <span className="material-symbols-outlined">folder_zip</span>
               </th>
               <th>Nhận xét</th>
+              <th>Thời gian báo cáo</th>
             </tr>
           </thead>
 
-          {topic?.stateReportProgress && (
-            <tbody>
+          {topics.map((topic, index) => (
+            <tbody key={index}>
               <tr>
+                <td className={cx("table__index")}>{index + 1}</td>
                 <td>
                   <div>{topic.stateReportProgress} </div>
                 </td>
@@ -128,9 +127,12 @@ function ReportProgress() {
                 <td>
                   <div>{topic.comment} </div>
                 </td>
+                <td>
+                  <div>{topic.time} </div>
+                </td>
               </tr>
             </tbody>
-          )}
+          ))}
         </table>
       </div>
 

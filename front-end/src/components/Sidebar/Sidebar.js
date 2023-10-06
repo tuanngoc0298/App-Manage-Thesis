@@ -24,6 +24,12 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/assignTeachers">Phân công giáo viên hướng dẫn</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/assignCounterTeachers">Phân công giáo viên phản biện</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/establishCouncil">Thành lập HĐBV</Link>
+            </li>
           </ul>
         </div>
       );
@@ -69,6 +75,9 @@ function Sidebar() {
             </li>
             <li className={cx("item")}>
               <Link to="/approveRegisterPresent">Duyệt đăng ký bảo vệ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/approveFinalReport">Duyệt báo cáo</Link>
             </li>
           </ul>
         </div>

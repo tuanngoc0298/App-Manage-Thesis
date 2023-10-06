@@ -11,6 +11,6 @@ const reportProgressController = require("../../controllers/Student/reportProgre
 router.get("/reportProgress", reportProgressController.getTopic);
 
 // Upload file zip
-router.put("/reportProgress/:id", upload.single("file"), reportProgressController.uploadReport);
+router.post("/reportProgress", upload.single("file"), reportProgressController.uploadReport);
 
 module.exports = router;

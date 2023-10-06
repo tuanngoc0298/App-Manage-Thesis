@@ -1,6 +1,7 @@
 const Topic = require("../../models/Topic");
 const TopicStudent = require("../../models/TopicStudent");
 const SuggestTopic = require("../../models/SuggestTopic");
+const Report = require("../../models/Report");
 const jwt = require("jsonwebtoken");
 
 const ChooseTopicController = {
@@ -8,7 +9,6 @@ const ChooseTopicController = {
     const { searchQuery } = req.query;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
     const { nameMajor, year, semester } = decoded.userInfo;
-    console.log(year, semester);
     try {
       if (searchQuery) {
         const topics = await Topic.find({
@@ -30,7 +30,7 @@ const ChooseTopicController = {
       }
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Lỗi khi tải danh sách đề tài." });
+      res.status(500).json({ message: "Lỗi khi tải danh sách đề tài." });
     }
   },
   // GET
@@ -38,13 +38,14 @@ const ChooseTopicController = {
     try {
       const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
       const { code } = decoded.userInfo;
+
       const topicStudent = await TopicStudent.findOne({ codeStudent: code });
       const topicSelected = await Topic.find({ nameTopic: topicStudent ? topicStudent.nameTopic : "" });
 
       res.json(topicSelected);
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Lỗi khi tải đề tài đăng ký." });
+      res.status(500).json({ message: "Lỗi khi tải đề tài đăng ký." });
     }
   },
 
@@ -80,12 +81,14 @@ const ChooseTopicController = {
     try {
       const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
       const { code } = decoded.userInfo;
-
+      if (await Report.exists({ codeStudent: code })) {
+        return res.status(500).json({ message: "Bạn không thể xóa." });
+      }
       await TopicStudent.findOneAndDelete({ codeStudent: code });
       res.status(200).json({ message: "Hủy đăng ký thành công" });
     } catch (error) {
       console.log(error);
-      res.status(500).json({ error: "Lỗi khi hủy đăng ký đề tài." });
+      res.status(500).json({ message: "Lỗi khi hủy đăng ký đề tài." });
     }
   },
 };

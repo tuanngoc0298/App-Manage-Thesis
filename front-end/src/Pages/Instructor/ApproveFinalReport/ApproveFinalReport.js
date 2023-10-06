@@ -1,29 +1,23 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
 import { SearchBar, ComboBox } from "~/components";
 
-import React, { useState, useEffect, useContext, useRef } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./ApproveReportProgress.module.scss";
+import styles from "./ApproveFinalReport.module.scss";
 
 const cx = classNames.bind(styles);
 
-function ApproveReportProgress() {
-  const [reports, setReports] = useState([]);
-  const [reportsDetail, setReportsDetail] = useState([]);
+function ApproveFinalReport() {
+  const [registers, setRegisters] = useState([]);
 
-  const [detail, setDetail] = useState();
-  const [editReport, setEditReport] = useState({});
-  const [comment, setComment] = useState("");
+  const [editRegister, setEditRegister] = useState({});
+  const [commentFinal, setCommentFinal] = useState("");
   const [isApprove, setIsApprove] = useState("");
   const [isOpenApproveModal, setIsOpenApproveModal] = useState(false);
-
-  const [isOpenDetailModal, setIsOpenDetailModal] = useState(false);
-
   const [isFilterApproved, setIsFilterApproved] = useState(false);
-
   const [searchQuery, setSearchQuery] = useState("");
 
   const [filterByYear, setFilterByYear] = useState("");
@@ -35,57 +29,40 @@ function ApproveReportProgress() {
 
   const { token } = useContext(HeaderContext);
 
-  useEffect(getAllReports, [filterBySemester, filterByYear, isFilterApproved]);
-  useEffect(getAllReportsDetail, [detail]);
+  useEffect(getAllRegister, [filterBySemester, filterByYear, isFilterApproved]);
 
-  function getAllReports() {
+  function getAllRegister() {
     axios
       .get(
-        `http://localhost:3001/api/approveReportProgess?searchQuery=${searchQuery}${
+        `http://localhost:3001/api/approveFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: "http://localhost:3001" }
       )
       .then((res) => {
-        setReports(res.data);
+        setRegisters(res.data);
       })
       .catch((err) => {
-        setError("Không thể tải danh sách báo cáo.");
+        setError("Không thể tải danh sách đăng ký.");
       });
   }
 
-  function getAllReportsDetail() {
-    if (detail) {
-      axios
-        .get(`http://localhost:3001/api/approveReportDetail/${detail._id}`, {
-          withCredentials: true,
-          baseURL: "http://localhost:3001",
-        })
-        .then((res) => {
-          setReportsDetail(res.data);
-        })
-        .catch((err) => {
-          setError("Không thể tải danh sách báo cáo.");
-        });
-    }
-  }
-
-  const handleApproveReportProgress = () => {
+  const handleApproveFinalReport = () => {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/approveReportProgess/${editReport._id}`,
-          { comment, isApprove, editReport },
+          `http://localhost:3001/api/approveFinalReport/${editRegister._id}`,
+          { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
           }
         )
         .then((res) => {
-          setEditReport({});
-          setComment("");
+          setEditRegister({});
+          setCommentFinal("");
           setIsApprove("");
           setIsOpenApproveModal(false);
-          getAllReports();
+          getAllRegister();
           setErrorApprove("");
         })
         .catch((err) => {
@@ -99,12 +76,9 @@ function ApproveReportProgress() {
   const handleCancleApprove = () => {
     setIsOpenApproveModal(false);
     setIsApprove("");
-    setComment("");
+    setCommentFinal("");
     setErrorApprove("");
-    setEditReport({});
-  };
-  const handleCancleDetail = () => {
-    setIsOpenDetailModal(false);
+    setEditRegister({});
   };
 
   const handleChangeFilterYear = (value) => {
@@ -140,7 +114,7 @@ function ApproveReportProgress() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllReports} />
+        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllRegister} />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -172,54 +146,61 @@ function ApproveReportProgress() {
               <th>Tên đề tài</th>
               <th>Năm học</th>
               <th>Kỳ học</th>
-
-              <th>Chức năng</th>
+              {isFilterApproved && <th>Trạng thái</th>}
+              {isFilterApproved && (
+                <th>
+                  <span className="material-symbols-outlined">folder_zip</span>
+                </th>
+              )}
+              {!isFilterApproved && <th>Chức năng</th>}
             </tr>
           </thead>
 
-          {reports.map((report, index) => (
+          {registers.map((register, index) => (
             <tbody key={index}>
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{report.codeStudent} </div>
+                  <div>{register.codeStudent} </div>
                 </td>
 
                 <td>
-                  <div>{report.nameStudent} </div>
+                  <div>{register.nameStudent} </div>
                 </td>
                 <td>
-                  <div>{report.nameTopic} </div>
+                  <div>{register.nameTopic} </div>
                 </td>
 
                 <td>
-                  <div>{report.yearTopic} </div>
+                  <div>{register.yearTopic} </div>
                 </td>
                 <td>
-                  <div>{report.semesterTopic} </div>
+                  <div>{register.semesterTopic} </div>
                 </td>
-
+                {isFilterApproved && (
+                  <td>
+                    <div>{register.stateApproveProject} </div>
+                  </td>
+                )}
                 {isFilterApproved ? (
-                  <td className={cx("column__functions")}>
-                    <div className={cx("wrapper__btn-approve")}>
-                      <button
-                        className={cx("btn-approve")}
-                        onClick={() => {
-                          setDetail(report);
-                          setIsOpenDetailModal(true);
-                        }}
+                  <td>
+                    <div>
+                      <a
+                        className={cx("linkDownload")}
+                        href={`http://localhost:3001/api/approveFinalReport/${register._id}`}
+                        download={register.fileFinal.nameFile}
                       >
-                        Chi tiết
-                      </button>
+                        {register.fileFinal.nameFile}
+                      </a>{" "}
                     </div>
                   </td>
                 ) : (
                   <td className={cx("column__functions")}>
-                    <div className={cx("wrapper__btn-approve")}>
+                    <div className={cx("wrapper__btn")}>
                       <button
-                        className={cx("btn-approve")}
+                        className={cx("btn")}
                         onClick={() => {
-                          setEditReport(report);
+                          setEditRegister(register);
                           setIsOpenApproveModal(true);
                         }}
                       >
@@ -237,7 +218,7 @@ function ApproveReportProgress() {
       {isOpenApproveModal && (
         <div>
           <div className={cx("modal")}>
-            <div className={cx("title-modal")}>Phê duyệt báo cáo</div>
+            <div className={cx("title-modal")}>Phê duyệt đăng ký</div>
             <div className={cx("form")}>
               <div>
                 <div className={cx("wrap-details")}>
@@ -246,19 +227,12 @@ function ApproveReportProgress() {
                     <span className="material-symbols-outlined">folder_zip</span>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/approveReportProgess/${editReport._id}`}
-                      download={editReport.file.nameFile}
+                      href={`http://localhost:3001/api/approveFinalReport/${editRegister._id}`}
+                      download={editRegister.fileFinal.nameFile}
                     >
-                      {editReport.file.nameFile}
+                      {editRegister.fileFinal.nameFile}
                     </a>
                   </div>
-
-                  <div>
-                    <span className={cx("details__title")}>Mức độ hoàn thành:</span> {editReport.completeLevel}
-                  </div>
-                </div>
-                <div>
-                  <span className={cx("details__title")}>Thời gian:</span> {editReport.time}
                 </div>
                 <div className={cx("form__comment")}>
                   <span className={cx("details__title")}>Nhận xét:</span>
@@ -266,7 +240,7 @@ function ApproveReportProgress() {
                     <textarea
                       className={cx("form__textArea")}
                       onChange={(e) => {
-                        setComment(e.target.value);
+                        setCommentFinal(e.target.value);
                       }}
                     ></textarea>
                   </div>
@@ -287,59 +261,10 @@ function ApproveReportProgress() {
                 <button className={cx("btn-modal")} onClick={handleCancleApprove}>
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveReportProgress}>
+                <button className={cx("btn-modal")} onClick={handleApproveFinalReport}>
                   Lưu
                 </button>
               </div>
-            </div>
-          </div>
-          <div className={cx("overlay")}></div>
-        </div>
-      )}
-
-      {isOpenDetailModal && (
-        <div>
-          <div className={cx("modal")}>
-            <div className={cx("modal-close")} onClick={handleCancleDetail}>
-              <span className="material-symbols-outlined">close</span>
-            </div>
-            <div className={cx("title-modal")}>Chi tiết báo cáo</div>
-            <div className={cx("form", "form-detail")}>
-              {reportsDetail.map((report, index) => (
-                <div className={cx("detail-item")}>
-                  <div className={cx("detail-title")}>Lần báo cáo thứ {index + 1}</div>
-                  <table className={cx("detail-table")}>
-                    <tr>
-                      <th>Tệp tin</th>
-                      <th>
-                        <a
-                          className={cx("linkDownload")}
-                          href={`http://localhost:3001/api/approveReportProgess/${report._id}`}
-                          download={report.file.nameFile}
-                        >
-                          {report.file.nameFile}
-                        </a>
-                      </th>
-                    </tr>
-                    <tr>
-                      <td>Thời gian báo cáo</td>
-                      <td>{report.time}</td>
-                    </tr>
-                    <tr>
-                      <td>Mức độ hoàn thành</td>
-                      <td>{report.completeLevel}</td>
-                    </tr>
-                    <tr>
-                      <td>Trạng thái</td>
-                      <td>{report.stateReportProgress}</td>
-                    </tr>
-                    <tr>
-                      <td>Nhận xét</td>
-                      <td>{report.comment}</td>
-                    </tr>
-                  </table>
-                </div>
-              ))}
             </div>
           </div>
           <div className={cx("overlay")}></div>
@@ -349,4 +274,4 @@ function ApproveReportProgress() {
   );
 }
 
-export default ApproveReportProgress;
+export default ApproveFinalReport;

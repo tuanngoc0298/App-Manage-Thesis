@@ -30,30 +30,6 @@
   background-color: #6296c5;
   font-weight: 800;
 }
-
-//
-.detail-item {
-  border-bottom: 1px solid #000;
-  padding-bottom: 30px;
-  margin-bottom: 30px;
-}
-.detail-table th,
-.detail-table td {
-  border: 1px solid #908d8d;
-  height: 50px;
-}
-.detail-table {
-  text-align: center;
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: auto;
-}
-.detail-title {
-  text-align: center;
-  font-size: 1.8rem;
-  margin-bottom: 10px;
-  font-weight: 800;
-}
 //
 
 .data tr {
@@ -93,8 +69,9 @@
 .btn-more {
   position: relative;
 }
-.wrapper__btn-approve {
+.wrapper__btn {
   width: 70%;
+
   position: absolute;
   background-color: #6296c5;
   left: 50%;
@@ -107,43 +84,16 @@
   }
 }
 
-.btn-approve {
+.btn {
   padding: 11px 12px;
   color: #fff;
   border-radius: 5px;
   width: 100%;
-  font-weight: bold;
-}
-.wrapper__btn {
-  position: absolute;
-  display: flex;
-  gap: 15px;
-  background-color: #6296c5;
-  right: 23px;
-  border-radius: 20px;
-  z-index: 1;
-}
-.wrapper__btn::before {
-  content: "";
-  position: absolute;
-  left: 50%;
-  top: -8px;
-  transform: translateX(-50%);
-  width: 0;
-  height: 0;
-  border-left: 8px solid transparent; /* Độ rộng và màu cho cạnh trái */
-  border-right: 8px solid transparent; /* Độ rộng và màu cho cạnh phải */
-  border-bottom: 8px solid #6296c5;
-}
-.btn {
-  padding: 5px 10px;
-  color: #fff;
-  border-radius: 5px;
 }
 .form__comment {
   margin-top: 10px;
   .form__textArea {
-    margin-top: 20px;
+    margin-top: 10px;
     width: 100%;
     height: 250px;
     font-size: 1.6rem;
@@ -152,8 +102,8 @@
 }
 
 .tab {
-  margin-bottom: 21px;
   border-bottom: 1px solid #ccc;
+  margin-bottom: 21px;
 
   button {
     padding: 10px;
@@ -176,16 +126,6 @@
   box-shadow: 0 4rem 6rem rgba(0, 0, 0, 0.3);
   z-index: 1000;
   transition: all 0.5s;
-  .modal-close {
-    position: absolute;
-    right: 0;
-    top: 0;
-    padding: 5px;
-    cursor: pointer;
-    span {
-      color: #fff;
-    }
-  }
 }
 .overlay {
   position: fixed;
@@ -217,13 +157,6 @@
 .form {
   background-color: #fff;
   padding: 60px;
-  font-size: 1.6rem;
-  font-weight: 500;
-  line-height: 1.5;
-}
-.form-detail {
-  max-height: 500px;
-  overflow: scroll;
 }
 .row {
   display: flex;
@@ -281,16 +214,18 @@
   display: grid;
   grid-template-columns: 1fr 1fr; /* Chia thành 2 cột bằng độ rộng tự đều */
   gap: 30px;
-  margin-bottom: 10px;
+  font-size: 1.6rem;
+  font-weight: 500;
+  line-height: 1.5;
 }
 .details__linkDownload {
   display: inline-flex;
   align-items: center;
-}
-.linkDownload {
-  text-decoration: underline;
-  text-underline-offset: 2px;
-  margin-left: 5px;
+  .linkDownload {
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    margin-left: 5px;
+  }
 }
 .details__title {
   color: #000;

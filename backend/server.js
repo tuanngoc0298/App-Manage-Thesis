@@ -29,6 +29,9 @@ const {
   approveReportProgressRoutes,
   registerPresentProjectRoutes,
   approveRegisterPresentRoutes,
+  approveFinalReportRoutes,
+  assignCounterTeacherRoutes,
+  establishCouncilRoutes,
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
@@ -62,13 +65,17 @@ app.use("/api", schoolYearRoutes);
 // Nguoi Phu Trach
 app.use("/api", studentRoutes);
 app.use("/api", assignTeacherRoutes);
+app.use("/api", assignCounterTeacherRoutes);
 app.use("/api", instructedStudentRoutes);
+app.use("/api", establishCouncilRoutes);
 
 // GiaoVienHuongDan
 app.use("/api", topicRoutes);
 app.use("/api", approveSuggestTopicRoutes);
 app.use("/api", approveReportProgressRoutes);
 app.use("/api", approveRegisterPresentRoutes);
+// GiaoVienPhanBien
+app.use("/api", approveFinalReportRoutes);
 
 // Sinh vien
 app.use("/api", chooseTopicRoutes);

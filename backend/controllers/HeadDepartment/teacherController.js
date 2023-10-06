@@ -31,6 +31,7 @@ const teacherController = {
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
     const { nameMajor } = decoded.userInfo;
     const major = await Major.findOne({ nameMajor });
+    const { nameTeacher } = req.query;
     try {
       Department.findOne({ nameDepartment: major ? major.nameDepartment : "" })
         .then((department) => {
@@ -42,7 +43,7 @@ const teacherController = {
           Major.find({ nameDepartment: department.nameDepartment })
             .then((majors) => {
               const nameMajors = majors.map((major) => major.nameMajor);
-              Teacher.find({ nameMajor: { $in: nameMajors } })
+              Teacher.find({ nameMajor: { $in: nameMajors }, name: { $ne: nameTeacher } })
                 .then((teachers) => {
                   res.status(200).json(teachers);
                 })

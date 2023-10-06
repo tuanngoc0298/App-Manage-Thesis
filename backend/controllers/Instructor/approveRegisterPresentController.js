@@ -30,6 +30,7 @@ const approveRegisterPresentController = {
           $match: {
             nameTeacher: name,
             statePresentProject: "Đang chờ duyệt",
+            nameCounterTeacher: { $exists: false },
           },
         },
         {
@@ -89,7 +90,7 @@ const approveRegisterPresentController = {
     const { isApprove, commentFinal } = req.body;
     try {
       if (isApprove === "Duyệt") {
-        await TopicStudent.findByIdAndUpdate(id, { commentFinal, statePresentProject: "Phê duyệt" });
+        await TopicStudent.findByIdAndUpdate(id, { commentFinal, statePresentProject: "Đã được phê duyệt" });
         res.status(200).send("Phê duyệt thành công.");
       }
       if (isApprove === "Từ chối") {

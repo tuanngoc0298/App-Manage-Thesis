@@ -35,6 +35,7 @@ function ChooseTopics() {
       .get("http://localhost:3001/api/topicsByMajor", { withCredentials: true, baseURL: "http://localhost:3001" })
       .then((res) => {
         setTopics(res.data);
+        setError("");
       })
       .catch((err) => {
         setError("Không thể tải danh sách đề tài.");
@@ -47,6 +48,7 @@ function ChooseTopics() {
       .get(`http://localhost:3001/api/chooseTopics`, { withCredentials: true, baseURL: "http://localhost:3001" })
       .then((res) => {
         setTopics(res.data);
+        setError("");
       })
       .catch((err) => {
         setError("Không thể tải đề tài đăng ký.");
@@ -87,7 +89,7 @@ function ChooseTopics() {
         getSelectedTopic();
       })
       .catch((err) => {
-        console.log(err);
+        setError(err.response.data.message);
       });
   };
 
@@ -118,7 +120,7 @@ function ChooseTopics() {
           <div style={{ color: "red" }}>{errorRegister}</div>
         </div>
       )}
-
+      {<div style={{ color: "red", textAlign: "center", marginBottom: "10px" }}>{error}</div>}
       <div>
         <table className={cx("data")}>
           <thead>

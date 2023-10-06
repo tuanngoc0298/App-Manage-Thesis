@@ -62,7 +62,7 @@ const authController = {
           break;
       }
       const token = jwt.sign({ _id: user._id, role: user.role, userInfo }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: 1800,
+        expiresIn: 60 * 60 * 6,
       });
       res.cookie("token", token);
       res.json({ token, role: user.role, userInfo });
