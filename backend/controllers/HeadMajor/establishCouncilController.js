@@ -1,6 +1,8 @@
 const TopicStudent = require("../../models/TopicStudent");
 const Student = require("../../models/Student");
 const Teacher = require("../../models/Teacher");
+const Major = require("../../models/Major");
+const Department = require("../../models/Department");
 const Topic = require("../../models/Topic");
 
 const jwt = require("jsonwebtoken");
@@ -88,19 +90,6 @@ const establishCouncilController = {
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Lỗi khi tải danh sách Sinh viên được bảo vệ khóa luận." });
-    }
-  },
-  // Get Member council
-  getTeachersCouncil: async (req, res) => {
-    try {
-      const { nameTeacher, nameCounterTeacher } = req.query;
-      const teachers = await Teacher.find({
-        name: { $nin: [nameCounterTeacher, nameTeacher] },
-      });
-      res.json(teachers);
-    } catch (error) {
-      console.log(error);
-      res.status(500).json({ error: "Lỗi khi tải danh sách Giáo viên." });
     }
   },
 

@@ -1,10 +1,10 @@
 const TopicStudent = require("../../models/TopicStudent");
+const FinalReport = require("../../models/FinalReport");
 const Student = require("../../models/Student");
-const Report = require("../../models/Report");
 
 const jwt = require("jsonwebtoken");
 
-const approveReportProgressController = {
+const approveRevisedFinalReportController = {
   // GET
   getAllLatestReports: async (req, res) => {
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
@@ -12,7 +12,15 @@ const approveReportProgressController = {
 
     try {
       const { searchQuery, year, semester, stateApprove } = req.query;
-      const query = { nameTeacher: name };
+      const query = {
+        $or: [
+          { nameTeacher: name },
+          { nameCounterTeacher: name },
+          { chairperson: name },
+          { secretary: name },
+          { commissioner: name },
+        ],
+      };
       let stateReport;
       if (stateApprove) {
         stateReport = { $ne: "Đang chờ duyệt" };
@@ -33,7 +41,7 @@ const approveReportProgressController = {
         ];
       }
 
-      const data = await Report.aggregate([
+      const data = await FinalReport.aggregate([
         { $sort: { codeStudent: 1, time: -1 } },
         { $match: { stateReportProgress: stateReport } },
         {
@@ -70,15 +78,20 @@ const approveReportProgressController = {
             _id: "$latestReport._id",
             codeStudent: "$latestReport.codeStudent",
             nameStudent: "$student.name",
-            nameTeacher: "$topic.nameTeacher",
             nameTopic: "$topic.nameTopic",
             yearTopic: "$topic.yearTopic",
+            nameCouncil: "$topic.protectionCouncil.nameCouncil",
             semesterTopic: "$topic.semesterTopic",
-            completeLevel: "$latestReport.completeLevel",
             comment: "$latestReport.comment",
             file: "$latestReport.file",
             stateReportProgress: "$latestReport.stateReportProgress",
             time: "$latestReport.time",
+
+            nameTeacher: "$topic.nameTeacher",
+            nameCounterTeacher: "$topic.nameCounterTeacher",
+            chairperson: "$topic.protectionCouncil.members.chairperson",
+            secretary: "$topic.protectionCouncil.members.secretary",
+            commissioner: "$topic.protectionCouncil.members.commissioner",
           },
         },
         {
@@ -96,8 +109,8 @@ const approveReportProgressController = {
     try {
       if (req.params.id) {
         const { id } = req.params;
-        const reportsDetail = await Report.findById(id);
-        const data = await Report.find({
+        const reportsDetail = await FinalReport.findById(id);
+        const data = await FinalReport.find({
           codeStudent: reportsDetail.codeStudent,
           stateReportProgress: { $ne: "Đang chờ duyệt" },
         }).sort({ time: 1 });
@@ -107,6 +120,7 @@ const approveReportProgressController = {
         res.status(500).json("Không thể tải chi tiết báo cáo.");
       }
     } catch (err) {
+      console.log(err);
       res.status(500).send("Không thể tải chi tiết báo cáo.");
     }
   },
@@ -115,7 +129,7 @@ const approveReportProgressController = {
     const { id } = req.params;
 
     try {
-      const report = await Report.findById(id);
+      const report = await FinalReport.findById(id);
       if (!report) {
         res.status(404).send("Không tìm thấy báo cáo cho mã sinh viên này.");
         return;
@@ -134,12 +148,12 @@ const approveReportProgressController = {
     const { isApprove, comment } = req.body;
     try {
       if (isApprove === "Duyệt") {
-        await Report.findByIdAndUpdate(id, { comment, stateReportProgress: "Đã được phê duyệt" });
+        await FinalReport.findByIdAndUpdate(id, { comment, stateReportProgress: "Đã được phê duyệt" });
         res.status(200).send("Phê duyệt thành công.");
       }
       if (isApprove === "Từ chối") {
         if (comment) {
-          await Report.findByIdAndUpdate(id, { comment, stateReportProgress: "Không phê duyệt" });
+          await FinalReport.findByIdAndUpdate(id, { comment, stateReportProgress: "Không phê duyệt" });
           res.status(200).send("Từ chối phê duyệt thành công.");
         } else {
           res.status(500).send("Bạn phải nhận xét trước khi Từ chối phê duyệt.");
@@ -151,4 +165,4 @@ const approveReportProgressController = {
   },
 };
 
-module.exports = approveReportProgressController;
+module.exports = approveRevisedFinalReportController;

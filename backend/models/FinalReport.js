@@ -1,13 +1,9 @@
 const mongoose = require("mongoose");
 
-const reportSchema = new mongoose.Schema({
+const finalReportSchema = new mongoose.Schema({
   codeStudent: {
     type: String,
     required: true,
-  },
-
-  completeLevel: {
-    type: String,
   },
   comment: {
     type: String,
@@ -26,4 +22,4 @@ const reportSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Report", reportSchema);
+module.exports = mongoose.model("finalReport", finalReportSchema);

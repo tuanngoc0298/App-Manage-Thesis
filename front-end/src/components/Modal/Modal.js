@@ -88,7 +88,7 @@ function Modal({
           {handleFileChange && (
             <div id="formUpload" className={cx("uploadFile")}>
               <span>Tải lên: </span>
-              <input type="file" accept=".zip" onChange={handleFileChange} />
+              <input type="file" accept=".zip, .pdf" onChange={handleFileChange} />
             </div>
           )}
           {error && <div className={cx("message")}>{error}</div>}

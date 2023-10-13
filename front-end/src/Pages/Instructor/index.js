@@ -4,3 +4,6 @@ export { default as InstructedStudents } from "./InstructedStudents/InstructedSt
 export { default as ApproveReportProgress } from "./ApproveReportProgress/ApproveReportProgress";
 export { default as ApproveRegisterPresent } from "./ApproveRegisterPresent/ApproveRegisterPresent";
 export { default as ApproveFinalReport } from "./ApproveFinalReport/ApproveFinalReport";
+export { default as Feedback } from "./Feedback/Feedback";
+export { default as ApproveRevisedFinalReport } from "./ApproveRevisedFinalReport/ApproveRevisedFinalReport";
+export { default as UpdateResult } from "./UpdateResult/UpdateResult";

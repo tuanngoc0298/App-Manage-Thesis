@@ -50,7 +50,6 @@ const reportProgressController = {
         completeLevel: `${valCompleteLevel}%`,
         file,
         stateReportProgress: "Đang chờ duyệt",
-        time: moment().format("dddd, D MMMM YYYY, h:mm A"),
       });
       await report.save();
       res.status(200).send("Báo cáo đã được tải lên và lưu trữ.");

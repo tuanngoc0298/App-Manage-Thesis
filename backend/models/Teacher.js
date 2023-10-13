@@ -16,6 +16,7 @@ const teacherSchema = new mongoose.Schema({
   },
   roleTeacher: {
     type: String,
+    enum: ["Giáo viên", "Trưởng ngành", "Trưởng khoa"],
     required: true,
   },
 });

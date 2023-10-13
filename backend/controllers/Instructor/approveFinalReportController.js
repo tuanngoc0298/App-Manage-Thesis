@@ -89,7 +89,7 @@ const approveFinalReportController = {
       const { nameFile, data } = report.fileFinal;
       // Thiết lập đối tượng tệp để tải xuống
       res.setHeader("Content-Disposition", `attachment; filename=${nameFile}`);
-      res.setHeader("Content-Type", "application/zip");
+      res.setHeader("Content-Type", "application/octet-stream");
       res.send(data);
     } catch (error) {
       res.status(500).send("Đã xảy ra lỗi.");

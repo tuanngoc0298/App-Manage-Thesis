@@ -32,6 +32,14 @@ const {
   approveFinalReportRoutes,
   assignCounterTeacherRoutes,
   establishCouncilRoutes,
+  protectionScheduleRoutes,
+  feedbackRoutes,
+  seeFeedbackRoutes,
+  submitFinalReportRoutes,
+  approveRevisedFinalReportRoutes,
+  updateResultRoutes,
+  seeScoreResultRoutes,
+  updateStateRoutes,
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
@@ -68,20 +76,31 @@ app.use("/api", assignTeacherRoutes);
 app.use("/api", assignCounterTeacherRoutes);
 app.use("/api", instructedStudentRoutes);
 app.use("/api", establishCouncilRoutes);
+app.use("/api", updateStateRoutes);
 
 // GiaoVienHuongDan
 app.use("/api", topicRoutes);
 app.use("/api", approveSuggestTopicRoutes);
 app.use("/api", approveReportProgressRoutes);
 app.use("/api", approveRegisterPresentRoutes);
+app.use("/api", approveRevisedFinalReportRoutes);
+app.use("/api", updateResultRoutes);
+
 // GiaoVienPhanBien
 app.use("/api", approveFinalReportRoutes);
+// Thư ký
+app.use("/api", feedbackRoutes);
 
 // Sinh vien
 app.use("/api", chooseTopicRoutes);
 app.use("/api", suggestTopicRoutes);
 app.use("/api", reportProgressRoutes);
 app.use("/api", registerPresentProjectRoutes);
+app.use("/api", protectionScheduleRoutes);
+app.use("/api", seeFeedbackRoutes);
+app.use("/api", submitFinalReportRoutes);
+app.use("/api", seeScoreResultRoutes);
+
 app.listen(port, () => {
   console.log(`Server đang lắng nghe tại http://localhost:${port}`);
 });

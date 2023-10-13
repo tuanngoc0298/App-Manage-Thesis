@@ -7,9 +7,6 @@ const establishCouncilController = require("../../controllers/HeadMajor/establis
 // Định nghĩa route để lấy dữ liệu
 router.get("/establishCouncil", establishCouncilController.getAllStudents);
 
-// Định nghĩa route để lấy dữ liệu
-router.get("/teachersCouncil", establishCouncilController.getTeachersCouncil);
-
 // Định nghĩa route sửa khoa
 router.put("/establishCouncil/:id", establishCouncilController.editCouncil);
 

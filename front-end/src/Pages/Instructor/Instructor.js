@@ -6,6 +6,9 @@ import {
   ApproveReportProgress,
   ApproveRegisterPresent,
   ApproveFinalReport,
+  Feedback,
+  ApproveRevisedFinalReport,
+  UpdateResult,
 } from "./";
 import { Home } from "~/components";
 
@@ -19,6 +22,9 @@ function Instructor() {
       <Route path="/approveReportProgess" element={<ApproveReportProgress />} />
       <Route path="/approveRegisterPresent" element={<ApproveRegisterPresent />} />
       <Route path="/approveFinalReport" element={<ApproveFinalReport />} />
+      <Route path="/feedback" element={<Feedback />} />
+      <Route path="/approveRevisedFinalReport" element={<ApproveRevisedFinalReport />} />
+      <Route path="/updateResult" element={<UpdateResult />} />
     </Routes>
   );
 }

@@ -385,7 +385,7 @@ function EstablishCouncil() {
                     title="Chủ tịch hội đồng"
                     customStyle={{ marginBottom: "10px" }}
                     isRequired={false}
-                    api={`teachersCouncil?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
+                    api={`teachersByDepartment?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
                     nameData="name"
                     onSelectionChange={handleChangeChairperson}
                     oldData={editCouncil.protectionCouncil?.members?.chairperson}
@@ -402,7 +402,7 @@ function EstablishCouncil() {
                     title="Thư ký"
                     customStyle={{ marginBottom: "10px" }}
                     isRequired={false}
-                    api={`teachersCouncil?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
+                    api={`teachersByDepartment?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
                     nameData="name"
                     onSelectionChange={handleChangeSecretary}
                     oldData={editCouncil.protectionCouncil?.members?.secretary}
@@ -411,7 +411,7 @@ function EstablishCouncil() {
                     title="Ủy viên"
                     customStyle={{ marginBottom: "10px" }}
                     isRequired={false}
-                    api={`teachersCouncil?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
+                    api={`teachersByDepartment?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
                     nameData="name"
                     onSelectionChange={handleChangeCommissioner}
                     oldData={editCouncil.protectionCouncil?.members?.commissioner}
@@ -537,7 +537,11 @@ function EstablishCouncil() {
                     <div className={cx("details__row", "details__row-margin")}>
                       <span className={cx("details__title")}>Ngày:</span>
                       <span className={cx("details__content")}>
-                        {new Date(editCouncil.protectionCouncil?.time).toLocaleDateString("vi-VI")}
+                        {new Date(editCouncil.protectionCouncil?.time).toLocaleDateString("vi-VI", {
+                          day: "2-digit",
+                          month: "2-digit",
+                          year: "2-digit",
+                        })}
                       </span>
                     </div>
                     <div className={cx("details__row")}>

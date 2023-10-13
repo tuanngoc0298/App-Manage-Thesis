@@ -6,13 +6,13 @@ import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./ReportProgress.module.scss";
+import styles from "./SubmitFinalReport.module.scss";
 
 const cx = classNames.bind(styles);
 
-function ReportProgress() {
-  const [topics, setTopics] = useState([]);
-  const [completeLevel, setCompleteLevel] = useState("");
+function SubmitFinalReport() {
+  const [reports, setReports] = useState([]);
+
   const [reportFile, setReportFile] = useState(null);
 
   const [isOpenReportModal, setIsOpenReportModal] = useState(false);
@@ -35,11 +35,12 @@ function ReportProgress() {
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
+
   function getTopic() {
     axios
-      .get("http://localhost:3001/api/reportProgress", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get("http://localhost:3001/api/submitFinalReport", { withCredentials: true, baseURL: "http://localhost:3001" })
       .then((res) => {
-        setTopics(res.data);
+        setReports(res.data);
       })
       .catch((err) => {
         console.log(err);
@@ -47,14 +48,14 @@ function ReportProgress() {
   }
 
   const handleUploadReport = () => {
-    if (reportFile && completeLevel.completeLevel) {
+    if (reportFile) {
       const formData = new FormData();
-      formData.append("valCompleteLevel", completeLevel.completeLevel);
+
       formData.append("nameFile", reportFile.name);
       formData.append("file", reportFile);
 
       axios
-        .post(`http://localhost:3001/api/reportProgress`, formData, {
+        .post(`http://localhost:3001/api/submitFinalReport`, formData, {
           withCredentials: true,
           baseURL: "http://localhost:3001",
           headers: {
@@ -64,7 +65,7 @@ function ReportProgress() {
         .then((res) => {
           // Cập nhật danh sách đề tài
           setIsOpenReportModal(false);
-          setCompleteLevel("");
+
           setReportFile(null);
           setErrorEdit("");
           getTopic();
@@ -79,7 +80,7 @@ function ReportProgress() {
 
   const handleCancleReport = () => {
     setIsOpenReportModal(false);
-    setCompleteLevel("");
+
     setReportFile(null);
     setErrorEdit("");
   };
@@ -87,17 +88,14 @@ function ReportProgress() {
   const handleFileChange = (e) => {
     setReportFile(e.target.files[0]);
   };
-  const handleChangeEditCompleteLevel = (value) => {
-    setCompleteLevel(value);
-  };
 
   return (
     <DefaultLayout>
-      <h2 className={cx("title")}>Báo cáo tiến độ</h2>
+      <h2 className={cx("title")}>Nộp báo cáo cuối</h2>
       <div className={cx("function")}>
         <div className={cx("function__allow")}>
           <button className={cx("btn", "btn-add")} onClick={() => setIsOpenReportModal(true)}>
-            Báo cáo
+            Nộp báo cáo
           </button>
         </div>
       </div>
@@ -108,7 +106,7 @@ function ReportProgress() {
             <tr>
               <th>STT</th>
               <th>Trạng thái</th>
-              <th>Mức độ hoàn thành</th>
+
               <th>
                 <span className="material-symbols-outlined">folder_zip</span>
               </th>
@@ -117,30 +115,28 @@ function ReportProgress() {
             </tr>
           </thead>
 
-          {topics.map((topic, index) => (
+          {reports.map((report, index) => (
             <tbody key={index}>
               <tr>
                 <td className={cx("table__index")}>{index + 1}</td>
                 <td>
-                  <div>{topic.stateReportProgress} </div>
+                  <div>{report.stateReportProgress} </div>
                 </td>
-                <td>
-                  <div>{topic.completeLevel} </div>
-                </td>
+
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`http://localhost:3001/api/approveReportProgess/${topic._id}`}
-                    download={topic.file.nameFile}
+                    href={`http://localhost:3001/api/approveFinalReport/${report._id}`}
+                    download={report.file.nameFile}
                   >
-                    {topic.file.nameFile}
+                    {report.file.nameFile}
                   </a>
                 </td>
                 <td>
-                  <div>{topic.comment} </div>
+                  <div>{report.comment} </div>
                 </td>
                 <td>
-                  <div>{formatTime(new Date(topic.time))} </div>
+                  <div>{formatTime(new Date(report.time))} </div>
                 </td>
               </tr>
             </tbody>
@@ -150,12 +146,10 @@ function ReportProgress() {
 
       {isOpenReportModal && (
         <Modal
-          name="Báo cáo tiến độ"
-          fields={[["Mức độ hoàn thành (%)", "completeLevel"]]}
+          name="Nộp báo cáo cuối"
           error={errorEdit}
           handleCancle={handleCancleReport}
           handleLogic={handleUploadReport}
-          handleChangeInput={handleChangeEditCompleteLevel}
           handleFileChange={handleFileChange}
         />
       )}
@@ -163,4 +157,4 @@ function ReportProgress() {
   );
 }
 
-export default ReportProgress;
+export default SubmitFinalReport;

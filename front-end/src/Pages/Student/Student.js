@@ -1,5 +1,14 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { ChooseTopics, SuggestTopic, ReportProgress, RegisterPresentProject } from "./";
+import {
+  ChooseTopics,
+  SuggestTopic,
+  ReportProgress,
+  RegisterPresentProject,
+  ProtectionSchedule,
+  SeeFeedback,
+  SubmitFinalReport,
+  SeeScoreResult,
+} from "./";
 import { Home } from "~/components";
 
 function Manager() {
@@ -10,7 +19,10 @@ function Manager() {
       <Route path="/suggestTopic" element={<SuggestTopic />} />
       <Route path="/reportProgress" element={<ReportProgress />} />
       <Route path="/registerPresent" element={<RegisterPresentProject />} />
-      {/* <Route path="/schoolYears" element={token ? <SchoolYears /> : <Navigate to="/" />} /> */}
+      <Route path="/protectionSchedule" element={<ProtectionSchedule />} />
+      <Route path="/seeFeedback" element={<SeeFeedback />} />
+      <Route path="/submitFinalReport" element={<SubmitFinalReport />} />
+      <Route path="/seeScoreResult" element={<SeeScoreResult />} />
     </Routes>
   );
 }

@@ -6,11 +6,11 @@ import axios from "axios";
 import { HeaderContext } from "~/App";
 
 import classNames from "classnames/bind";
-import styles from "./ApproveReportProgress.module.scss";
+import styles from "./ApproveRevisedFinalReport.module.scss";
 
 const cx = classNames.bind(styles);
 
-function ApproveReportProgress() {
+function ApproveRevisedFinalReport() {
   const [reports, setReports] = useState([]);
   const [reportsDetail, setReportsDetail] = useState([]);
 
@@ -50,11 +50,10 @@ function ApproveReportProgress() {
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
-
   function getAllReports() {
     axios
       .get(
-        `http://localhost:3001/api/approveReportProgess?searchQuery=${searchQuery}${
+        `http://localhost:3001/api/approveRevisedFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: "http://localhost:3001" }
@@ -70,7 +69,7 @@ function ApproveReportProgress() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`http://localhost:3001/api/approveReportDetail/${detail._id}`, {
+        .get(`http://localhost:3001/api/approveRevisedReportDetail/${detail._id}`, {
           withCredentials: true,
           baseURL: "http://localhost:3001",
         })
@@ -83,11 +82,11 @@ function ApproveReportProgress() {
     }
   }
 
-  const handleApproveReportProgress = () => {
+  const handleApproveRevisedFinalReport = () => {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/approveReportProgess/${editReport._id}`,
+          `http://localhost:3001/api/approveRevisedFinalReport/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -130,7 +129,7 @@ function ApproveReportProgress() {
 
   return (
     <DefaultLayout>
-      <h2 className={cx("title")}>Duyệt báo cáo</h2>
+      <h2 className={cx("title")}>Duyệt báo cáo cuối</h2>
       <div className={cx("tab")}>
         <button
           onClick={() => {
@@ -183,6 +182,7 @@ function ApproveReportProgress() {
               <th>Mã sinh viên</th>
               <th>Tên sinh viên</th>
               <th>Tên đề tài</th>
+              <th>Tên HĐBV</th>
               <th>Năm học</th>
               <th>Kỳ học</th>
 
@@ -204,7 +204,9 @@ function ApproveReportProgress() {
                 <td>
                   <div>{report.nameTopic} </div>
                 </td>
-
+                <td>
+                  <div>{report.nameCouncil} </div>
+                </td>
                 <td>
                   <div>{report.yearTopic} </div>
                 </td>
@@ -259,15 +261,11 @@ function ApproveReportProgress() {
                     <span className="material-symbols-outlined">folder_zip</span>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/approveReportProgess/${editReport._id}`}
+                      href={`http://localhost:3001/api/approveRevisedFinalReport/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
                     </a>
-                  </div>
-
-                  <div>
-                    <span className={cx("details__title")}>Mức độ hoàn thành:</span> {editReport.completeLevel}
                   </div>
                 </div>
                 <div>
@@ -300,7 +298,7 @@ function ApproveReportProgress() {
                 <button className={cx("btn-modal")} onClick={handleCancleApprove}>
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveReportProgress}>
+                <button className={cx("btn-modal")} onClick={handleApproveRevisedFinalReport}>
                   Lưu
                 </button>
               </div>
@@ -319,7 +317,7 @@ function ApproveReportProgress() {
             <div className={cx("title-modal")}>Chi tiết báo cáo</div>
             <div className={cx("form", "form-detail")}>
               {reportsDetail.map((report, index) => (
-                <div className={cx("detail-item")}>
+                <div className={cx("detail-item")} key={index}>
                   <div className={cx("detail-title")}>Lần báo cáo thứ {index + 1}</div>
                   <table className={cx("detail-table")}>
                     <tr>
@@ -327,7 +325,7 @@ function ApproveReportProgress() {
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`http://localhost:3001/api/approveReportProgess/${report._id}`}
+                          href={`http://localhost:3001/api/approveRevisedFinalReport/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}
@@ -338,10 +336,7 @@ function ApproveReportProgress() {
                       <td>Thời gian báo cáo</td>
                       <td>{formatTime(new Date(report.time))}</td>
                     </tr>
-                    <tr>
-                      <td>Mức độ hoàn thành</td>
-                      <td>{report.completeLevel}</td>
-                    </tr>
+
                     <tr>
                       <td>Trạng thái</td>
                       <td>{report.stateReportProgress}</td>
@@ -362,4 +357,4 @@ function ApproveReportProgress() {
   );
 }
 
-export default ApproveReportProgress;
+export default ApproveRevisedFinalReport;

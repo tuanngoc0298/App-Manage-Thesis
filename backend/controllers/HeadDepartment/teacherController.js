@@ -17,9 +17,10 @@ const teacherController = {
             { roleTeacher: { $regex: searchQuery, $options: "i" } },
           ],
         });
+
         res.json(teachers);
       } else {
-        const teachers = await Teacher.find();
+        const teachers = await Teacher.find().sort({ nameMajor: 1 });
         res.json(teachers);
       }
     } catch (error) {
@@ -31,7 +32,7 @@ const teacherController = {
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
     const { nameMajor } = decoded.userInfo;
     const major = await Major.findOne({ nameMajor });
-    const { nameTeacher } = req.query;
+    const { nameTeacher, nameCounterTeacher } = req.query;
     try {
       Department.findOne({ nameDepartment: major ? major.nameDepartment : "" })
         .then((department) => {
@@ -43,7 +44,11 @@ const teacherController = {
           Major.find({ nameDepartment: department.nameDepartment })
             .then((majors) => {
               const nameMajors = majors.map((major) => major.nameMajor);
-              Teacher.find({ nameMajor: { $in: nameMajors }, name: { $ne: nameTeacher } })
+              Teacher.find({
+                nameMajor: { $in: nameMajors },
+                name: { $nin: [nameTeacher, nameCounterTeacher] },
+                roleTeacher: "Giáo viên",
+              })
                 .then((teachers) => {
                   res.status(200).json(teachers);
                 })

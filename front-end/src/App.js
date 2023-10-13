@@ -59,7 +59,7 @@ function App() {
       <div className="App">
         {!token && <Login onLogin={handleLogin} />}
         <HeaderContext.Provider value={{ userName, handleLogout, token, userRole }}>{content}</HeaderContext.Provider>
-        {/* <Register /> */}
+        <Register />
       </div>
     </Router>
   );

@@ -45,7 +45,6 @@ const topicStudentSchema = new mongoose.Schema({
   protectionCouncil: {
     nameCouncil: {
       type: String,
-      required: true,
     },
 
     describeCouncil: {
@@ -69,6 +68,42 @@ const topicStudentSchema = new mongoose.Schema({
       type: String,
       enum: ["Chưa bảo vệ", "Đã bảo vệ"],
     },
+  },
+  feedback: {
+    fileFeedback: {
+      nameFile: String,
+      data: Buffer,
+    },
+    stateFeedback: {
+      type: String,
+      enum: ["Cần chỉnh sửa", "Tốt"],
+    },
+    timeFeedback: {
+      type: String,
+    },
+  },
+  scoreResult: {
+    teacher: {
+      scores: [Number],
+      total: Number,
+    },
+    counterTeacher: {
+      scores: [Number],
+      total: Number,
+    },
+    chairperson: {
+      scores: [Number],
+      total: Number,
+    },
+    secretary: {
+      scores: [Number],
+      total: Number,
+    },
+    commissioner: {
+      scores: [Number],
+      total: Number,
+    },
+    average: Number,
   },
 });
 

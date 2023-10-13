@@ -30,6 +30,9 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/establishCouncil">Thành lập HĐBV</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/updateState">Cập nhật trạng thái KLTN</Link>
+            </li>
           </ul>
         </div>
       );
@@ -50,6 +53,18 @@ function Sidebar() {
             </li>
             <li className={cx("item")}>
               <Link to="/registerPresent">Đăng ký bảo vệ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/protectionSchedule">Xem lịch bảo vệ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/seeFeedback">Xem nhận xét bảo vệ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/submitFinalReport">Nộp báo cáo cuối</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/seeScoreResult">Xem điểm KLTN</Link>
             </li>
           </ul>
         </div>
@@ -78,6 +93,15 @@ function Sidebar() {
             </li>
             <li className={cx("item")}>
               <Link to="/approveFinalReport">Duyệt báo cáo</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/feedback">Nhận xét bảo vệ</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/approveRevisedFinalReport">Duyệt báo cáo cuối</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/updateResult">Cập nhật điểm KLTN</Link>
             </li>
           </ul>
         </div>
