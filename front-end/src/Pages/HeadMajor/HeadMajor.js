@@ -1,5 +1,13 @@
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
-import { ManagerStudents, AssignTeachers, AssignCounterTeachers, EstablishCouncil, UpdateState } from ".";
+import {
+  ManagerStudents,
+  AssignTeachers,
+  AssignCounterTeachers,
+  EstablishCouncil,
+  UpdateState,
+  StatisticsCompletion,
+  StatisticsStudent,
+} from ".";
 import { Home } from "~/components";
 
 function HeadMajor() {
@@ -11,6 +19,8 @@ function HeadMajor() {
       <Route path="/assignCounterTeachers" element={<AssignCounterTeachers />} />
       <Route path="/establishCouncil" element={<EstablishCouncil />} />
       <Route path="/updateState" element={<UpdateState />} />
+      <Route path="/statisticsCompletion" element={<StatisticsCompletion />} />
+      <Route path="/statisticsStudent" element={<StatisticsStudent />} />
     </Routes>
   );
 }

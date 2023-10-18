@@ -33,6 +33,12 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/updateState">Cập nhật trạng thái KLTN</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsCompletion">Thống kê tỷ lệ hoàn thành KLTN</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsStudent">Thống kê số lượng SV hướng dẫn</Link>
+            </li>
           </ul>
         </div>
       );
@@ -103,16 +109,17 @@ function Sidebar() {
             <li className={cx("item")}>
               <Link to="/updateResult">Cập nhật điểm KLTN</Link>
             </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsCompletion">Thống kê tỷ lệ hoàn thành KLTN</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsStudent">Thống kê số lượng SV hướng dẫn</Link>
+            </li>
           </ul>
         </div>
       );
       break;
-    case "GiaoVienPhanBien":
-      content = <p>Error occurred.</p>;
-      break;
-    case "HoiDongBaoVe":
-      content = <p>Error occurred.</p>;
-      break;
+
     case "PhongDaoTao":
       content = (
         <div className={cx("list")}>
@@ -132,6 +139,12 @@ function Sidebar() {
             </li>
             <li className={cx("item")}>
               <Link to="/schoolYears">Quản lý năm học</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsCompletion">Thống kê tỷ lệ hoàn thành KLTN</Link>
+            </li>
+            <li className={cx("item")}>
+              <Link to="/statisticsStudent">Thống kê số lượng SV hướng dẫn</Link>
             </li>
           </ul>
         </div>

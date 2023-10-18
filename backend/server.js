@@ -40,6 +40,8 @@ const {
   updateResultRoutes,
   seeScoreResultRoutes,
   updateStateRoutes,
+  statisticsCompletionRoutes,
+  statisticsStudentRoutes,
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
@@ -63,8 +65,11 @@ const corsOptions = {
 };
 app.use(cors(corsOptions));
 
-// PhongDaoTao
 app.use("/api", authRoutes);
+app.use("/api", statisticsCompletionRoutes);
+app.use("/api", statisticsStudentRoutes);
+
+// PhongDaoTao
 app.use("/api", departmentRoutes);
 app.use("/api", majorRoutes);
 app.use("/api", teacherRoutes);

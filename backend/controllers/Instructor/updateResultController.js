@@ -61,6 +61,7 @@ const updateResultController = {
             yearTopic: 1,
             semesterTopic: 1,
             scoreResult: 1,
+            state: "$student.state",
 
             scoreByRole: {
               $switch: {
@@ -83,6 +84,7 @@ const updateResultController = {
           $match: query,
         },
       ]);
+      console.log(data);
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -93,7 +95,14 @@ const updateResultController = {
   // EDIT
   editResult: async (req, res) => {
     try {
-      const { scores, total, role } = req.body;
+      const {
+        scores,
+        total,
+        role,
+        editResult: { state },
+      } = req.body;
+      if (state === "Hoàn thành KLTN" || state === "Không hoàn thành KLTN")
+        return res.status(500).json({ error: "Bạn không thể sửa!" });
       if (scores.length !== 5 || scores.includes(null))
         return res.status(500).json({ error: "Vui lòng nhập đầy đủ điểm đánh giá !" });
       if (scores.some((item) => item < 0 || item > 2))

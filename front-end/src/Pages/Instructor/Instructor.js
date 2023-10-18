@@ -9,6 +9,8 @@ import {
   Feedback,
   ApproveRevisedFinalReport,
   UpdateResult,
+  StatisticsCompletion,
+  StatisticsStudent,
 } from "./";
 import { Home } from "~/components";
 
@@ -25,6 +27,8 @@ function Instructor() {
       <Route path="/feedback" element={<Feedback />} />
       <Route path="/approveRevisedFinalReport" element={<ApproveRevisedFinalReport />} />
       <Route path="/updateResult" element={<UpdateResult />} />
+      <Route path="/statisticsCompletion" element={<StatisticsCompletion />} />
+      <Route path="/statisticsStudent" element={<StatisticsStudent />} />
     </Routes>
   );
 }

@@ -7,3 +7,5 @@ export { default as ApproveFinalReport } from "./ApproveFinalReport/ApproveFinal
 export { default as Feedback } from "./Feedback/Feedback";
 export { default as ApproveRevisedFinalReport } from "./ApproveRevisedFinalReport/ApproveRevisedFinalReport";
 export { default as UpdateResult } from "./UpdateResult/UpdateResult";
+export { default as StatisticsCompletion } from "../StatisticsCompletion/StatisticsCompletion";
+export { default as StatisticsStudent } from "../StatisticsStudent/StatisticsStudent";

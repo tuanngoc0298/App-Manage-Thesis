@@ -1,4 +1,7 @@
 const authRoutes = require("./authRoutes");
+const statisticsCompletionRoutes = require("./statisticsCompletionRoutes");
+const statisticsStudentRoutes = require("./statisticsStudentRoutes");
+
 // Phong Đào Tạo
 const departmentRoutes = require("./HeadDepartment/departmentRoutes");
 const majorRoutes = require("./HeadDepartment/majorRoutes");
@@ -33,6 +36,7 @@ const updateResultRoutes = require("./Instructor/updateResultRoutes");
 const feedbackRoutes = require("./Instructor/feedbackRoutes");
 
 const allModules = {
+  statisticsCompletionRoutes,
   authRoutes,
   departmentRoutes,
   majorRoutes,
@@ -61,6 +65,7 @@ const allModules = {
   updateResultRoutes,
   seeScoreResultRoutes,
   updateStateRoutes,
+  statisticsStudentRoutes,
 };
 
 module.exports = allModules;

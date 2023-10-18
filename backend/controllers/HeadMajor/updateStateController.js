@@ -19,10 +19,10 @@ const updateStateController = {
         query.state = "Đăng ký đề tài";
       }
       if (year) {
-        query.year = year;
+        query.yearTopic = year;
       }
       if (semester) {
-        query.semester = semester;
+        query.semesterTopic = semester;
       }
       if (searchQuery) {
         query.$or = [

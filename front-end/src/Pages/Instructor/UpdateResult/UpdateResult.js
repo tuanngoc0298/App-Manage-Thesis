@@ -91,7 +91,7 @@ function UpdateResult() {
     axios
       .put(
         `http://localhost:3001/api/updateResult/${editResult._id}`,
-        { scores, total, role },
+        { scores, total, role, editResult },
         {
           headers: { Authorization: `Bearer ${token}` },
         }

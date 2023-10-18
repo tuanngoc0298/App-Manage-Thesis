@@ -76,7 +76,7 @@ const topicStudentSchema = new mongoose.Schema({
     },
     stateFeedback: {
       type: String,
-      enum: ["Cần chỉnh sửa", "Tốt"],
+      enum: ["Cần chỉnh sửa", "Không cần chỉnh sửa"],
     },
     timeFeedback: {
       type: String,
@@ -84,23 +84,38 @@ const topicStudentSchema = new mongoose.Schema({
   },
   scoreResult: {
     teacher: {
-      scores: [Number],
+      scores: {
+        type: [Number],
+        default: undefined,
+      },
       total: Number,
     },
     counterTeacher: {
-      scores: [Number],
+      scores: {
+        type: [Number],
+        default: undefined,
+      },
       total: Number,
     },
     chairperson: {
-      scores: [Number],
+      scores: {
+        type: [Number],
+        default: undefined,
+      },
       total: Number,
     },
     secretary: {
-      scores: [Number],
+      scores: {
+        type: [Number],
+        default: undefined,
+      },
       total: Number,
     },
     commissioner: {
-      scores: [Number],
+      scores: {
+        type: [Number],
+        default: undefined,
+      },
       total: Number,
     },
     average: Number,

@@ -277,7 +277,7 @@ function Feedback() {
                 </div>
                 <ComboBox
                   title="Trạng thái đánh giá KL"
-                  selfData={[{ name: "Cần chỉnh sửa" }, { name: "Tốt" }]}
+                  selfData={[{ name: "Cần chỉnh sửa" }, { name: "Không cần chỉnh sửa" }]}
                   onSelectionChange={handleChangeStateFeedback}
                   oldData={editFeedback.feedback?.stateFeedback}
                   customStyle={{ justifyContent: "flex-start" }}
