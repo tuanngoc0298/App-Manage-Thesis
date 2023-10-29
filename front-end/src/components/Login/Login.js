@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import axios from "axios";
 import images from "~/assets/img";
 
@@ -45,7 +45,7 @@ function Login({ onLogin }) {
         } = res.data;
         Cookies.set("token", token, { expires: 1 / 4 });
         onLogin(token, name, role);
-        navigate("/home");
+        navigate("/");
       });
       setError("");
     } catch (err) {
@@ -98,6 +98,9 @@ function Login({ onLogin }) {
           {error && <div className={cx("message")}>{error}</div>}
           <div className={cx("btn")}>
             <input type="submit" value="Đăng nhập" name="btnLogin" id="btnLogin" className={cx("btn-input")} />
+          </div>
+          <div className={cx("forgetPass")}>
+            <Link to="/forgetPassWord">Quên mật khẩu?</Link>
           </div>
         </form>
       </div>

@@ -1,12 +1,14 @@
 import React, { useState, createContext } from "react";
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
 import { HeadDepartment, HeadMajor, Instructor, Student } from "./Pages";
+import { Home, ForgetPass, Login } from "~/components";
+
+import { PrivateRoute } from "~/utils";
 
 import jwt_decode from "jwt-decode";
 import Cookies from "js-cookie";
 import Register from "./components/Register/Register";
-import { Login } from "~/components";
 
 export const HeaderContext = createContext();
 
@@ -53,12 +55,22 @@ function App() {
     case "PhongDaoTao":
       content = <HeadDepartment />;
       break;
+    default:
   }
+
   return (
     <Router>
       <div className="App">
-        {!token && <Login onLogin={handleLogin} />}
-        <HeaderContext.Provider value={{ userName, handleLogout, token, userRole }}>{content}</HeaderContext.Provider>
+        <HeaderContext.Provider value={{ userName, handleLogout, token, userRole, PrivateRoute }}>
+          <Routes>
+            <Route path="/forgetPassWord" element={<ForgetPass />} />
+            <Route path="/login" element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
+            <Route element={<PrivateRoute />}>
+              <Route index element={<Home />} />
+              <Route path="/*" element={content} />
+            </Route>
+          </Routes>
+        </HeaderContext.Provider>
         {/* <Register /> */}
       </div>
     </Router>

@@ -19,7 +19,16 @@ function UpdateResult() {
   const [students, setStudents] = useState([]);
 
   const [scores, setScores] = useState([]);
+  const [scoresTeacher, setScoresTeacher] = useState([]);
+  const [scoresCounterTeacher, setScoresCounterTeacher] = useState([]);
+  const [scoresChairperson, setScoresChairperson] = useState([]);
+  const [scoresCommissioner, setScoresCommissioner] = useState([]);
+
   const [total, setTotal] = useState();
+  const [totalTeacher, setTotalTeacher] = useState();
+  const [totalCounterTeacher, setTotalCounterTeacher] = useState();
+  const [totalChairperson, setTotalChairperson] = useState();
+  const [totalCommissioner, setTotalCommissioner] = useState();
 
   const [idActiveRow, setIdActiveRow] = useState(null);
 
@@ -66,10 +75,23 @@ function UpdateResult() {
       document.removeEventListener("click", handleClickOutside);
     };
   }, []);
-  useEffect(roleUser, [editResult]);
+  useEffect(() => {
+    roleUser();
+  }, [editResult]);
   useEffect(() => {
     setScores(editResult.scoreResult?.[role]?.scores || []);
     setTotal(editResult.scoreResult?.[role]?.total);
+    if (role === "secretary") {
+      setScoresTeacher(editResult.scoreResult?.teacher?.scores || []);
+      setScoresCounterTeacher(editResult.scoreResult?.counterTeacher?.scores || []);
+      setScoresChairperson(editResult.scoreResult?.chairperson?.scores || []);
+      setScoresCommissioner(editResult.scoreResult?.commissioner?.scores || []);
+
+      setTotalTeacher(editResult.scoreResult?.teacher?.total);
+      setTotalCounterTeacher(editResult.scoreResult?.counterTeacher?.total);
+      setTotalChairperson(editResult.scoreResult?.chairperson?.total);
+      setTotalCommissioner(editResult.scoreResult?.commissioner?.total);
+    }
   }, [role]);
   function getAllStudents() {
     axios
@@ -91,7 +113,20 @@ function UpdateResult() {
     axios
       .put(
         `http://localhost:3001/api/updateResult/${editResult._id}`,
-        { scores, total, role, editResult },
+        {
+          scores,
+          total,
+          scoresTeacher,
+          totalTeacher,
+          scoresCounterTeacher,
+          totalCounterTeacher,
+          scoresChairperson,
+          totalChairperson,
+          scoresCommissioner,
+          totalCommissioner,
+          role,
+          editResult,
+        },
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -109,7 +144,7 @@ function UpdateResult() {
 
   const handleCancleEdit = () => {
     setIsOpenEditModal(false);
-
+    setRole("");
     setErrorEdit("");
     setEditResult({});
   };
@@ -141,6 +176,69 @@ function UpdateResult() {
     setTotal(+totalScore.toFixed(1));
   };
 
+  const handleInputChangeTeacher = (index, value) => {
+    // Kiểm tra giá trị nhập vào
+    const parsedValue = parseFloat(value);
+
+    setErrorEdit(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+
+    // Cập nhật giá trị trong mảng scores
+    const newScores = [...scoresTeacher];
+    newScores[index] = parsedValue;
+
+    setScoresTeacher(newScores);
+    // Tính lại trung bình
+    const totalScore = newScores.reduce((acc, curr) => acc + curr, 0);
+    setTotalTeacher(+totalScore.toFixed(1));
+  };
+
+  const handleInputChangeCounterTeacher = (index, value) => {
+    // Kiểm tra giá trị nhập vào
+    const parsedValue = parseFloat(value);
+
+    setErrorEdit(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+
+    // Cập nhật giá trị trong mảng scores
+    const newScores = [...scoresCounterTeacher];
+    newScores[index] = parsedValue;
+
+    setScoresCounterTeacher(newScores);
+    // Tính lại trung bình
+    const totalScore = newScores.reduce((acc, curr) => acc + curr, 0);
+    setTotalCounterTeacher(+totalScore.toFixed(1));
+  };
+
+  const handleInputChangeChairperson = (index, value) => {
+    // Kiểm tra giá trị nhập vào
+    const parsedValue = parseFloat(value);
+
+    setErrorEdit(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+
+    // Cập nhật giá trị trong mảng scores
+    const newScores = [...scoresChairperson];
+    newScores[index] = parsedValue;
+
+    setScoresChairperson(newScores);
+    // Tính lại trung bình
+    const totalScore = newScores.reduce((acc, curr) => acc + curr, 0);
+    setTotalChairperson(+totalScore.toFixed(1));
+  };
+
+  const handleInputChangeCommissioner = (index, value) => {
+    // Kiểm tra giá trị nhập vào
+    const parsedValue = parseFloat(value);
+
+    setErrorEdit(""); // Xóa thông báo lỗi nếu giá trị hợp lệ
+
+    // Cập nhật giá trị trong mảng scores
+    const newScores = [...scoresCommissioner];
+    newScores[index] = parsedValue;
+
+    setScoresCommissioner(newScores);
+    // Tính lại trung bình
+    const totalScore = newScores.reduce((acc, curr) => acc + curr, 0);
+    setTotalCommissioner(+totalScore.toFixed(1));
+  };
   function roleUser() {
     switch (nameUser) {
       case editResult.nameTeacher:
@@ -221,7 +319,6 @@ function UpdateResult() {
               <th>Chức năng</th>
             </tr>
           </thead>
-
           {students.map((student, index) => (
             <tbody key={index}>
               <tr>
@@ -278,7 +375,6 @@ function UpdateResult() {
                           className={cx("btn")}
                           onClick={() => {
                             setEditResult(student);
-
                             setIsOpenEditModal(true);
                           }}
                         >
@@ -309,7 +405,7 @@ function UpdateResult() {
         </table>
       </div>
 
-      {isOpenEditModal && (
+      {isOpenEditModal && role !== "secretary" && (
         <div>
           <div className={cx("modal")}>
             <div className={cx("modal-close")} onClick={handleCancleEdit}>
@@ -375,6 +471,267 @@ function UpdateResult() {
                     </tr>
                   </tbody>
                 </table>
+                {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
+                <div className={cx("btns")}>
+                  <button className={cx("btn-modal")} onClick={handleCancleEdit}>
+                    Hủy
+                  </button>
+                  <button className={cx("btn-modal")} onClick={handleUpdateResult}>
+                    Lưu
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className={cx("overlay")}></div>
+        </div>
+      )}
+
+      {isOpenEditModal && role === "secretary" && (
+        <div>
+          <div className={cx("modal", "modal__secretary")}>
+            <div className={cx("modal-close")} onClick={handleCancleEdit}>
+              <span className="material-symbols-outlined">close</span>
+            </div>
+            <div className={cx("title-modal")}>Cập nhật điểm</div>
+            <div className={cx("form")}>
+              <div>
+                <div className={cx("wrap-details")}>
+                  <div className={cx("details__row")}>
+                    <span className={cx("details__title")}>Mã sinh viên:</span>
+                    <span className={cx("details__content")}>{editResult.codeStudent}</span>
+                  </div>
+
+                  <div className={cx("details__row")}>
+                    <span className={cx("details__title")}>Tên HĐBV:</span>
+                    <span className={cx("details__content")}>{editResult.nameCouncil}</span>
+                  </div>
+
+                  <div className={cx("details__row")}>
+                    <span className={cx("details__title")}>Tên sinh viên:</span>
+                    <span className={cx("details__content")}>{editResult.nameStudent}</span>
+                  </div>
+                </div>
+                <div className={cx("details__role")}>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Thư ký</h2>
+                  <table className={cx("data", "data__result")}>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Các chi tiết đánh giá</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm đánh giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {request.map(([request, score], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td className={cx("data__request")}>
+                            <div>{request} </div>
+                          </td>
+                          <td>
+                            <div>{score}</div>
+                          </td>
+                          <td>
+                            <input
+                              className={cx("data__input")}
+                              type="number"
+                              value={scores[index] || ""}
+                              onChange={(e) => handleInputChange(index, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div>Kết quả: </div>
+                        </td>
+                        <td>
+                          <div>10</div>
+                        </td>
+                        <td>{total || -1}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={cx("details__role")}>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Giáo viên hướng dẫn</h2>
+                  <table className={cx("data", "data__result")}>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Các chi tiết đánh giá</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm đánh giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {request.map(([request, score], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td className={cx("data__request")}>
+                            <div>{request} </div>
+                          </td>
+                          <td>
+                            <div>{score}</div>
+                          </td>
+                          <td>
+                            <input
+                              className={cx("data__input")}
+                              type="number"
+                              value={scoresTeacher[index] || ""}
+                              onChange={(e) => handleInputChangeTeacher(index, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div>Kết quả: </div>
+                        </td>
+                        <td>
+                          <div>10</div>
+                        </td>
+                        <td>{totalTeacher || -1}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={cx("details__role")}>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Giáo viên phản biện</h2>
+                  <table className={cx("data", "data__result")}>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Các chi tiết đánh giá</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm đánh giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {request.map(([request, score], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td className={cx("data__request")}>
+                            <div>{request} </div>
+                          </td>
+                          <td>
+                            <div>{score}</div>
+                          </td>
+                          <td>
+                            <input
+                              className={cx("data__input")}
+                              type="number"
+                              value={scoresCounterTeacher[index] || ""}
+                              onChange={(e) => handleInputChangeCounterTeacher(index, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div>Kết quả: </div>
+                        </td>
+                        <td>
+                          <div>10</div>
+                        </td>
+                        <td>{totalCounterTeacher || -1}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={cx("details__role")}>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Chủ tịch hội đồng</h2>
+                  <table className={cx("data", "data__result")}>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Các chi tiết đánh giá</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm đánh giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {request.map(([request, score], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td className={cx("data__request")}>
+                            <div>{request} </div>
+                          </td>
+                          <td>
+                            <div>{score}</div>
+                          </td>
+                          <td>
+                            <input
+                              className={cx("data__input")}
+                              type="number"
+                              value={scoresChairperson[index] || ""}
+                              onChange={(e) => handleInputChangeChairperson(index, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div>Kết quả: </div>
+                        </td>
+                        <td>
+                          <div>10</div>
+                        </td>
+                        <td>{totalChairperson || -1}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+                <div className={cx("details__role")}>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Ủy viên</h2>
+                  <table className={cx("data", "data__result")}>
+                    <thead>
+                      <tr>
+                        <th>STT</th>
+                        <th>Các chi tiết đánh giá</th>
+                        <th>Điểm tối đa</th>
+                        <th>Điểm đánh giá</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {request.map(([request, score], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td className={cx("data__request")}>
+                            <div>{request} </div>
+                          </td>
+                          <td>
+                            <div>{score}</div>
+                          </td>
+                          <td>
+                            <input
+                              className={cx("data__input")}
+                              type="number"
+                              value={scoresCommissioner[index] || ""}
+                              onChange={(e) => handleInputChangeCommissioner(index, e.target.value)}
+                            />
+                          </td>
+                        </tr>
+                      ))}
+                      <tr>
+                        <td></td>
+                        <td>
+                          <div>Kết quả: </div>
+                        </td>
+                        <td>
+                          <div>10</div>
+                        </td>
+                        <td>{totalCommissioner || -1}</td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
                 {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
                 <div className={cx("btns")}>
                   <button className={cx("btn-modal")} onClick={handleCancleEdit}>

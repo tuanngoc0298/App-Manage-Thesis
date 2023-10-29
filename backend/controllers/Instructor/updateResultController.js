@@ -20,10 +20,10 @@ const updateResultController = {
           };
       const condition = isTabResult ? { scoreResult: { $exists: true } } : { feedback: { $exists: true } };
       if (year) {
-        query.year = year;
+        query.yearTopic = year;
       }
       if (semester) {
-        query.semester = semester;
+        query.semesterTopic = semester;
       }
       if (searchQuery) {
         query.$or = [
@@ -84,7 +84,7 @@ const updateResultController = {
           $match: query,
         },
       ]);
-      console.log(data);
+
       res.json(data);
     } catch (error) {
       console.log(error);
@@ -95,24 +95,67 @@ const updateResultController = {
   // EDIT
   editResult: async (req, res) => {
     try {
+      const { id } = req.params;
+
       const {
         scores,
         total,
+        scoresTeacher,
+        totalTeacher,
+        scoresCounterTeacher,
+        totalCounterTeacher,
+        scoresChairperson,
+        totalChairperson,
+        scoresCommissioner,
+        totalCommissioner,
         role,
         editResult: { state },
       } = req.body;
       if (state === "Hoàn thành KLTN" || state === "Không hoàn thành KLTN")
         return res.status(500).json({ error: "Bạn không thể sửa!" });
-      if (scores.length !== 5 || scores.includes(null))
-        return res.status(500).json({ error: "Vui lòng nhập đầy đủ điểm đánh giá !" });
-      if (scores.some((item) => item < 0 || item > 2))
-        return res.status(500).json({ error: "Điểm phải > 0 và < Điểm tối đa !" });
+      if (role !== "secretary") {
+        if (scores.length !== 5 || scores.includes(null))
+          return res.status(500).json({ error: "Vui lòng nhập đầy đủ điểm đánh giá !" });
+        if (scores.some((item) => item < 0 || item > 2))
+          return res.status(500).json({ error: "Điểm phải > 0 và < Điểm tối đa !" });
 
-      const { id } = req.params;
-      const updateObj = {};
-      updateObj[`scoreResult.${role}`] = { scores, total };
-      const result = await TopicStudent.findByIdAndUpdate(id, updateObj, { new: true });
+        const updateObj = {};
+        updateObj[`scoreResult.${role}`] = { scores, total };
+        await TopicStudent.findByIdAndUpdate(id, updateObj, { new: true });
+      } else {
+        if (
+          scores.length !== 5 ||
+          scores.includes(null) ||
+          scoresTeacher.length !== 5 ||
+          scoresTeacher.includes(null) ||
+          scoresCounterTeacher.length !== 5 ||
+          scoresCounterTeacher.includes(null) ||
+          scoresChairperson.length !== 5 ||
+          scoresChairperson.includes(null) ||
+          scoresCommissioner.length !== 5 ||
+          scoresCommissioner.includes(null)
+        )
+          return res.status(500).json({ error: "Vui lòng nhập đầy đủ điểm đánh giá !" });
+        if (
+          scores.some((item) => item < 0 || item > 2) ||
+          scoresTeacher.some((item) => item < 0 || item > 2) ||
+          scoresCounterTeacher.some((item) => item < 0 || item > 2) ||
+          scoresChairperson.some((item) => item < 0 || item > 2) ||
+          scoresCommissioner.some((item) => item < 0 || item > 2)
+        )
+          return res.status(500).json({ error: "Điểm phải > 0 và < Điểm tối đa !" });
 
+        const scoreResult = {
+          teacher: { scores: scoresTeacher, total: totalTeacher },
+          counterTeacher: { scores: scoresCounterTeacher, total: totalCounterTeacher },
+          chairperson: { scores: scoresChairperson, total: totalChairperson },
+          secretary: { scores, total },
+          commissioner: { scores: scoresCommissioner, total: totalCommissioner },
+        };
+
+        await TopicStudent.findByIdAndUpdate(id, { scoreResult }, { new: true });
+      }
+      const result = await TopicStudent.findById(id);
       if (
         result.scoreResult?.teacher?.total &&
         result.scoreResult?.counterTeacher?.total &&

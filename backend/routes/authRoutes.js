@@ -7,6 +7,12 @@ router.post("/login", authController.loginUser);
 
 router.post("/register", authController.registerUser);
 
+router.put("/changePassword", authController.changePassword);
+
+router.post("/forgetPassWord", authController.forgetPassWord);
+
+router.get("/resetPassWord", authController.resetPassWord);
+
 // router.post("/logout", (req, res) => {
 //   req.session.destroy((err) => {
 //     if (err) {

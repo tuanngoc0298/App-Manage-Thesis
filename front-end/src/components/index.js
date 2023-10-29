@@ -8,3 +8,4 @@ export { default as DeleteModal } from "./DeleteModal/DeleteModal";
 export { default as Modal } from "./Modal/Modal";
 export { default as Login } from "./Login/Login";
 export { default as Home } from "./Home/Home";
+export { default as ForgetPass } from "./ForgetPass/ForgetPass";

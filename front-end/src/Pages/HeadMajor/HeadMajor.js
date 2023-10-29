@@ -8,12 +8,11 @@ import {
   StatisticsCompletion,
   StatisticsStudent,
 } from ".";
-import { Home } from "~/components";
+import { ErrorPage } from "~/Pages";
 
 function HeadMajor() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
       <Route path="/managerStudents" element={<ManagerStudents />} />
       <Route path="/assignTeachers" element={<AssignTeachers />} />
       <Route path="/assignCounterTeachers" element={<AssignCounterTeachers />} />
@@ -21,6 +20,7 @@ function HeadMajor() {
       <Route path="/updateState" element={<UpdateState />} />
       <Route path="/statisticsCompletion" element={<StatisticsCompletion />} />
       <Route path="/statisticsStudent" element={<StatisticsStudent />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }

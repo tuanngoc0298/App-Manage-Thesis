@@ -12,12 +12,11 @@ import {
   StatisticsCompletion,
   StatisticsStudent,
 } from "./";
-import { Home } from "~/components";
+import { ErrorPage } from "~/Pages";
 
 function Instructor() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
       <Route path="/registerTopics" element={<RegisterTopics />} />
       <Route path="/approveSuggestTopics" element={<ApproveSuggestTopics />} />
       <Route path="/instructedStudents" element={<InstructedStudents />} />
@@ -29,6 +28,7 @@ function Instructor() {
       <Route path="/updateResult" element={<UpdateResult />} />
       <Route path="/statisticsCompletion" element={<StatisticsCompletion />} />
       <Route path="/statisticsStudent" element={<StatisticsStudent />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }

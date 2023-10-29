@@ -9,12 +9,11 @@ import {
   SubmitFinalReport,
   SeeScoreResult,
 } from "./";
-import { Home } from "~/components";
+import { ErrorPage } from "~/Pages";
 
 function Manager() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
       <Route path="/chooseTopics" element={<ChooseTopics />} />
       <Route path="/suggestTopic" element={<SuggestTopic />} />
       <Route path="/reportProgress" element={<ReportProgress />} />
@@ -23,6 +22,7 @@ function Manager() {
       <Route path="/seeFeedback" element={<SeeFeedback />} />
       <Route path="/submitFinalReport" element={<SubmitFinalReport />} />
       <Route path="/seeScoreResult" element={<SeeScoreResult />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }

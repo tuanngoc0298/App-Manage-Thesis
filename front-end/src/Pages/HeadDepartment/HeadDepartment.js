@@ -8,12 +8,11 @@ import {
   StatisticsCompletion,
   StatisticsStudent,
 } from ".";
-import { Home } from "~/components";
+import { ErrorPage } from "~/Pages";
 
 function HeadDepartment() {
   return (
     <Routes>
-      <Route path="/home" element={<Home />} />
       <Route path="/departments" element={<Departments />} />
       <Route path="/majors" element={<Majors />} />
       <Route path="/teachers" element={<Teachers />} />
@@ -21,6 +20,7 @@ function HeadDepartment() {
       <Route path="/schoolYears" element={<SchoolYears />} />
       <Route path="/statisticsCompletion" element={<StatisticsCompletion />} />
       <Route path="/statisticsStudent" element={<StatisticsStudent />} />
+      <Route path="*" element={<ErrorPage />} />
     </Routes>
   );
 }
