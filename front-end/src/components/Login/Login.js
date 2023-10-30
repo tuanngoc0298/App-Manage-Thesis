@@ -10,6 +10,9 @@ import Cookies from "js-cookie";
 const cx = classNames.bind(styles);
 
 function Login({ onLogin }) {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const navigate = useNavigate();
   // Xử lý input
   const [isFocusedName, setIsFocusedName] = useState(false);
@@ -37,7 +40,7 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios.post("http://localhost:3001/api/login", { username, password }).then((res) => {
+      await axios.post(`${host}:${port}/api/login`, { username, password }).then((res) => {
         const {
           token,
           userInfo: { name },

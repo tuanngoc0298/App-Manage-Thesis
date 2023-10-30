@@ -11,6 +11,9 @@ import styles from "./RegisterPresentProject.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterPresentProject() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [topic, setTopic] = useState({});
 
   const [reportFile, setReportFile] = useState(null);
@@ -25,9 +28,9 @@ function RegisterPresentProject() {
 
   function getTopic() {
     axios
-      .get("http://localhost:3001/api/registerPresent", {
+      .get(`${host}:${port}/api/registerPresent`, {
         withCredentials: true,
-        baseURL: "http://localhost:3001",
+        baseURL: `${host}:${port}`,
       })
       .then((res) => {
         setTopic(res.data);
@@ -45,9 +48,9 @@ function RegisterPresentProject() {
       formData.append("file", reportFile);
 
       axios
-        .put(`http://localhost:3001/api/registerPresent/${topic._id}`, formData, {
+        .put(`${host}:${port}/api/registerPresent/${topic._id}`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -111,7 +114,7 @@ function RegisterPresentProject() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`http://localhost:3001/api/approveRegisterPresent/${topic._id}`}
+                    href={`${host}:${port}/api/approveRegisterPresent/${topic._id}`}
                     download={topic.fileFinal.nameFile}
                   >
                     {topic.fileFinal.nameFile}

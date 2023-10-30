@@ -11,6 +11,9 @@ import styles from "./ReportProgress.module.scss";
 const cx = classNames.bind(styles);
 
 function ReportProgress() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [topics, setTopics] = useState([]);
   const [completeLevel, setCompleteLevel] = useState("");
   const [reportFile, setReportFile] = useState(null);
@@ -37,7 +40,7 @@ function ReportProgress() {
   }
   function getTopic() {
     axios
-      .get("http://localhost:3001/api/reportProgress", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/reportProgress`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((res) => {
         setTopics(res.data);
       })
@@ -54,9 +57,9 @@ function ReportProgress() {
       formData.append("file", reportFile);
 
       axios
-        .post(`http://localhost:3001/api/reportProgress`, formData, {
+        .post(`${host}:${port}/api/reportProgress`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -130,7 +133,7 @@ function ReportProgress() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`http://localhost:3001/api/approveReportProgess/${topic._id}`}
+                    href={`${host}:${port}/api/approveReportProgess/${topic._id}`}
                     download={topic.file.nameFile}
                   >
                     {topic.file.nameFile}

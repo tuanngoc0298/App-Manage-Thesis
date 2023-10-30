@@ -11,6 +11,9 @@ import styles from "./AssignCounterTeachers.module.scss";
 const cx = classNames.bind(styles);
 
 function AssignCounterTeachers() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [requests, setRequests] = useState([]);
 
   const [valNameTeacher, setValNameTeacher] = useState("");
@@ -35,8 +38,8 @@ function AssignCounterTeachers() {
   function getAllStudentsNeedAssign() {
     axios
       .get(
-        `http://localhost:3001/api/assignCounterTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        `${host}:${port}/api/assignCounterTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setRequests(res.data);
@@ -51,7 +54,7 @@ function AssignCounterTeachers() {
     if (valNameTeacher) {
       axios
         .put(
-          `http://localhost:3001/api/assignCounterTeachers/${editRequest._id}`,
+          `${host}:${port}/api/assignCounterTeachers/${editRequest._id}`,
           { valNameTeacher, editRequest },
           {
             headers: { Authorization: `Bearer ${token}` },

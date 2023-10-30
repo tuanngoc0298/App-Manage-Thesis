@@ -11,6 +11,9 @@ import styles from "./SubmitFinalReport.module.scss";
 const cx = classNames.bind(styles);
 
 function SubmitFinalReport() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [reports, setReports] = useState([]);
 
   const [reportFile, setReportFile] = useState(null);
@@ -38,7 +41,7 @@ function SubmitFinalReport() {
 
   function getTopic() {
     axios
-      .get("http://localhost:3001/api/submitFinalReport", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/submitFinalReport`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((res) => {
         setReports(res.data);
       })
@@ -55,9 +58,9 @@ function SubmitFinalReport() {
       formData.append("file", reportFile);
 
       axios
-        .post(`http://localhost:3001/api/submitFinalReport`, formData, {
+        .post(`${host}:${port}/api/submitFinalReport`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -126,7 +129,7 @@ function SubmitFinalReport() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`http://localhost:3001/api/approveFinalReport/${report._id}`}
+                    href={`${host}:${port}/api/approveFinalReport/${report._id}`}
                     download={report.file.nameFile}
                   >
                     {report.file.nameFile}

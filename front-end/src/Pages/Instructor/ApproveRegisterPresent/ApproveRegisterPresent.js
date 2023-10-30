@@ -11,6 +11,9 @@ import styles from "./ApproveRegisterPresent.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveRegisterPresent() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [registers, setRegisters] = useState([]);
 
   const [editRegister, setEditRegister] = useState({});
@@ -34,8 +37,8 @@ function ApproveRegisterPresent() {
   function getAllRegister() {
     axios
       .get(
-        `http://localhost:3001/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        `${host}:${port}/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setRegisters(res.data);
@@ -49,7 +52,7 @@ function ApproveRegisterPresent() {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/approveRegisterPresent/${editRegister._id}`,
+          `${host}:${port}/api/approveRegisterPresent/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -181,7 +184,7 @@ function ApproveRegisterPresent() {
                     <span className="material-symbols-outlined">folder_zip</span>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/approveRegisterPresent/${editRegister._id}`}
+                      href={`${host}:${port}/api/approveRegisterPresent/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}

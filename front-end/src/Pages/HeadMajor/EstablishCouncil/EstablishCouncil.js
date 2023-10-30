@@ -13,6 +13,9 @@ import styles from "./EstablishCouncil.module.scss";
 const cx = classNames.bind(styles);
 
 function EstablishCouncil() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [councils, setCouncils] = useState([]);
   const [idActiveRow, setIdActiveRow] = useState(null);
 
@@ -49,10 +52,10 @@ function EstablishCouncil() {
   function getAllStudents() {
     axios
       .get(
-        `http://localhost:3001/api/establishCouncil?searchQuery=${searchQuery}${
+        `${host}:${port}/api/establishCouncil?searchQuery=${searchQuery}${
           isTabCouncil ? `&isTabCouncil=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setCouncils(res.data);
@@ -74,7 +77,7 @@ function EstablishCouncil() {
       editCouncil.protectionCouncil?.members?.commissioner
     ) {
       axios
-        .put(`http://localhost:3001/api/establishCouncil/${editCouncil._id}`, editCouncil, {
+        .put(`${host}:${port}/api/establishCouncil/${editCouncil._id}`, editCouncil, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -262,7 +265,7 @@ function EstablishCouncil() {
                           onClick={() => {
                             setEditCouncil({
                               ...council,
-                              protectionCouncil: { ...council.protectionCouncil, stateProtection: "Chưa bảo vệ" },
+                              protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
                             });
                             setIsOpenDetailModal(true);
                           }}
@@ -274,7 +277,7 @@ function EstablishCouncil() {
                           onClick={() => {
                             setEditCouncil({
                               ...council,
-                              protectionCouncil: { ...council.protectionCouncil, stateProtection: "Chưa bảo vệ" },
+                              protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
                             });
                             setIsOpenEditModal(true);
                           }}
@@ -292,7 +295,7 @@ function EstablishCouncil() {
                         onClick={() => {
                           setEditCouncil({
                             ...council,
-                            protectionCouncil: { ...council.protectionCouncil, stateProtection: "Chưa bảo vệ" },
+                            protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
                           });
                           setIsOpenEditModal(true);
                         }}

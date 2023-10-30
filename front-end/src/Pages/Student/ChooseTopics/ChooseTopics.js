@@ -11,6 +11,8 @@ import styles from "./ChooseTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function ChooseTopics() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
   const { code, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   let editTopic = {};
@@ -32,7 +34,7 @@ function ChooseTopics() {
 
     setIsSelectedTopicTab(false);
     axios
-      .get("http://localhost:3001/api/topicsByMajor", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/topicsByMajor`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((res) => {
         setTopics(res.data);
         setError("");
@@ -45,7 +47,7 @@ function ChooseTopics() {
   function getSelectedTopic() {
     setIsSelectedTopicTab(true);
     axios
-      .get(`http://localhost:3001/api/chooseTopics`, { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/chooseTopics`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((res) => {
         setTopics(res.data);
         setError("");
@@ -58,11 +60,11 @@ function ChooseTopics() {
   const handleRegisterTopic = () => {
     axios
       .put(
-        `http://localhost:3001/api/chooseTopics/${editTopic._id}`,
+        `${host}:${port}/api/chooseTopics/${editTopic._id}`,
         { editTopic, code },
         {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         }
       )
       .then((res) => {
@@ -78,9 +80,9 @@ function ChooseTopics() {
   const handleCancleRegisterTopic = () => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`http://localhost:3001/api/chooseTopics/${editTopic._id}`, {
+      .delete(`${host}:${port}/api/chooseTopics/${editTopic._id}`, {
         withCredentials: true,
-        baseURL: "http://localhost:3001",
+        baseURL: `${host}:${port}`,
       })
       .then((res) => {
         // Cập nhật danh sách đề tài
@@ -95,9 +97,9 @@ function ChooseTopics() {
 
   const handleSearchTopic = () => {
     axios
-      .get(`http://localhost:3001/api/topicsByMajor?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/topicsByMajor?searchQuery=${searchQuery}`, {
         withCredentials: true,
-        baseURL: "http://localhost:3001",
+        baseURL: `${host}:${port}`,
       })
       .then((res) => {
         setTopics(res.data);

@@ -98,6 +98,7 @@ const establishCouncilController = {
     try {
       const { protectionCouncil } = req.body;
       const { stateProtection } = protectionCouncil;
+
       const { chairperson, secretary, commissioner } = protectionCouncil.members;
       const values = new Set([chairperson, secretary, commissioner]);
       if (stateProtection === "Đã bảo vệ") return res.status(400).json({ error: "Không thể sửa hội đồng đã bảo vệ!" });

@@ -11,6 +11,9 @@ import styles from "./ApproveFinalReport.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveFinalReport() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [registers, setRegisters] = useState([]);
 
   const [editRegister, setEditRegister] = useState({});
@@ -34,10 +37,10 @@ function ApproveFinalReport() {
   function getAllRegister() {
     axios
       .get(
-        `http://localhost:3001/api/approveFinalReport?searchQuery=${searchQuery}${
+        `${host}:${port}/api/approveFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setRegisters(res.data);
@@ -51,7 +54,7 @@ function ApproveFinalReport() {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/approveFinalReport/${editRegister._id}`,
+          `${host}:${port}/api/approveFinalReport/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -187,7 +190,7 @@ function ApproveFinalReport() {
                     <div>
                       <a
                         className={cx("linkDownload")}
-                        href={`http://localhost:3001/api/approveFinalReport/${register._id}`}
+                        href={`${host}:${port}/api/approveFinalReport/${register._id}`}
                         download={register.fileFinal.nameFile}
                       >
                         {register.fileFinal.nameFile}
@@ -227,7 +230,7 @@ function ApproveFinalReport() {
                     <span className="material-symbols-outlined">folder_zip</span>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/approveFinalReport/${editRegister._id}`}
+                      href={`${host}:${port}/api/approveFinalReport/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}

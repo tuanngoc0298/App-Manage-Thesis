@@ -11,6 +11,9 @@ import styles from "./ProtectionSchedule.module.scss";
 const cx = classNames.bind(styles);
 
 function ProtectionSchedule() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [schedule, setSchedule] = useState({});
 
   const [error, setError] = useState("");
@@ -21,9 +24,9 @@ function ProtectionSchedule() {
 
   function getSchedule() {
     axios
-      .get("http://localhost:3001/api/protectionSchedule", {
+      .get(`${host}:${port}/api/protectionSchedule`, {
         withCredentials: true,
-        baseURL: "http://localhost:3001",
+        baseURL: `${host}:${port}`,
       })
       .then((res) => {
         setSchedule(res.data);

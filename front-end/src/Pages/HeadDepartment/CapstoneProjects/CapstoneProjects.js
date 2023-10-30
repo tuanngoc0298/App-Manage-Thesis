@@ -11,6 +11,9 @@ import styles from "./CapstoneProjects.module.scss";
 const cx = classNames.bind(styles);
 
 function CapstoneProjects() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [capstoneProjects, setCapstoneProjects] = useState([]);
   const [newCapstoneProject, setNewCapstoneProject] = useState({});
   const [editCapstoneProject, setEditCapstoneProject] = useState({});
@@ -31,7 +34,7 @@ function CapstoneProjects() {
   useEffect(() => {
     // Gọi API để lấy danh sách học phần KLTN
     axios
-      .get("http://localhost:3001/api/capstoneProjects", {
+      .get(`${host}:${port}/api/capstoneProjects`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -68,7 +71,7 @@ function CapstoneProjects() {
     ) {
       // Gọi API để thêm học phần KLTN mới
       axios
-        .post("http://localhost:3001/api/capstoneProjects", newCapstoneProject, {
+        .post(`${host}:${port}/api/capstoneProjects`, newCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -98,7 +101,7 @@ function CapstoneProjects() {
       editCapstoneProject.credit
     ) {
       axios
-        .put(`http://localhost:3001/api/capstoneProjects/${editCapstoneProject._id}`, editCapstoneProject, {
+        .put(`${host}:${port}/api/capstoneProjects/${editCapstoneProject._id}`, editCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -130,7 +133,7 @@ function CapstoneProjects() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa học phần KLTN
     axios
-      .delete(`http://localhost:3001/api/capstoneProjects/${id}`, {
+      .delete(`${host}:${port}/api/capstoneProjects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -145,7 +148,7 @@ function CapstoneProjects() {
   };
   const handleSearchCapstoneProject = () => {
     axios
-      .get(`http://localhost:3001/api/capstoneProjects?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/capstoneProjects?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

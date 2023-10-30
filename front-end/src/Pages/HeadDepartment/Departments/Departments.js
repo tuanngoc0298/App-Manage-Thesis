@@ -11,6 +11,9 @@ import styles from "./Departments.module.scss";
 const cx = classNames.bind(styles);
 
 function Departments() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [departments, setDepartments] = useState([]);
   const [newDepartment, setNewDepartment] = useState({});
   const [editDepartment, setEditDepartment] = useState({});
@@ -30,7 +33,7 @@ function Departments() {
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get("http://localhost:3001/api/departments", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/departments`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((response) => {
         setDepartments(response.data);
       })
@@ -61,7 +64,7 @@ function Departments() {
     if (newDepartment.codeDepartment && newDepartment.nameDepartment && newDepartment.describeDepartment) {
       // Gọi API để thêm khoa mới
       axios
-        .post("http://localhost:3001/api/departments", newDepartment, {
+        .post(`${host}:${port}/api/departments`, newDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -85,7 +88,7 @@ function Departments() {
     // Gọi API để sửa khoa
     if (editDepartment.nameDepartment && editDepartment.codeDepartment && editDepartment.describeDepartment) {
       axios
-        .put(`http://localhost:3001/api/departments/${editDepartment._id}`, editDepartment, {
+        .put(`${host}:${port}/api/departments/${editDepartment._id}`, editDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -117,7 +120,7 @@ function Departments() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa khoa
     axios
-      .delete(`http://localhost:3001/api/departments/${id}`, {
+      .delete(`${host}:${port}/api/departments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -132,7 +135,7 @@ function Departments() {
   };
   const handleSearchDepartment = () => {
     axios
-      .get(`http://localhost:3001/api/departments?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/departments?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

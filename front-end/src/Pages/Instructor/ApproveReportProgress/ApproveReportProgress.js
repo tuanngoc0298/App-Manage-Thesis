@@ -11,6 +11,9 @@ import styles from "./ApproveReportProgress.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveReportProgress() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [reports, setReports] = useState([]);
   const [reportsDetail, setReportsDetail] = useState([]);
 
@@ -54,10 +57,10 @@ function ApproveReportProgress() {
   function getAllReports() {
     axios
       .get(
-        `http://localhost:3001/api/approveReportProgess?searchQuery=${searchQuery}${
+        `${host}:${port}/api/approveReportProgess?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setReports(res.data);
@@ -70,9 +73,9 @@ function ApproveReportProgress() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`http://localhost:3001/api/approveReportDetail/${detail._id}`, {
+        .get(`${host}:${port}/api/approveReportDetail/${detail._id}`, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((res) => {
           setReportsDetail(res.data);
@@ -87,7 +90,7 @@ function ApproveReportProgress() {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/approveReportProgess/${editReport._id}`,
+          `${host}:${port}/api/approveReportProgess/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -259,7 +262,7 @@ function ApproveReportProgress() {
                     <span className="material-symbols-outlined">folder_zip</span>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/approveReportProgess/${editReport._id}`}
+                      href={`${host}:${port}/api/approveReportProgess/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
@@ -327,7 +330,7 @@ function ApproveReportProgress() {
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`http://localhost:3001/api/approveReportProgess/${report._id}`}
+                          href={`${host}:${port}/api/approveReportProgess/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}

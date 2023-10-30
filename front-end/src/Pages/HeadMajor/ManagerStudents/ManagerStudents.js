@@ -13,6 +13,8 @@ import styles from "./ManagerStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function ManagerStudents() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
   const { nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [students, setStudents] = useState([]);
@@ -63,10 +65,10 @@ function ManagerStudents() {
     setErrorImport("");
     axios
       .get(
-        `http://localhost:3001/api/students?searchQuery=${searchQuery}${
+        `${host}:${port}/api/students?searchQuery=${searchQuery}${
           isFilterByMajor ? `&nameMajor=${nameMajor}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((response) => {
         setStudents(response.data);
@@ -88,9 +90,9 @@ function ManagerStudents() {
       formData.append("file", file);
       const form = document.getElementById("formImport");
       axios
-        .post("http://localhost:3001/api/studentsUpload", formData, {
+        .post(`${host}:${port}/api/studentsUpload`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((res) => {
           setErrorImport("");
@@ -116,7 +118,7 @@ function ManagerStudents() {
     if (newStudent.code && newStudent.name && newStudent.year && newStudent.semester && newStudent.state) {
       // Gọi API để thêm sinh viên mới
       axios
-        .post("http://localhost:3001/api/students", newStudent, {
+        .post(`${host}:${port}/api/students`, newStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -140,7 +142,7 @@ function ManagerStudents() {
     // Gọi API để sửa sinh viên
     if (editStudent.name && editStudent.code && editStudent.year && editStudent.semester && editStudent.state) {
       axios
-        .put(`http://localhost:3001/api/students/${editStudent._id}`, editStudent, {
+        .put(`${host}:${port}/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -172,7 +174,7 @@ function ManagerStudents() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa sinh viên
     axios
-      .delete(`http://localhost:3001/api/students/${id}`, {
+      .delete(`${host}:${port}/api/students/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {

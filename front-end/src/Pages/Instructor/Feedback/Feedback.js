@@ -10,6 +10,9 @@ import styles from "./Feedback.module.scss";
 const cx = classNames.bind(styles);
 
 function Feedback() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [feedbacks, setFeedbacks] = useState([]);
 
   const [idActiveRow, setIdActiveRow] = useState(null);
@@ -33,10 +36,10 @@ function Feedback() {
   function getAllStudents() {
     axios
       .get(
-        `http://localhost:3001/api/feedback?searchQuery=${searchQuery}${
+        `${host}:${port}/api/feedback?searchQuery=${searchQuery}${
           isTabFeedback ? `&isTabFeedback=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setFeedbacks(res.data);
@@ -54,9 +57,9 @@ function Feedback() {
       formData.append("nameFile", editFeedback.feedback?.fileFeedback?.nameFile);
       formData.append("file", file);
       axios
-        .put(`http://localhost:3001/api/feedback/${editFeedback._id}`, formData, {
+        .put(`${host}:${port}/api/feedback/${editFeedback._id}`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -210,7 +213,7 @@ function Feedback() {
                   <td>
                     <a
                       className={cx("linkDownload")}
-                      href={`http://localhost:3001/api/feedback/${feedback._id}`}
+                      href={`${host}:${port}/api/feedback/${feedback._id}`}
                       download={feedback.feedback?.fileFeedback?.nameFile}
                     >
                       {feedback.feedback?.fileFeedback?.nameFile}
@@ -298,104 +301,6 @@ function Feedback() {
           <div className={cx("overlay")}></div>
         </div>
       )}
-      {/* 
-      {isOpenDetailModal && (
-        <div>
-          <div className={cx("modal", "modal__details")}>
-            <div className={cx("modal-close")} onClick={handleCancleDetail}>
-              <span className="material-symbols-outlined">close</span>
-            </div>
-            <div className={cx("title-modal")}>Chi tiết HĐBV</div>
-            <div className={cx("form")} style={{ padding: "40px 60px" }}>
-              <div className={cx("wrap__modalDetails")}>
-                <div className={cx("wrap__modalDetail1")}>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editFeedback.nameStudent}</span>
-                  </div>
-
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Năm học:</span>
-                    <span className={cx("details__content")}>{editFeedback.yearTopic}</span>
-                  </div>
-
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Kỳ học:</span>
-                    <span className={cx("details__content")}>{editFeedback.semesterTopic}</span>
-                  </div>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Tên HĐBV:</span>
-                    <span className={cx("details__content")}>{editFeedback.protectionCouncil?.nameCouncil}</span>
-                  </div>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Mô tả:</span>
-                    <span className={cx("details__content")}>{editFeedback.protectionCouncil?.describeCouncil}</span>
-                  </div>
-                </div>
-                <div className={cx("wrap__modalDetail1")}>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Đề tài KLTN:</span>
-                    <span className={cx("details__content")}>{editFeedback.nameTopic}</span>
-                  </div>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Mô tả đề tài:</span>
-                    <span className={cx("details__content")}>{editFeedback.describeTopic}</span>
-                  </div>
-                  <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Lịch bảo vệ</span>
-                  </div>
-                  <div className={cx("details__schedule")}>
-                    <div className={cx("details__row", "details__row-margin")}>
-                      <span className={cx("details__title")}>Ngày:</span>
-                      <span className={cx("details__content")}>
-                        {new Date(editFeedback.protectionCouncil?.time).toLocaleDateString("vi-VI", {
-                          day: "2-digit",
-                          month: "2-digit",
-                          year: "2-digit",
-                        })}
-                      </span>
-                    </div>
-                    <div className={cx("details__row")}>
-                      <span className={cx("details__title")}>Ca/Mã phòng:</span>
-                      <span className={cx("details__content")}>{editFeedback.protectionCouncil?.shift}/</span>
-                      <span className={cx("details__content")}>{editFeedback.protectionCouncil?.roomCode}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ margin: "15px 0 10px" }}>
-                <span className={cx("details__title")}>Thành viên hội đồng bảo vệ</span>
-              </div>
-              <div className={cx("details__members")}>
-                <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Chủ tịch hội đồng:</span>
-                  <span className={cx("details__content")}>{editFeedback.protectionCouncil?.members?.chairperson}</span>
-                </div>
-                <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Giáo viên hướng dẫn:</span>
-                  <span className={cx("details__content")}>{editFeedback.nameTeacher}</span>
-                </div>
-                <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Giáo viên phản biện:</span>
-                  <span className={cx("details__content")}>{editFeedback.nameCounterTeacher}</span>
-                </div>
-                <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Thư ký:</span>
-                  <span className={cx("details__content")}>{editFeedback.protectionCouncil?.members?.secretary}</span>
-                </div>
-                <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Ủy viên:</span>
-                  <span className={cx("details__content")}>
-                    {editFeedback.protectionCouncil?.members?.commissioner}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div className={cx("overlay")}></div>
-        </div>
-      )} */}
     </DefaultLayout>
   );
 }

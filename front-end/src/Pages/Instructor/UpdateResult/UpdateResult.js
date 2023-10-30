@@ -12,6 +12,8 @@ import styles from "./UpdateResult.module.scss";
 const cx = classNames.bind(styles);
 
 function UpdateResult() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
   const nameUser = Cookies.get("token") ? jwt_decode(Cookies.get("token")).userInfo.name : "";
 
   const [role, setRole] = useState("");
@@ -96,10 +98,10 @@ function UpdateResult() {
   function getAllStudents() {
     axios
       .get(
-        `http://localhost:3001/api/updateResult?searchQuery=${searchQuery}${
+        `${host}:${port}/api/updateResult?searchQuery=${searchQuery}${
           isTabResult ? `&isTabResult=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setStudents(res.data);
@@ -112,7 +114,7 @@ function UpdateResult() {
   const handleUpdateResult = () => {
     axios
       .put(
-        `http://localhost:3001/api/updateResult/${editResult._id}`,
+        `${host}:${port}/api/updateResult/${editResult._id}`,
         {
           scores,
           total,

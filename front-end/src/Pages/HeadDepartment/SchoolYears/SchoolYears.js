@@ -11,6 +11,9 @@ import styles from "./SchoolYears.module.scss";
 const cx = classNames.bind(styles);
 
 function SchoolYears() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [schoolYears, setSchoolYears] = useState([]);
   const [newSchoolYear, setNewSchoolYear] = useState({});
   const [editSchoolYear, setEditSchoolYear] = useState({});
@@ -30,7 +33,7 @@ function SchoolYears() {
   useEffect(() => {
     // Gọi API để lấy danh sách năm học
     axios
-      .get("http://localhost:3001/api/schoolYears", {
+      .get(`${host}:${port}/api/schoolYears`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -63,7 +66,7 @@ function SchoolYears() {
     if (newSchoolYear.year && newSchoolYear.semester) {
       // Gọi API để thêm năm học mới
       axios
-        .post("http://localhost:3001/api/schoolYears", newSchoolYear, {
+        .post(`${host}:${port}/api/schoolYears`, newSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -87,7 +90,7 @@ function SchoolYears() {
     // Gọi API để sửa năm học
     if (editSchoolYear.semester && editSchoolYear.year) {
       axios
-        .put(`http://localhost:3001/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
+        .put(`${host}:${port}/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -119,7 +122,7 @@ function SchoolYears() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa năm học
     axios
-      .delete(`http://localhost:3001/api/schoolYears/${id}`, {
+      .delete(`${host}:${port}/api/schoolYears/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -134,7 +137,7 @@ function SchoolYears() {
   };
   const handleSearchSchoolYear = () => {
     axios
-      .get(`http://localhost:3001/api/schoolYears?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/schoolYears?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

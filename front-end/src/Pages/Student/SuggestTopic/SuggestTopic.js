@@ -1,5 +1,5 @@
 import DefaultLayout from "~/Layout/DefaultLayout";
-import { SearchBar, DeleteModal, Modal } from "~/components";
+import { DeleteModal, Modal } from "~/components";
 
 import React, { useState, useEffect, useContext, useRef } from "react";
 import axios from "axios";
@@ -13,6 +13,9 @@ import styles from "./SuggestTopic.module.scss";
 const cx = classNames.bind(styles);
 
 function SuggestTopic() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const { code } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [topic, setTopic] = useState();
@@ -52,7 +55,7 @@ function SuggestTopic() {
 
   function getSuggestTopic() {
     axios
-      .get("http://localhost:3001/api/suggestTopic", { withCredentials: true, baseURL: "http://localhost:3001" })
+      .get(`${host}:${port}/api/suggestTopic`, { withCredentials: true, baseURL: `${host}:${port}` })
       .then((res) => {
         setTopic(res.data);
       })
@@ -63,9 +66,9 @@ function SuggestTopic() {
     if (newSuggestTopic.nameTopic && newSuggestTopic.describe) {
       // Gọi API để thêm đề tài mới
       axios
-        .post("http://localhost:3001/api/suggestTopic", newSuggestTopic, {
+        .post(`${host}:${port}/api/suggestTopic`, newSuggestTopic, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((res) => {
           // Cập nhật danh sách đề tài
@@ -87,9 +90,9 @@ function SuggestTopic() {
     // Gọi API để sửa đề tài
     if (editSuggestTopic.nameTopic && editSuggestTopic.describe) {
       axios
-        .put(`http://localhost:3001/api/suggestTopic/${editSuggestTopic._id}`, editSuggestTopic, {
+        .put(`${host}:${port}/api/suggestTopic/${editSuggestTopic._id}`, editSuggestTopic, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((res) => {
           // Cập nhật danh sách đề tài
@@ -112,9 +115,9 @@ function SuggestTopic() {
   const handleDeleteTopic = (id) => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`http://localhost:3001/api/suggestTopic/${id}`, {
+      .delete(`${host}:${port}/api/suggestTopic/${id}`, {
         withCredentials: true,
-        baseURL: "http://localhost:3001",
+        baseURL: `${host}:${port}`,
       })
       .then(() => {
         // Cập nhật danh sách đề tài

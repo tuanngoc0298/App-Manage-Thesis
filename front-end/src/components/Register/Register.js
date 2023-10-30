@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 
 function Register({ onRegister }) {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [role, setRole] = useState("");
@@ -10,7 +13,7 @@ function Register({ onRegister }) {
 
   const handleRegister = async () => {
     try {
-      await axios.post("http://localhost:3001/api/register", { username, password, role, userCode });
+      await axios.post(`${host}:${port}/api/register`, { username, password, role, userCode });
 
       setError("Đăng ký thành công");
     } catch (err) {

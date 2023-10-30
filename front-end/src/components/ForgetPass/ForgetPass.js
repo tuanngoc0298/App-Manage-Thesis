@@ -1,15 +1,16 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+
 import axios from "axios";
 import images from "~/assets/img";
 
 import classNames from "classnames/bind";
 import styles from "./ForgetPass.module.scss";
-import Cookies from "js-cookie";
 
 const cx = classNames.bind(styles);
 
 function ForgetPass() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
   // Xử lý input
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedUsername, setIsFocusedUsername] = useState(false);
@@ -18,9 +19,6 @@ function ForgetPass() {
   //
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
-  const [error, setError] = useState("");
-  // Forget Password
-  const [isForgetPassword, setIsForgetPassword] = useState();
 
   const handleFocusUsername = () => {
     setIsFocusedEmail(true);
@@ -40,7 +38,7 @@ function ForgetPass() {
 
     if (email && username) {
       await axios
-        .post("http://localhost:3001/api/forgetPassWord", { username, email })
+        .post(`${host}:${port}/api/forgetPassWord`, { username, email })
         .then((res) => {
           alert(res.data);
         })
@@ -93,7 +91,7 @@ function ForgetPass() {
             <span class={cx("material-symbols-outlined", "focus__icon")}>person</span>
             <span className={cx("focus-input")}></span>
           </div>
-          {error && <div className={cx("message")}>{error}</div>}
+
           <div className={cx("btn")}>
             <input
               type="submit"

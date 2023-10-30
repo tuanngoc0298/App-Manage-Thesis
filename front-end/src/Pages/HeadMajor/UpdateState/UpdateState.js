@@ -11,6 +11,9 @@ import styles from "./UpdateState.module.scss";
 const cx = classNames.bind(styles);
 
 function UpdateState() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [students, setStudents] = useState([]);
 
   const [editStudent, setStudent] = useState({});
@@ -34,10 +37,10 @@ function UpdateState() {
   function getAllRegister() {
     axios
       .get(
-        `http://localhost:3001/api/updateState?searchQuery=${searchQuery}${
+        `${host}:${port}/api/updateState?searchQuery=${searchQuery}${
           isFilterApproved ? `&isTabComplete=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setStudents(res.data);
@@ -51,7 +54,7 @@ function UpdateState() {
     if (isApprove) {
       axios
         .put(
-          `http://localhost:3001/api/updateState/${editStudent._id}`,
+          `${host}:${port}/api/updateState/${editStudent._id}`,
           { isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },

@@ -11,6 +11,9 @@ import styles from "./Teachers.module.scss";
 const cx = classNames.bind(styles);
 
 function Teachers() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [teachers, setTeachers] = useState([]);
   const [newTeacher, setNewTeacher] = useState({});
   const [editTeacher, setEditTeacher] = useState({});
@@ -31,7 +34,7 @@ function Teachers() {
   useEffect(() => {
     // Gọi API để lấy danh sách giáo viên
     axios
-      .get("http://localhost:3001/api/teachers", {
+      .get(`${host}:${port}/api/teachers`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -64,7 +67,7 @@ function Teachers() {
     if (newTeacher.code && newTeacher.name && newTeacher.nameMajor && newTeacher.roleTeacher) {
       // Gọi API để thêm giáo viên mới
       axios
-        .post("http://localhost:3001/api/teachers", newTeacher, {
+        .post(`${host}:${port}/api/teachers`, newTeacher, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -89,7 +92,7 @@ function Teachers() {
     if (editTeacher.name && editTeacher.code && editTeacher.nameMajor && editTeacher.roleTeacher) {
       axios
         .put(
-          `http://localhost:3001/api/teachers/${editTeacher._id}`,
+          `${host}:${port}/api/teachers/${editTeacher._id}`,
           { editTeacher, initialValueComboBox },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -124,7 +127,7 @@ function Teachers() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa giáo viên
     axios
-      .delete(`http://localhost:3001/api/teachers/${id}`, {
+      .delete(`${host}:${port}/api/teachers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -139,7 +142,7 @@ function Teachers() {
   };
   const handleSearchTeacher = () => {
     axios
-      .get(`http://localhost:3001/api/teachers?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/teachers?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

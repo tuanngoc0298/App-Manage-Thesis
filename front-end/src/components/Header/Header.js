@@ -11,6 +11,8 @@ const cx = classNames.bind(styles);
 function Header() {
   const navigate = useNavigate();
   const { userName, handleLogout } = useContext(HeaderContext);
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
 
   const [changePassword, setChangePassword] = useState(false);
   const [errorChangePassword, setErrorChangePassword] = useState("");
@@ -30,9 +32,9 @@ function Header() {
       }
       axios
         .put(
-          `http://localhost:3001/api/changePassword`,
+          `${host}:${port}/api/changePassword`,
           { currentPass, newPass },
-          { withCredentials: true, baseURL: "http://localhost:3001" }
+          { withCredentials: true, baseURL: `${host}:${port}` }
         )
         .then((res) => {
           setChangePassword(false);

@@ -11,6 +11,9 @@ import styles from "./AssignTeachers.module.scss";
 const cx = classNames.bind(styles);
 
 function AssignTeachers() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [suggestTopics, setSuggestTopics] = useState([]);
 
   const [valNameTeacher, setValNameTeacher] = useState("");
@@ -35,8 +38,8 @@ function AssignTeachers() {
   function getAllStudentsNeedAssign() {
     axios
       .get(
-        `http://localhost:3001/api/assignTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        `${host}:${port}/api/assignTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setSuggestTopics(res.data);
@@ -51,7 +54,7 @@ function AssignTeachers() {
     if (valNameTeacher) {
       axios
         .put(
-          `http://localhost:3001/api/assignTeachers/${editSuggestTopic._id}`,
+          `${host}:${port}/api/assignTeachers/${editSuggestTopic._id}`,
           { valNameTeacher, editSuggestTopic },
           {
             headers: { Authorization: `Bearer ${token}` },

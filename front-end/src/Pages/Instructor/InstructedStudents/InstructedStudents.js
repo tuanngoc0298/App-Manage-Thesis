@@ -11,6 +11,9 @@ import styles from "./InstructedStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function InstructedStudents() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [instructedStudents, setInstructedStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -24,8 +27,8 @@ function InstructedStudents() {
   function getInstructedStudents() {
     axios
       .get(
-        `http://localhost:3001/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        `${host}:${port}/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         setInstructedStudents(res.data);

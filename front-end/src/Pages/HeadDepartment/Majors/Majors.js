@@ -11,6 +11,9 @@ import styles from "./Majors.module.scss";
 const cx = classNames.bind(styles);
 
 function Majors() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [majors, setMajors] = useState([]);
   const [newMajor, setNewMajor] = useState({});
   const [editMajor, setEditMajor] = useState({});
@@ -31,7 +34,7 @@ function Majors() {
   useEffect(() => {
     // Gọi API để lấy danh sách ngành
     axios
-      .get("http://localhost:3001/api/majors", {
+      .get(`${host}:${port}/api/majors`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -64,7 +67,7 @@ function Majors() {
     if (newMajor.codeMajor && newMajor.nameMajor && newMajor.nameDepartment) {
       // Gọi API để thêm ngành mới
       axios
-        .post("http://localhost:3001/api/majors", newMajor, {
+        .post(`${host}:${port}/api/majors`, newMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -89,7 +92,7 @@ function Majors() {
 
     if (editMajor.nameDepartment && editMajor.nameMajor && editMajor.codeMajor) {
       axios
-        .put(`http://localhost:3001/api/majors/${editMajor._id}`, editMajor, {
+        .put(`${host}:${port}/api/majors/${editMajor._id}`, editMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -121,7 +124,7 @@ function Majors() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa ngành
     axios
-      .delete(`http://localhost:3001/api/majors/${id}`, {
+      .delete(`${host}:${port}/api/majors/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -136,7 +139,7 @@ function Majors() {
   };
   const handleSearchMajor = () => {
     axios
-      .get(`http://localhost:3001/api/majors?searchQuery=${searchQuery}`, {
+      .get(`${host}:${port}/api/majors?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

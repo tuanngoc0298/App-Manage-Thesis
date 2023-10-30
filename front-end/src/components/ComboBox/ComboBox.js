@@ -19,14 +19,17 @@ function ComboBox({
   customInput,
   defaultDisplay = "Chọn một mục",
 }) {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [data, setData] = useState([]);
 
   useEffect(() => {
     if (api) {
       axios
-        .get(`http://localhost:3001/api/${api}`, {
+        .get(`${host}:${port}/api/${api}`, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((res) => {
           setData(res.data);

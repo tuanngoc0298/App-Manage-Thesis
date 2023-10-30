@@ -12,6 +12,9 @@ import styles from "./StatisticsStudent.module.scss";
 const cx = classNames.bind(styles);
 
 function StatisticsStudent() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const [statistics, setStatistics] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
 
@@ -26,8 +29,8 @@ function StatisticsStudent() {
   function getStatistics() {
     axios
       .get(
-        `http://localhost:3001/api/statisticsStudent?searchQuery=${searchQuery}&year=${filterByYear}&department=${filterByDepartment}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        `${host}:${port}/api/statisticsStudent?searchQuery=${searchQuery}&year=${filterByYear}&department=${filterByDepartment}`,
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
         console.log(res.data);

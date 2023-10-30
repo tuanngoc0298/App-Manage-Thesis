@@ -13,6 +13,9 @@ import styles from "./RegisterTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterTopic() {
+  const host = process.env.REACT_APP_HOST;
+  const port = process.env.REACT_APP_PORT;
+
   const { name, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [topics, setTopics] = useState([]);
@@ -62,10 +65,10 @@ function RegisterTopic() {
     setErrorImport("");
     axios
       .get(
-        `http://localhost:3001/api/topics?searchQuery=${searchQuery}${
+        `${host}:${port}/api/topics?searchQuery=${searchQuery}${
           isFilterByUserName ? `&nameTeacher=${name}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: "http://localhost:3001" }
+        { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((response) => {
         setTopics(response.data);
@@ -88,9 +91,9 @@ function RegisterTopic() {
       const form = document.getElementById("formImport");
 
       axios
-        .post("http://localhost:3001/api/topicsUpload", formData, {
+        .post(`${host}:${port}/api/topicsUpload`, formData, {
           withCredentials: true,
-          baseURL: "http://localhost:3001",
+          baseURL: `${host}:${port}`,
         })
         .then((response) => {
           setErrorImport("");
@@ -122,7 +125,7 @@ function RegisterTopic() {
     ) {
       // Gọi API để thêm đề tài mới
       axios
-        .post("http://localhost:3001/api/topics", newTopic, {
+        .post(`${host}:${port}/api/topics`, newTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -153,7 +156,7 @@ function RegisterTopic() {
       editTopic.semester
     ) {
       axios
-        .put(`http://localhost:3001/api/topics/${editTopic._id}`, editTopic, {
+        .put(`${host}:${port}/api/topics/${editTopic._id}`, editTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -185,7 +188,7 @@ function RegisterTopic() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa đề tài
     axios
-      .delete(`http://localhost:3001/api/topics/${id}`, {
+      .delete(`${host}:${port}/api/topics/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
