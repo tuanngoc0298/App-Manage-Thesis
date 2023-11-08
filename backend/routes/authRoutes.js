@@ -13,6 +13,10 @@ router.post("/forgetPassWord", authController.forgetPassWord);
 
 router.get("/resetPassWord", authController.resetPassWord);
 
+router.get("/getEmail", authController.getEmail);
+
+router.put("/updateEmail", authController.updateEmail);
+
 // router.post("/logout", (req, res) => {
 //   req.session.destroy((err) => {
 //     if (err) {

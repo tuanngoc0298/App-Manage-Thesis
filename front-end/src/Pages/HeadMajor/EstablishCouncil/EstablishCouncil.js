@@ -270,7 +270,7 @@ function EstablishCouncil() {
                             setIsOpenDetailModal(true);
                           }}
                         >
-                          <span class="material-symbols-outlined">visibility</span>
+                          <span className="material-symbols-outlined">visibility</span>
                         </button>
                         <button
                           className={cx("btn")}

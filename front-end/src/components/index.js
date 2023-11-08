@@ -9,3 +9,4 @@ export { default as Modal } from "./Modal/Modal";
 export { default as Login } from "./Login/Login";
 export { default as Home } from "./Home/Home";
 export { default as ForgetPass } from "./ForgetPass/ForgetPass";
+export { default as UpdateEmail } from "./UpdateEmail/UpdateEmail";

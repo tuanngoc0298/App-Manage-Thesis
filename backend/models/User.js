@@ -16,7 +16,7 @@ const userSchema = new mongoose.Schema({
   },
   role: {
     type: String,
-    enum: ["admin", "NguoiPhuTrach", "SinhVien", "GiaoVien", "PhongDaoTao"],
+    enum: ["Admin", "Người phụ trách", "Sinh viên", "Giáo viên", "Phòng đào tạo"],
     require: true,
   },
   code: {

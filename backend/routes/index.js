@@ -2,6 +2,10 @@ const authRoutes = require("./authRoutes");
 const statisticsCompletionRoutes = require("./statisticsCompletionRoutes");
 const statisticsStudentRoutes = require("./statisticsStudentRoutes");
 
+// Admin
+const permissionRoutes = require("./Admin/permissionRoutes");
+const managerUserRoutes = require("./Admin/managerUserRoutes");
+
 // Phong Đào Tạo
 const departmentRoutes = require("./HeadDepartment/departmentRoutes");
 const majorRoutes = require("./HeadDepartment/majorRoutes");
@@ -66,6 +70,8 @@ const allModules = {
   seeScoreResultRoutes,
   updateStateRoutes,
   statisticsStudentRoutes,
+  permissionRoutes,
+  managerUserRoutes,
 };
 
 module.exports = allModules;

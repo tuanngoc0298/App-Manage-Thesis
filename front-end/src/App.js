@@ -1,8 +1,8 @@
 import React, { useState, createContext } from "react";
 import { BrowserRouter as Router, Route, Routes, Navigate } from "react-router-dom";
 
-import { HeadDepartment, HeadMajor, Instructor, Student } from "./Pages";
-import { Home, ForgetPass, Login } from "~/components";
+import { HeadDepartment, HeadMajor, Instructor, Student, Admin } from "./Pages";
+import { Home, ForgetPass, Login, UpdateEmail } from "~/components";
 
 import { PrivateRoute } from "~/utils";
 
@@ -40,19 +40,19 @@ function App() {
 
   let content;
   switch (userRole) {
-    case "admin":
-      content = <p>Loading...</p>;
+    case "Admin":
+      content = <Admin />;
       break;
-    case "NguoiPhuTrach":
+    case "Người phụ trách":
       content = <HeadMajor />;
       break;
-    case "SinhVien":
+    case "Sinh viên":
       content = <Student />;
       break;
-    case "GiaoVien":
+    case "Giáo viên":
       content = <Instructor />;
       break;
-    case "PhongDaoTao":
+    case "Phòng đào tạo":
       content = <HeadDepartment />;
       break;
     default:
@@ -67,6 +67,7 @@ function App() {
             <Route path="/login" element={!token ? <Login onLogin={handleLogin} /> : <Navigate to="/" />} />
             <Route element={<PrivateRoute />}>
               <Route index element={<Home />} />
+              <Route path="/updateEmail" element={<UpdateEmail />} />
               <Route path="/*" element={content} />
             </Route>
           </Routes>

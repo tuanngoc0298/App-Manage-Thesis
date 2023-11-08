@@ -19,7 +19,7 @@ const authController = {
       const existingUser = await User.findOne({ username });
 
       if (existingUser) {
-        return res.status(400).json({ message: "Người dùng đã tồn tại" });
+        return res.status(500).json({ message: "Người dùng đã tồn tại" });
       }
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
@@ -38,40 +38,44 @@ const authController = {
     try {
       const user = await User.findOne({ username });
       if (!user) {
-        return res.status(401).json({ error: "Tài khoản không tồn tại!" });
+        return res.status(401).send("Tên đăng nhập hoặc mật khẩu không đúng!");
       }
 
       const passwordMatch = await bcrypt.compare(password, user.password);
       if (!passwordMatch) {
-        return res.status(401).json({ error: "Mật khẩu không đúng!" });
+        return res.status(401).send("Mật khẩu không đúng!");
       }
 
       let userInfo;
 
       switch (user.role) {
-        case "admin":
+        case "Admin":
           userInfo = await Admin.findOne({ code: user.code });
           break;
-        case "NguoiPhuTrach":
+        case "Người phụ trách":
           userInfo = await Teacher.findOne({ code: user.code });
           break;
-        case "SinhVien":
+        case "Sinh viên":
           userInfo = await Student.findOne({ code: user.code });
           break;
-        case "GiaoVien":
+        case "Giáo viên":
           userInfo = await Teacher.findOne({ code: user.code });
           break;
-        case "PhongDaoTao":
+        case "Phòng đào tạo":
           userInfo = await HeadDepartment.findOne({ code: user.code });
           break;
+      }
+      if (!userInfo) {
+        return res.status(500).send("Bạn chưa có thông tin trong cơ sở dữ liệu!");
       }
       const token = jwt.sign({ _id: user._id, role: user.role, userInfo }, process.env.JWT_ACCESS_KEY, {
         expiresIn: 60 * 60 * 6,
       });
       res.cookie("token", token);
+
       res.json({ token, role: user.role, userInfo });
     } catch (error) {
-      res.status(500).json({ error: "Đã xảy ra lỗi khi đăng nhập!" });
+      res.status(500).send("Đã xảy ra lỗi khi đăng nhập!");
     }
   },
   changePassword: async (req, res) => {
@@ -119,7 +123,7 @@ const authController = {
       from: '"Quản lý khóa luận" <quanlykhoaluan0298@gmail.com>',
       to: email,
       subject: "Yêu cầu đặt lại mật khẩu",
-      html: `Hệ thống nhận được yêu cầu đổi mật khẩu cho tài khoản ${username} của bạn. Nếu đúng do bạn thực hiện thì mật khẩu mới của bạn là: ${newPassword} và thực hiện bằng cách nhấn vào liên kết sau để hệ thống tiến hành đổi <a href="${process.env.HOST}:${process.env.PORT}/api/resetPassword?username=${username}&newPassword=${newPassword}">Bấm vào đây để hệ thống tiến hành đổi mật khẩu</a>`,
+      html: `Hệ thống nhận được yêu cầu đổi mật khẩu cho tài khoản <span style="font-weight: bold">${username} </span> của bạn. Nếu đúng do bạn thực hiện thì mật khẩu mới của bạn là: <span style="font-weight: bold">${newPassword} </span> và thực hiện bằng cách nhấn vào liên kết sau để hệ thống tiến hành đổi <a href="${process.env.HOST}:${process.env.PORT}/api/resetPassword?username=${username}&newPassword=${newPassword}">Bấm vào đây để hệ thống tiến hành đổi mật khẩu</a>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
@@ -146,6 +150,30 @@ const authController = {
     }
   },
   //
+  getEmail: async (req, res) => {
+    try {
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { _id } = decoded;
+      const user = await User.findById(_id);
+
+      res.status(200).send(user.email);
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Get email thất bại");
+    }
+  },
+  updateEmail: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { _id } = decoded;
+
+      await User.findByIdAndUpdate(_id, { $set: { email } });
+      res.status(200).send("Cập nhật thành công");
+    } catch (err) {
+      res.status(200).send("Cập nhật thất bại");
+    }
+  },
 };
 
 module.exports = authController;

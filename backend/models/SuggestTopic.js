@@ -18,6 +18,9 @@ const suggestTopicSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  nameMajor: {
+    type: String,
+  },
   state: {
     type: String,
     required: true,

@@ -1,0 +1,87 @@
+.title {
+  line-height: 35px;
+  font-size: 1.5rem;
+  text-indent: 7px;
+  color: #175765;
+  font-weight: bold;
+  background: #dbe3e4;
+  margin-bottom: 21px;
+}
+
+// Search, add
+.function {
+  height: 40px;
+  display: flex;
+  justify-content: space-between;
+  margin: 0 20px 20px;
+}
+.btn-add {
+  padding: 10px 20px;
+  background-color: #6296c5;
+  font-weight: 800;
+}
+//
+
+.data tr {
+  border: 1px solid #908d8d;
+}
+
+.data {
+  border-collapse: collapse;
+  text-align: center;
+  table-layout: auto;
+  width: 100%;
+  .column__functions {
+    width: 150px;
+    position: relative;
+  }
+}
+
+.data th,
+.data td {
+  height: 50px;
+}
+
+.data .table__index {
+  width: 50px;
+}
+.data thead {
+  background: #6296c5;
+  color: #fff;
+}
+
+.input {
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  font-size: 1.6rem;
+}
+.btn-more {
+  position: relative;
+}
+.wrapper__btn {
+  position: absolute;
+  display: flex;
+  gap: 15px;
+  background-color: #6296c5;
+  right: 23px;
+  border-radius: 20px;
+  z-index: 1;
+}
+.wrapper__btn::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: -8px;
+  transform: translateX(-50%);
+  width: 0;
+  height: 0;
+  border-left: 8px solid transparent; /* Độ rộng và màu cho cạnh trái */
+  border-right: 8px solid transparent; /* Độ rộng và màu cho cạnh phải */
+  border-bottom: 8px solid #6296c5;
+}
+.btn {
+  padding: 5px 10px;
+  color: #fff;
+  border-radius: 5px;
+}

@@ -33,7 +33,6 @@ function StatisticsStudent() {
         { withCredentials: true, baseURL: `${host}:${port}` }
       )
       .then((res) => {
-        console.log(res.data);
         setStatistics(res.data);
       })
       .catch((err) => {

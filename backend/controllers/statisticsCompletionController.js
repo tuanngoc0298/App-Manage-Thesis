@@ -10,6 +10,8 @@ const statisticsCompletionController = {
         return res.json([]);
       }
       const query = {};
+      const query1 = {};
+
       if (year) {
         query.year = year;
       }
@@ -18,15 +20,44 @@ const statisticsCompletionController = {
       }
       if (department) {
         query.nameDepartment = department;
+        query1.nameDepartment = department;
       }
       if (searchQuery) {
         query.$or = [
           { nameDepartment: { $regex: searchQuery, $options: "i" } },
           { nameMajor: { $regex: searchQuery, $options: "i" } },
         ];
+        query1.$or = [
+          { nameDepartment: { $regex: searchQuery, $options: "i" } },
+          { nameMajor: { $regex: searchQuery, $options: "i" } },
+        ];
       }
+      const data1 = await Major.aggregate([
+        {
+          $lookup: {
+            from: Student.collection.name,
+            localField: "nameMajor",
+            foreignField: "nameMajor",
+            as: "student",
+          },
+        },
 
-      const data = await Major.aggregate([
+        {
+          $project: {
+            _id: 0,
+            nameMajor: 1,
+            nameDepartment: 1,
+
+            totalStudents: { $ifNull: ["$totalStudents", 0] },
+            totalCompletedStudents: { $ifNull: ["$totalCompletedStudents", 0] },
+            completionRate: "0%",
+          },
+        },
+        {
+          $match: query1,
+        },
+      ]);
+      const data2 = await Major.aggregate([
         {
           $lookup: {
             from: Student.collection.name,
@@ -63,7 +94,11 @@ const statisticsCompletionController = {
             totalCompletedStudents: 1,
             completionRate: {
               $concat: [
-                { $toString: { $multiply: [{ $divide: ["$totalCompletedStudents", "$totalStudents"] }, 100] } },
+                {
+                  $toString: {
+                    $round: [{ $multiply: [{ $divide: ["$totalCompletedStudents", "$totalStudents"] }, 100] }, 2],
+                  },
+                },
                 "%",
               ],
             },
@@ -72,12 +107,19 @@ const statisticsCompletionController = {
         {
           $match: query,
         },
-        {
-          $sort: {
-            nameDepartment: 1,
-          },
-        },
       ]);
+      const mergedData = data1.map((item1) => {
+        const matchingItem = data2.find((item2) => item1.nameMajor === item2.nameMajor);
+        return matchingItem ? matchingItem : item1;
+      });
+      const data = mergedData.sort((a, b) => {
+        const nameA = a.nameDepartment.toLowerCase(); // Chuyển về chữ thường và lưu trong biến nameA
+        const nameB = b.nameDepartment.toLowerCase(); // Chuyển về chữ thường và lưu trong biến nameB
+
+        if (nameA < nameB) return -1;
+        if (nameA > nameB) return 1;
+        return 0;
+      });
       res.json(data);
     } catch (error) {
       console.log(error);

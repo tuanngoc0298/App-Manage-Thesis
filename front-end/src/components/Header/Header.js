@@ -37,9 +37,7 @@ function Header() {
           { withCredentials: true, baseURL: `${host}:${port}` }
         )
         .then((res) => {
-          setChangePassword(false);
-
-          setErrorChangePassword("");
+          setErrorChangePassword("Cập nhật thành công");
         })
         .catch((err) => {
           // console.log(err);

@@ -12,6 +12,7 @@ const app = express();
 const port = process.env.PORT;
 
 const {
+  permissionRoutes,
   authRoutes,
   departmentRoutes,
   majorRoutes,
@@ -42,6 +43,7 @@ const {
   updateStateRoutes,
   statisticsCompletionRoutes,
   statisticsStudentRoutes,
+  managerUserRoutes,
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
@@ -68,6 +70,10 @@ app.use(cors(corsOptions));
 app.use("/api", authRoutes);
 app.use("/api", statisticsCompletionRoutes);
 app.use("/api", statisticsStudentRoutes);
+
+// Admin
+app.use("/api", permissionRoutes);
+app.use("/api", managerUserRoutes);
 
 // PhongDaoTao
 app.use("/api", departmentRoutes);

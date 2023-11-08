@@ -1,8 +1,7 @@
 const TopicStudent = require("../../models/TopicStudent");
 const Student = require("../../models/Student");
-const Teacher = require("../../models/Teacher");
-const Major = require("../../models/Major");
-const Department = require("../../models/Department");
+const SuggestTopic = require("../../models/SuggestTopic");
+
 const Topic = require("../../models/Topic");
 
 const jwt = require("jsonwebtoken");
@@ -40,7 +39,7 @@ const establishCouncilController = {
         }
       }
 
-      const data = await TopicStudent.aggregate([
+      const data1 = await TopicStudent.aggregate([
         {
           $match: condition,
         },
@@ -86,7 +85,55 @@ const establishCouncilController = {
           $match: query,
         },
       ]);
-      res.json(data);
+
+      const data2 = await TopicStudent.aggregate([
+        {
+          $match: condition,
+        },
+        {
+          $lookup: {
+            from: Student.collection.name,
+            localField: "codeStudent",
+            foreignField: "code",
+            as: "student",
+          },
+        },
+        {
+          $unwind: "$student", // Giải phóng các tài liệu từ mảng kết quả
+        },
+        {
+          $lookup: {
+            from: SuggestTopic.collection.name,
+            localField: "nameTopic",
+            foreignField: "nameTopic",
+            as: "topic",
+          },
+        },
+        {
+          $unwind: "$topic", // Giải phóng các tài liệu từ mảng kết quả
+        },
+        {
+          $project: {
+            __id: 1,
+            codeStudent: 1,
+            protectionCouncil: 1,
+
+            nameTopic: 1,
+            nameTeacher: 1,
+            nameCounterTeacher: 1,
+            yearTopic: 1,
+            semesterTopic: 1,
+            describeTopic: "$topic.describe",
+            nameStudent: "$student.name",
+            nameMajor: "$student.nameMajor",
+          },
+        },
+        {
+          $match: query,
+        },
+      ]);
+
+      res.json([...data1, ...data2]);
     } catch (error) {
       console.log(error);
       res.status(500).json({ error: "Lỗi khi tải danh sách Sinh viên được bảo vệ khóa luận." });

@@ -46,14 +46,14 @@ function Login({ onLogin }) {
           userInfo: { name },
           role,
         } = res.data;
+
         Cookies.set("token", token, { expires: 1 / 4 });
         onLogin(token, name, role);
         navigate("/");
       });
       setError("");
     } catch (err) {
-      console.log(err);
-      setError("Tên đăng nhập hoặc mật khẩu không đúng.");
+      setError(err.response.data);
     }
   };
 

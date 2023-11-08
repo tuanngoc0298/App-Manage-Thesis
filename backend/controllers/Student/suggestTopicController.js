@@ -17,6 +17,9 @@ const suggestTopicController = {
   // Add
   addSuggestTopic: async (req, res) => {
     try {
+      const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+      const { nameMajor } = decoded.userInfo;
+
       let { nameTopic, describe, nameTeacher, state, code } = req.body;
       if (!nameTeacher) {
         state = "Phân công";
@@ -29,6 +32,7 @@ const suggestTopicController = {
         nameTopic,
         describe,
         nameTeacher,
+        nameMajor,
         state,
       });
       await suggestTopic.save();

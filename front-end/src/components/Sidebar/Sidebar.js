@@ -10,10 +10,23 @@ function Sidebar() {
 
   let content;
   switch (userRole) {
-    case "admin":
-      content = <p>Loading...</p>;
+    case "Admin":
+      content = (
+        <div className={cx("list")}>
+          <h2 className={cx("title")}>Quản lý đào tạo</h2>
+          <ul>
+            <li className={cx("item")}>
+              <Link to="/permissions">Quản lý Nhóm quyền</Link>
+              <Link to="/managerUsers">Quản lý Người dùng</Link>
+            </li>
+            {/* <li className={cx("item")}>
+          <Link to="/assignTeachers">Phân công giáo viên hướng dẫn</Link>
+        </li> */}
+          </ul>
+        </div>
+      );
       break;
-    case "NguoiPhuTrach":
+    case "Người phụ trách":
       content = (
         <div className={cx("list")}>
           <h2 className={cx("title")}>Quản lý đào tạo</h2>
@@ -43,7 +56,7 @@ function Sidebar() {
         </div>
       );
       break;
-    case "SinhVien":
+    case "Sinh viên":
       content = (
         <div className={cx("list")}>
           <h2 className={cx("title")}>Quản lý đào tạo</h2>
@@ -77,7 +90,7 @@ function Sidebar() {
       );
 
       break;
-    case "GiaoVien":
+    case "Giáo viên":
       content = (
         <div className={cx("list")}>
           <h2 className={cx("title")}>Quản lý đào tạo</h2>
@@ -120,7 +133,7 @@ function Sidebar() {
       );
       break;
 
-    case "PhongDaoTao":
+    case "Phòng đào tạo":
       content = (
         <div className={cx("list")}>
           <h2 className={cx("title")}>Quản lý đào tạo</h2>
