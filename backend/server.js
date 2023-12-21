@@ -72,7 +72,7 @@ const whitelist = [
   "https://app-manage-thesis.vercel.app",
 ];
 const corsOptions = {
-  origin: "*",
+  origin: whitelist,
   methods: "*",
   allowedHeaders: ["Content-Type", "Authorization"],
   credentials: true,
