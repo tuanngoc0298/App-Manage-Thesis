@@ -11,8 +11,7 @@ import styles from "./Permissions.module.scss";
 const cx = classNames.bind(styles);
 
 function Permissions() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [permissions, setPermissions] = useState([]);
   const [newPermission, setNewPermission] = useState({});
@@ -32,7 +31,10 @@ function Permissions() {
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get(`${host}:${port}/api/permissions`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/permissions`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((response) => {
         setPermissions(response.data);
       })
@@ -43,7 +45,10 @@ function Permissions() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -60,10 +65,13 @@ function Permissions() {
   }, [isOpenDeleteModal]);
 
   const handleAddPermission = () => {
-    if ((newPermission.codePermission, newPermission.namePermission && newPermission.describePermission)) {
+    if (
+      (newPermission.codePermission,
+      newPermission.namePermission && newPermission.describePermission)
+    ) {
       // Gọi API để thêm khoa mới
       axios
-        .post(`${host}:${port}/api/permissions`, newPermission, {
+        .post(`${url}/api/permissions`, newPermission, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -85,9 +93,13 @@ function Permissions() {
 
   const handleEditPermission = () => {
     // Gọi API để sửa khoa
-    if (editPermission.namePermission && editPermission.codePermission && editPermission.describePermission) {
+    if (
+      editPermission.namePermission &&
+      editPermission.codePermission &&
+      editPermission.describePermission
+    ) {
       axios
-        .put(`${host}:${port}/api/permissions/${editPermission._id}`, editPermission, {
+        .put(`${url}/api/permissions/${editPermission._id}`, editPermission, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -119,12 +131,14 @@ function Permissions() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa khoa
     axios
-      .delete(`${host}:${port}/api/permissions/${id}`, {
+      .delete(`${url}/api/permissions/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách khoa
-        const updatedPermissions = permissions.filter((permission) => permission._id !== id);
+        const updatedPermissions = permissions.filter(
+          (permission) => permission._id !== id
+        );
         setPermissions(updatedPermissions);
         setError("");
       })
@@ -134,7 +148,7 @@ function Permissions() {
   };
   const handleSearchPermission = () => {
     axios
-      .get(`${host}:${port}/api/permissions?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/permissions?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -171,8 +185,14 @@ function Permissions() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý nhóm quyền</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchPermission} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchPermission}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm nhóm quyền
         </button>
       </div>
@@ -218,8 +238,13 @@ function Permissions() {
 
                   {idActiveRow === permission._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

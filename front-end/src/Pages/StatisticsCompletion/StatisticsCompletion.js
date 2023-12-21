@@ -12,8 +12,7 @@ import styles from "./StatisticsCompletion.module.scss";
 const cx = classNames.bind(styles);
 
 function StatisticsCompletion() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [statistics, setStatistics] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -24,13 +23,17 @@ function StatisticsCompletion() {
 
   const [error, setError] = useState("");
 
-  useEffect(getStatistics, [filterBySemester, filterByYear, filterByDepartment]);
+  useEffect(getStatistics, [
+    filterBySemester,
+    filterByYear,
+    filterByDepartment,
+  ]);
 
   function getStatistics() {
     axios
       .get(
-        `${host}:${port}/api/statisticsCompletion?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}&department=${filterByDepartment}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        `${url}/api/statisticsCompletion?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}&department=${filterByDepartment}`,
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setStatistics(res.data);
@@ -62,7 +65,10 @@ function StatisticsCompletion() {
       <h2 className={cx("title")}>Thống kê tỷ lệ hoàn thành KLTN</h2>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getStatistics} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getStatistics}
+        />
         <CSVLink
           data={statistics}
           filename={`Thống_kê${

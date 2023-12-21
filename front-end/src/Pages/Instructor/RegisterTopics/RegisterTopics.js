@@ -13,8 +13,7 @@ import styles from "./RegisterTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterTopic() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const { name, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
@@ -45,7 +44,10 @@ function RegisterTopic() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -65,10 +67,10 @@ function RegisterTopic() {
     setErrorImport("");
     axios
       .get(
-        `${host}:${port}/api/topics?searchQuery=${searchQuery}${
+        `${url}/api/topics?searchQuery=${searchQuery}${
           isFilterByUserName ? `&nameTeacher=${name}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((response) => {
         setTopics(response.data);
@@ -91,9 +93,9 @@ function RegisterTopic() {
       const form = document.getElementById("formImport");
 
       axios
-        .post(`${host}:${port}/api/topicsUpload`, formData, {
+        .post(`${url}/api/topicsUpload`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((response) => {
           setErrorImport("");
@@ -125,7 +127,7 @@ function RegisterTopic() {
     ) {
       // Gọi API để thêm đề tài mới
       axios
-        .post(`${host}:${port}/api/topics`, newTopic, {
+        .post(`${url}/api/topics`, newTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -156,7 +158,7 @@ function RegisterTopic() {
       editTopic.semester
     ) {
       axios
-        .put(`${host}:${port}/api/topics/${editTopic._id}`, editTopic, {
+        .put(`${url}/api/topics/${editTopic._id}`, editTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -188,7 +190,7 @@ function RegisterTopic() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa đề tài
     axios
-      .delete(`${host}:${port}/api/topics/${id}`, {
+      .delete(`${url}/api/topics/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -278,15 +280,25 @@ function RegisterTopic() {
         </button>
       </div>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllTopics} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllTopics}
+        />
         <div style={{ color: "red" }}>{errorImport}</div>
         {isFilterByUserName && (
           <div className={cx("function__allow")}>
             <form id="formImport" className={cx("importFile")}>
-              <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={handleFileUpload}
+              />
               <button onClick={handleUpload}>Tải lên</button>
             </form>
-            <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+            <button
+              className={cx("btn", "btn-add")}
+              onClick={() => setIsOpenAddModal(true)}
+            >
               Thêm đề tài
             </button>
           </div>
@@ -367,8 +379,13 @@ function RegisterTopic() {
 
                     {idActiveRow === topic._id && (
                       <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                        <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                          <span className="material-symbols-outlined">delete</span>
+                        <button
+                          className={cx("btn")}
+                          onClick={() => setIsOpenDeleteModal(true)}
+                        >
+                          <span className="material-symbols-outlined">
+                            delete
+                          </span>
                         </button>
                         <button
                           className={cx("btn")}
@@ -377,7 +394,9 @@ function RegisterTopic() {
                             setIsOpenEditModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">edit</span>
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
                         </button>
                       </div>
                     )}

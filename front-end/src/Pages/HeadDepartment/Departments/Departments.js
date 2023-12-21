@@ -11,8 +11,7 @@ import styles from "./Departments.module.scss";
 const cx = classNames.bind(styles);
 
 function Departments() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [departments, setDepartments] = useState([]);
   const [newDepartment, setNewDepartment] = useState({});
@@ -33,7 +32,10 @@ function Departments() {
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get(`${host}:${port}/api/departments`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/departments`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((response) => {
         setDepartments(response.data);
       })
@@ -44,7 +46,10 @@ function Departments() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -61,10 +66,14 @@ function Departments() {
   }, [isOpenDeleteModal]);
 
   const handleAddDepartment = () => {
-    if (newDepartment.codeDepartment && newDepartment.nameDepartment && newDepartment.describeDepartment) {
+    if (
+      newDepartment.codeDepartment &&
+      newDepartment.nameDepartment &&
+      newDepartment.describeDepartment
+    ) {
       // Gọi API để thêm khoa mới
       axios
-        .post(`${host}:${port}/api/departments`, newDepartment, {
+        .post(`${url}/api/departments`, newDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -86,9 +95,13 @@ function Departments() {
 
   const handleEditDepartment = () => {
     // Gọi API để sửa khoa
-    if (editDepartment.nameDepartment && editDepartment.codeDepartment && editDepartment.describeDepartment) {
+    if (
+      editDepartment.nameDepartment &&
+      editDepartment.codeDepartment &&
+      editDepartment.describeDepartment
+    ) {
       axios
-        .put(`${host}:${port}/api/departments/${editDepartment._id}`, editDepartment, {
+        .put(`${url}/api/departments/${editDepartment._id}`, editDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -120,12 +133,14 @@ function Departments() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa khoa
     axios
-      .delete(`${host}:${port}/api/departments/${id}`, {
+      .delete(`${url}/api/departments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách khoa
-        const updatedDepartments = departments.filter((department) => department._id !== id);
+        const updatedDepartments = departments.filter(
+          (department) => department._id !== id
+        );
         setDepartments(updatedDepartments);
         setError("");
       })
@@ -135,7 +150,7 @@ function Departments() {
   };
   const handleSearchDepartment = () => {
     axios
-      .get(`${host}:${port}/api/departments?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/departments?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -172,8 +187,14 @@ function Departments() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý khoa</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchDepartment} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchDepartment}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm khoa
         </button>
       </div>
@@ -219,8 +240,13 @@ function Departments() {
 
                   {idActiveRow === department._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

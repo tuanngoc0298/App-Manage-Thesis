@@ -11,8 +11,7 @@ import styles from "./SchoolYears.module.scss";
 const cx = classNames.bind(styles);
 
 function SchoolYears() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [schoolYears, setSchoolYears] = useState([]);
   const [newSchoolYear, setNewSchoolYear] = useState({});
@@ -33,7 +32,7 @@ function SchoolYears() {
   useEffect(() => {
     // Gọi API để lấy danh sách năm học
     axios
-      .get(`${host}:${port}/api/schoolYears`, {
+      .get(`${url}/api/schoolYears`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -46,7 +45,10 @@ function SchoolYears() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -66,7 +68,7 @@ function SchoolYears() {
     if (newSchoolYear.year && newSchoolYear.semester) {
       // Gọi API để thêm năm học mới
       axios
-        .post(`${host}:${port}/api/schoolYears`, newSchoolYear, {
+        .post(`${url}/api/schoolYears`, newSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -90,7 +92,7 @@ function SchoolYears() {
     // Gọi API để sửa năm học
     if (editSchoolYear.semester && editSchoolYear.year) {
       axios
-        .put(`${host}:${port}/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
+        .put(`${url}/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -122,12 +124,14 @@ function SchoolYears() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa năm học
     axios
-      .delete(`${host}:${port}/api/schoolYears/${id}`, {
+      .delete(`${url}/api/schoolYears/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách năm học
-        const updatedTeachers = schoolYears.filter((teacher) => teacher._id !== id);
+        const updatedTeachers = schoolYears.filter(
+          (teacher) => teacher._id !== id
+        );
         setSchoolYears(updatedTeachers);
         setError("");
       })
@@ -137,7 +141,7 @@ function SchoolYears() {
   };
   const handleSearchSchoolYear = () => {
     axios
-      .get(`${host}:${port}/api/schoolYears?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/schoolYears?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -174,8 +178,14 @@ function SchoolYears() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý năm học</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchSchoolYear} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchSchoolYear}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm năm học
         </button>
       </div>
@@ -217,8 +227,13 @@ function SchoolYears() {
 
                   {idActiveRow === teacher._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

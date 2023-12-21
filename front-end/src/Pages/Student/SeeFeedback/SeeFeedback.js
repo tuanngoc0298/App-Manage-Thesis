@@ -11,8 +11,7 @@ import styles from "./SeeFeedback.module.scss";
 const cx = classNames.bind(styles);
 
 function SeeFeedback() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [feedback, setFeedback] = useState({});
 
@@ -24,9 +23,9 @@ function SeeFeedback() {
 
   function getFeedback() {
     axios
-      .get(`${host}:${port}/api/seeFeedback`, {
+      .get(`${url}/api/seeFeedback`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         setFeedback(res.data);
@@ -61,7 +60,7 @@ function SeeFeedback() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${host}:${port}/api/feedback/${feedback._id}`}
+                    href={`${url}/api/feedback/${feedback._id}`}
                     download={feedback.feedback?.fileFeedback?.nameFile}
                   >
                     {feedback.feedback?.fileFeedback?.nameFile}

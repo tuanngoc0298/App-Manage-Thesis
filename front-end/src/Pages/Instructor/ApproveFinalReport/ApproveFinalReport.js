@@ -11,8 +11,7 @@ import styles from "./ApproveFinalReport.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveFinalReport() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [registers, setRegisters] = useState([]);
 
@@ -37,10 +36,10 @@ function ApproveFinalReport() {
   function getAllRegister() {
     axios
       .get(
-        `${host}:${port}/api/approveFinalReport?searchQuery=${searchQuery}${
+        `${url}/api/approveFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setRegisters(res.data);
@@ -54,7 +53,7 @@ function ApproveFinalReport() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/approveFinalReport/${editRegister._id}`,
+          `${url}/api/approveFinalReport/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -117,7 +116,10 @@ function ApproveFinalReport() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllRegister} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllRegister}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -190,7 +192,7 @@ function ApproveFinalReport() {
                     <div>
                       <a
                         className={cx("linkDownload")}
-                        href={`${host}:${port}/api/approveFinalReport/${register._id}`}
+                        href={`${url}/api/approveFinalReport/${register._id}`}
                         download={register.fileFinal.nameFile}
                       >
                         {register.fileFinal.nameFile}
@@ -227,10 +229,12 @@ function ApproveFinalReport() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__linkDownload")}>
                     <span className={cx("details__title")}>Tệp tin:</span>
-                    <span className="material-symbols-outlined">folder_zip</span>
+                    <span className="material-symbols-outlined">
+                      folder_zip
+                    </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${host}:${port}/api/approveFinalReport/${editRegister._id}`}
+                      href={`${url}/api/approveFinalReport/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}
@@ -250,21 +254,37 @@ function ApproveFinalReport() {
                 </div>
                 <div className={cx("details__checkBox")}>
                   <label>
-                    <input type="radio" checked={isApprove === "Duyệt"} onChange={() => setIsApprove("Duyệt")} /> Phê
-                    duyệt
+                    <input
+                      type="radio"
+                      checked={isApprove === "Duyệt"}
+                      onChange={() => setIsApprove("Duyệt")}
+                    />{" "}
+                    Phê duyệt
                   </label>
                   <label>
-                    <input type="radio" checked={isApprove === "Từ chối"} onChange={() => setIsApprove("Từ chối")} /> Từ
-                    chối
+                    <input
+                      type="radio"
+                      checked={isApprove === "Từ chối"}
+                      onChange={() => setIsApprove("Từ chối")}
+                    />{" "}
+                    Từ chối
                   </label>
                 </div>
               </div>
-              {errorApprove && <div className={cx("message")}>{errorApprove}</div>}
+              {errorApprove && (
+                <div className={cx("message")}>{errorApprove}</div>
+              )}
               <div className={cx("btns")}>
-                <button className={cx("btn-modal")} onClick={handleCancleApprove}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleCancleApprove}
+                >
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveFinalReport}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleApproveFinalReport}
+                >
                   Lưu
                 </button>
               </div>

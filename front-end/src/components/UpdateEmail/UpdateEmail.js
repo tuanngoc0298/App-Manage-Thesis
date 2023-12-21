@@ -9,8 +9,7 @@ import { useEffect } from "react";
 const cx = classNames.bind(styles);
 
 function UpdateEmail() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -18,7 +17,10 @@ function UpdateEmail() {
   useEffect(getEmail, []);
   function getEmail() {
     axios
-      .get(`${host}:${port}/api/getEmail`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/getEmail`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setEmail(res.data);
       })
@@ -30,7 +32,11 @@ function UpdateEmail() {
     e.preventDefault();
     if (!email) return setError("Vui lòng nhập thông tin!");
     axios
-      .put(`${host}:${port}/api/updateEmail`, { email }, { withCredentials: true, baseURL: `${host}:${port}` })
+      .put(
+        `${url}/api/updateEmail`,
+        { email },
+        { withCredentials: true, baseURL: `${url}` }
+      )
       .then((res) => {
         setError(res.data);
       })
@@ -40,7 +46,9 @@ function UpdateEmail() {
   };
   return (
     <DefaultLayout>
-      <div className={cx("title")}>Đăng ký email, số điện thoại để nhận hỗ trợ tốt nhất</div>
+      <div className={cx("title")}>
+        Đăng ký email, số điện thoại để nhận hỗ trợ tốt nhất
+      </div>
       <div className={cx("content")}>
         <div className={cx("content__row")}>
           <label htmlFor="email" className={cx("row__title")}>
@@ -60,7 +68,12 @@ function UpdateEmail() {
         </div>
         {error && <div className={cx("message")}>{error}</div>}
 
-        <input className={cx("btn")} type="submit" onClick={handleUpdateEmail} value="Cập nhật" />
+        <input
+          className={cx("btn")}
+          type="submit"
+          onClick={handleUpdateEmail}
+          value="Cập nhật"
+        />
       </div>
     </DefaultLayout>
   );

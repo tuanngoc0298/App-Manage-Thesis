@@ -11,8 +11,7 @@ import styles from "./ManagerUsers.module.scss";
 const cx = classNames.bind(styles);
 
 function ManagerUsers() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [users, setUsers] = useState([]);
   const [newUser, setNewUser] = useState({});
@@ -37,7 +36,10 @@ function ManagerUsers() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -56,9 +58,9 @@ function ManagerUsers() {
   function getAllUsers() {
     setErrorImport("");
     axios
-      .get(`${host}:${port}/api/managerUsers?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/managerUsers?searchQuery=${searchQuery}`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((response) => {
         setUsers(response.data);
@@ -81,9 +83,9 @@ function ManagerUsers() {
       const form = document.getElementById("formImport");
 
       axios
-        .post(`${host}:${port}/api/managerUsersUpload`, formData, {
+        .post(`${url}/api/managerUsersUpload`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((response) => {
           getAllUsers();
@@ -108,7 +110,7 @@ function ManagerUsers() {
     if (newUser.username && newUser.code && newUser.email && newUser.role) {
       // Gọi API để thêm người dùng mới
       axios
-        .post(`${host}:${port}/api/managerUsers`, newUser, {
+        .post(`${url}/api/managerUsers`, newUser, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -131,7 +133,7 @@ function ManagerUsers() {
     // Gọi API để sửa người dùng
     if (editUser.code && editUser.username && editUser.email && editUser.role) {
       axios
-        .put(`${host}:${port}/api/managerUsers/${editUser._id}`, editUser, {
+        .put(`${url}/api/managerUsers/${editUser._id}`, editUser, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -156,7 +158,7 @@ function ManagerUsers() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa người dùng
     axios
-      .delete(`${host}:${port}/api/managerUsers/${id}`, {
+      .delete(`${url}/api/managerUsers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -211,10 +213,17 @@ function ManagerUsers() {
 
         <div className={cx("function__allow")}>
           <form id="formImport" className={cx("importFile")}>
-            <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+            <input
+              type="file"
+              accept=".xlsx, .xls"
+              onChange={handleFileUpload}
+            />
             <button onClick={handleUpload}>Tải lên</button>
           </form>
-          <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+          <button
+            className={cx("btn", "btn-add")}
+            onClick={() => setIsOpenAddModal(true)}
+          >
             Thêm người dùng
           </button>
         </div>
@@ -265,8 +274,13 @@ function ManagerUsers() {
 
                   {idActiveRow === user._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

@@ -11,8 +11,7 @@ import styles from "./RegisterPresentProject.module.scss";
 const cx = classNames.bind(styles);
 
 function RegisterPresentProject() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [topic, setTopic] = useState({});
 
@@ -28,9 +27,9 @@ function RegisterPresentProject() {
 
   function getTopic() {
     axios
-      .get(`${host}:${port}/api/registerPresent`, {
+      .get(`${url}/api/registerPresent`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         setTopic(res.data);
@@ -48,9 +47,9 @@ function RegisterPresentProject() {
       formData.append("file", reportFile);
 
       axios
-        .put(`${host}:${port}/api/registerPresent/${topic._id}`, formData, {
+        .put(`${url}/api/registerPresent/${topic._id}`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -87,7 +86,10 @@ function RegisterPresentProject() {
       <h2 className={cx("title")}>Đăng ký bảo vệ</h2>
       <div className={cx("function")}>
         <div className={cx("function__allow")}>
-          <button className={cx("btn", "btn-add")} onClick={() => setIsOpenReportModal(true)}>
+          <button
+            className={cx("btn", "btn-add")}
+            onClick={() => setIsOpenReportModal(true)}
+          >
             Đăng ký bảo vệ
           </button>
         </div>
@@ -114,7 +116,7 @@ function RegisterPresentProject() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${host}:${port}/api/approveRegisterPresent/${topic._id}`}
+                    href={`${url}/api/approveRegisterPresent/${topic._id}`}
                     download={topic.fileFinal.nameFile}
                   >
                     {topic.fileFinal.nameFile}

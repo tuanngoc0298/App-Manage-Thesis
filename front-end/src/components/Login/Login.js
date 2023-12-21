@@ -10,8 +10,7 @@ import Cookies from "js-cookie";
 const cx = classNames.bind(styles);
 
 function Login({ onLogin }) {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const navigate = useNavigate();
   // Xử lý input
@@ -41,7 +40,7 @@ function Login({ onLogin }) {
     e.preventDefault();
     try {
       await axios
-        .post(`${host}:${port}/api/login`, { username, password })
+        .post(`${url}/api/login`, { username, password })
         .then((res) => {
           const {
             token,

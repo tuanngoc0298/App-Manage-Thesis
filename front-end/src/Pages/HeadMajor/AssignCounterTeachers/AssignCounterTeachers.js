@@ -11,8 +11,7 @@ import styles from "./AssignCounterTeachers.module.scss";
 const cx = classNames.bind(styles);
 
 function AssignCounterTeachers() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [requests, setRequests] = useState([]);
 
@@ -38,8 +37,8 @@ function AssignCounterTeachers() {
   function getAllStudentsNeedAssign() {
     axios
       .get(
-        `${host}:${port}/api/assignCounterTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        `${url}/api/assignCounterTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setRequests(res.data);
@@ -54,7 +53,7 @@ function AssignCounterTeachers() {
     if (valNameTeacher) {
       axios
         .put(
-          `${host}:${port}/api/assignCounterTeachers/${editRequest._id}`,
+          `${url}/api/assignCounterTeachers/${editRequest._id}`,
           { valNameTeacher, editRequest },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -97,7 +96,10 @@ function AssignCounterTeachers() {
       <h2 className={cx("title")}>Phân công giáo viên phản biện</h2>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudentsNeedAssign} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllStudentsNeedAssign}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox

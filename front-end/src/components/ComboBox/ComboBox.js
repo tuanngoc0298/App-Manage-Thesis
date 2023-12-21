@@ -19,17 +19,16 @@ function ComboBox({
   customInput,
   defaultDisplay = "Chọn một mục",
 }) {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [data, setData] = useState([]);
 
   useEffect(() => {
     if (api) {
       axios
-        .get(`${host}:${port}/api/${api}`, {
+        .get(`${url}/api/${api}`, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((res) => {
           setData(res.data);
@@ -54,7 +53,11 @@ function ComboBox({
         </span>
       )}
       <div className={cx("wrap-input")} style={customInput}>
-        <select className={cx("wrap__comboBox")} value={oldData} onChange={handleChange}>
+        <select
+          className={cx("wrap__comboBox")}
+          value={oldData}
+          onChange={handleChange}
+        >
           <option value="">{defaultDisplay}</option>
           {data.map((item, index) => {
             const value = item[nameData];

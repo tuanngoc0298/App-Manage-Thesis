@@ -13,8 +13,7 @@ import styles from "./EstablishCouncil.module.scss";
 const cx = classNames.bind(styles);
 
 function EstablishCouncil() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [councils, setCouncils] = useState([]);
   const [idActiveRow, setIdActiveRow] = useState(null);
@@ -40,7 +39,10 @@ function EstablishCouncil() {
   useEffect(getAllStudents, [filterBySemester, filterByYear, isTabCouncil]);
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -52,10 +54,10 @@ function EstablishCouncil() {
   function getAllStudents() {
     axios
       .get(
-        `${host}:${port}/api/establishCouncil?searchQuery=${searchQuery}${
+        `${url}/api/establishCouncil?searchQuery=${searchQuery}${
           isTabCouncil ? `&isTabCouncil=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setCouncils(res.data);
@@ -77,7 +79,7 @@ function EstablishCouncil() {
       editCouncil.protectionCouncil?.members?.commissioner
     ) {
       axios
-        .put(`${host}:${port}/api/establishCouncil/${editCouncil._id}`, editCouncil, {
+        .put(`${url}/api/establishCouncil/${editCouncil._id}`, editCouncil, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -116,7 +118,10 @@ function EstablishCouncil() {
       ...editCouncil,
       protectionCouncil: {
         ...editCouncil.protectionCouncil,
-        members: { ...editCouncil.protectionCouncil?.members, chairperson: value },
+        members: {
+          ...editCouncil.protectionCouncil?.members,
+          chairperson: value,
+        },
       },
     });
   };
@@ -125,7 +130,10 @@ function EstablishCouncil() {
       ...editCouncil,
       protectionCouncil: {
         ...editCouncil.protectionCouncil,
-        members: { ...editCouncil.protectionCouncil?.members, secretary: value },
+        members: {
+          ...editCouncil.protectionCouncil?.members,
+          secretary: value,
+        },
       },
     });
   };
@@ -134,7 +142,10 @@ function EstablishCouncil() {
       ...editCouncil,
       protectionCouncil: {
         ...editCouncil.protectionCouncil,
-        members: { ...editCouncil.protectionCouncil?.members, commissioner: value },
+        members: {
+          ...editCouncil.protectionCouncil?.members,
+          commissioner: value,
+        },
       },
     });
   };
@@ -172,7 +183,10 @@ function EstablishCouncil() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudents} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllStudents}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -265,24 +279,34 @@ function EstablishCouncil() {
                           onClick={() => {
                             setEditCouncil({
                               ...council,
-                              protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
+                              protectionCouncil: {
+                                stateProtection: "Chưa bảo vệ",
+                                ...council.protectionCouncil,
+                              },
                             });
                             setIsOpenDetailModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">visibility</span>
+                          <span className="material-symbols-outlined">
+                            visibility
+                          </span>
                         </button>
                         <button
                           className={cx("btn")}
                           onClick={() => {
                             setEditCouncil({
                               ...council,
-                              protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
+                              protectionCouncil: {
+                                stateProtection: "Chưa bảo vệ",
+                                ...council.protectionCouncil,
+                              },
                             });
                             setIsOpenEditModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">edit</span>
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
                         </button>
                       </div>
                     )}
@@ -295,7 +319,10 @@ function EstablishCouncil() {
                         onClick={() => {
                           setEditCouncil({
                             ...council,
-                            protectionCouncil: { stateProtection: "Chưa bảo vệ", ...council.protectionCouncil },
+                            protectionCouncil: {
+                              stateProtection: "Chưa bảo vệ",
+                              ...council.protectionCouncil,
+                            },
                           });
                           setIsOpenEditModal(true);
                         }}
@@ -323,22 +350,30 @@ function EstablishCouncil() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Đề tài KLTN:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameTopic}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Năm học:</span>
-                    <span className={cx("details__content")}>{editCouncil.yearTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.yearTopic}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Kỳ học:</span>
-                    <span className={cx("details__content")}>{editCouncil.semesterTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.semesterTopic}
+                    </span>
                   </div>
                 </div>
                 <div className={cx("details__wrapInput")}>
@@ -353,7 +388,10 @@ function EstablishCouncil() {
                       onChange={(e) => {
                         setEditCouncil({
                           ...editCouncil,
-                          protectionCouncil: { ...editCouncil.protectionCouncil, nameCouncil: e.target.value },
+                          protectionCouncil: {
+                            ...editCouncil.protectionCouncil,
+                            nameCouncil: e.target.value,
+                          },
                         });
                       }}
                     />
@@ -371,7 +409,10 @@ function EstablishCouncil() {
                       onChange={(e) => {
                         setEditCouncil({
                           ...editCouncil,
-                          protectionCouncil: { ...editCouncil.protectionCouncil, describeCouncil: e.target.value },
+                          protectionCouncil: {
+                            ...editCouncil.protectionCouncil,
+                            describeCouncil: e.target.value,
+                          },
                         });
                       }}
                     ></textarea>
@@ -391,15 +432,25 @@ function EstablishCouncil() {
                     api={`teachersByDepartment?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
                     nameData="name"
                     onSelectionChange={handleChangeChairperson}
-                    oldData={editCouncil.protectionCouncil?.members?.chairperson}
+                    oldData={
+                      editCouncil.protectionCouncil?.members?.chairperson
+                    }
                   />
                   <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Giáo viên hướng dẫn:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameTeacher}</span>
+                    <span className={cx("details__title")}>
+                      Giáo viên hướng dẫn:
+                    </span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameTeacher}
+                    </span>
                   </div>
                   <div className={cx("details__row")}>
-                    <span className={cx("details__title")}>Giáo viên phản biện:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameCounterTeacher}</span>
+                    <span className={cx("details__title")}>
+                      Giáo viên phản biện:
+                    </span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameCounterTeacher}
+                    </span>
                   </div>
                   <ComboBox
                     title="Thư ký"
@@ -417,7 +468,9 @@ function EstablishCouncil() {
                     api={`teachersByDepartment?nameTeacher=${editCouncil.nameTeacher}&nameCounterTeacher=${editCouncil.nameCounterTeacher}`}
                     nameData="name"
                     onSelectionChange={handleChangeCommissioner}
-                    oldData={editCouncil.protectionCouncil?.members?.commissioner}
+                    oldData={
+                      editCouncil.protectionCouncil?.members?.commissioner
+                    }
                   />
                 </div>
 
@@ -432,7 +485,12 @@ function EstablishCouncil() {
                     customStyle={{ marginBottom: "0" }}
                     customInput={{ width: "85px" }}
                     defaultDisplay="Chọn ca"
-                    selfData={[{ name: "1" }, { name: "2" }, { name: "3" }, { name: "4" }]}
+                    selfData={[
+                      { name: "1" },
+                      { name: "2" },
+                      { name: "3" },
+                      { name: "4" },
+                    ]}
                     isRequired={false}
                     onSelectionChange={handleChangeShift}
                     oldData={editCouncil.protectionCouncil?.shift}
@@ -440,13 +498,22 @@ function EstablishCouncil() {
                   <div className={cx("details__time")}>
                     <span className={cx("details__title")}>Ngày:</span>
 
-                    <div className={cx("details__input")} style={{ width: "210px" }}>
+                    <div
+                      className={cx("details__input")}
+                      style={{ width: "210px" }}
+                    >
                       <DatePicker
-                        selected={editCouncil.protectionCouncil?.time && new Date(editCouncil.protectionCouncil?.time)}
+                        selected={
+                          editCouncil.protectionCouncil?.time &&
+                          new Date(editCouncil.protectionCouncil?.time)
+                        }
                         onChange={(date) =>
                           setEditCouncil({
                             ...editCouncil,
-                            protectionCouncil: { ...editCouncil.protectionCouncil, time: date },
+                            protectionCouncil: {
+                              ...editCouncil.protectionCouncil,
+                              time: date,
+                            },
                           })
                         }
                         showIcon
@@ -460,14 +527,20 @@ function EstablishCouncil() {
                   </div>
                   <div className={cx("details__wrapInput")}>
                     <span className={cx("details__title")}>Mã phòng:</span>
-                    <div className={cx("details__input")} style={{ width: "150px" }}>
+                    <div
+                      className={cx("details__input")}
+                      style={{ width: "150px" }}
+                    >
                       <input
                         type="text"
                         value={editCouncil.protectionCouncil?.roomCode}
                         onChange={(e) =>
                           setEditCouncil({
                             ...editCouncil,
-                            protectionCouncil: { ...editCouncil.protectionCouncil, roomCode: e.target.value },
+                            protectionCouncil: {
+                              ...editCouncil.protectionCouncil,
+                              roomCode: e.target.value,
+                            },
                           })
                         }
                       />
@@ -477,10 +550,16 @@ function EstablishCouncil() {
 
                 {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
                 <div className={cx("btns")}>
-                  <button className={cx("btn-modal")} onClick={handleCancleEdit}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleCancleEdit}
+                  >
                     Hủy
                   </button>
-                  <button className={cx("btn-modal")} onClick={handleEstablishCouncil}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleEstablishCouncil}
+                  >
                     Lưu
                   </button>
                 </div>
@@ -503,35 +582,49 @@ function EstablishCouncil() {
                 <div className={cx("wrap__modalDetail1")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Năm học:</span>
-                    <span className={cx("details__content")}>{editCouncil.yearTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.yearTopic}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Kỳ học:</span>
-                    <span className={cx("details__content")}>{editCouncil.semesterTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.semesterTopic}
+                    </span>
                   </div>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên HĐBV:</span>
-                    <span className={cx("details__content")}>{editCouncil.protectionCouncil?.nameCouncil}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.protectionCouncil?.nameCouncil}
+                    </span>
                   </div>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mô tả:</span>
-                    <span className={cx("details__content")}>{editCouncil.protectionCouncil?.describeCouncil}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.protectionCouncil?.describeCouncil}
+                    </span>
                   </div>
                 </div>
                 <div className={cx("wrap__modalDetail1")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Đề tài KLTN:</span>
-                    <span className={cx("details__content")}>{editCouncil.nameTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.nameTopic}
+                    </span>
                   </div>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mô tả đề tài:</span>
-                    <span className={cx("details__content")}>{editCouncil.describeTopic}</span>
+                    <span className={cx("details__content")}>
+                      {editCouncil.describeTopic}
+                    </span>
                   </div>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Lịch bảo vệ</span>
@@ -540,7 +633,9 @@ function EstablishCouncil() {
                     <div className={cx("details__row", "details__row-margin")}>
                       <span className={cx("details__title")}>Ngày:</span>
                       <span className={cx("details__content")}>
-                        {new Date(editCouncil.protectionCouncil?.time).toLocaleDateString("vi-VI", {
+                        {new Date(
+                          editCouncil.protectionCouncil?.time
+                        ).toLocaleDateString("vi-VI", {
                           day: "2-digit",
                           month: "2-digit",
                           year: "2-digit",
@@ -549,36 +644,58 @@ function EstablishCouncil() {
                     </div>
                     <div className={cx("details__row")}>
                       <span className={cx("details__title")}>Ca/Mã phòng:</span>
-                      <span className={cx("details__content")}>{editCouncil.protectionCouncil?.shift}/</span>
-                      <span className={cx("details__content")}>{editCouncil.protectionCouncil?.roomCode}</span>
+                      <span className={cx("details__content")}>
+                        {editCouncil.protectionCouncil?.shift}/
+                      </span>
+                      <span className={cx("details__content")}>
+                        {editCouncil.protectionCouncil?.roomCode}
+                      </span>
                     </div>
                   </div>
                 </div>
               </div>
 
               <div style={{ margin: "15px 0 10px" }}>
-                <span className={cx("details__title")}>Thành viên hội đồng bảo vệ</span>
+                <span className={cx("details__title")}>
+                  Thành viên hội đồng bảo vệ
+                </span>
               </div>
               <div className={cx("details__members")}>
                 <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Chủ tịch hội đồng:</span>
-                  <span className={cx("details__content")}>{editCouncil.protectionCouncil?.members?.chairperson}</span>
+                  <span className={cx("details__title")}>
+                    Chủ tịch hội đồng:
+                  </span>
+                  <span className={cx("details__content")}>
+                    {editCouncil.protectionCouncil?.members?.chairperson}
+                  </span>
                 </div>
                 <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Giáo viên hướng dẫn:</span>
-                  <span className={cx("details__content")}>{editCouncil.nameTeacher}</span>
+                  <span className={cx("details__title")}>
+                    Giáo viên hướng dẫn:
+                  </span>
+                  <span className={cx("details__content")}>
+                    {editCouncil.nameTeacher}
+                  </span>
                 </div>
                 <div className={cx("details__row")}>
-                  <span className={cx("details__title")}>Giáo viên phản biện:</span>
-                  <span className={cx("details__content")}>{editCouncil.nameCounterTeacher}</span>
+                  <span className={cx("details__title")}>
+                    Giáo viên phản biện:
+                  </span>
+                  <span className={cx("details__content")}>
+                    {editCouncil.nameCounterTeacher}
+                  </span>
                 </div>
                 <div className={cx("details__row")}>
                   <span className={cx("details__title")}>Thư ký:</span>
-                  <span className={cx("details__content")}>{editCouncil.protectionCouncil?.members?.secretary}</span>
+                  <span className={cx("details__content")}>
+                    {editCouncil.protectionCouncil?.members?.secretary}
+                  </span>
                 </div>
                 <div className={cx("details__row")}>
                   <span className={cx("details__title")}>Ủy viên:</span>
-                  <span className={cx("details__content")}>{editCouncil.protectionCouncil?.members?.commissioner}</span>
+                  <span className={cx("details__content")}>
+                    {editCouncil.protectionCouncil?.members?.commissioner}
+                  </span>
                 </div>
               </div>
             </div>

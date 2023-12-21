@@ -11,8 +11,7 @@ import styles from "./SubmitFinalReport.module.scss";
 const cx = classNames.bind(styles);
 
 function SubmitFinalReport() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [reports, setReports] = useState([]);
 
@@ -41,7 +40,10 @@ function SubmitFinalReport() {
 
   function getTopic() {
     axios
-      .get(`${host}:${port}/api/submitFinalReport`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/submitFinalReport`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setReports(res.data);
       })
@@ -58,9 +60,9 @@ function SubmitFinalReport() {
       formData.append("file", reportFile);
 
       axios
-        .post(`${host}:${port}/api/submitFinalReport`, formData, {
+        .post(`${url}/api/submitFinalReport`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -97,7 +99,10 @@ function SubmitFinalReport() {
       <h2 className={cx("title")}>Nộp báo cáo cuối</h2>
       <div className={cx("function")}>
         <div className={cx("function__allow")}>
-          <button className={cx("btn", "btn-add")} onClick={() => setIsOpenReportModal(true)}>
+          <button
+            className={cx("btn", "btn-add")}
+            onClick={() => setIsOpenReportModal(true)}
+          >
             Nộp báo cáo
           </button>
         </div>
@@ -129,7 +134,7 @@ function SubmitFinalReport() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${host}:${port}/api/approveFinalReport/${report._id}`}
+                    href={`${url}/api/approveFinalReport/${report._id}`}
                     download={report.file.nameFile}
                   >
                     {report.file.nameFile}

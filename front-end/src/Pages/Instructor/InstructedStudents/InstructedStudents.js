@@ -11,8 +11,7 @@ import styles from "./InstructedStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function InstructedStudents() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [instructedStudents, setInstructedStudents] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -27,8 +26,8 @@ function InstructedStudents() {
   function getInstructedStudents() {
     axios
       .get(
-        `${host}:${port}/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        `${url}/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setInstructedStudents(res.data);
@@ -49,7 +48,10 @@ function InstructedStudents() {
       <h2 className={cx("title")}>Danh sách sinh viên hướng dẫn</h2>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getInstructedStudents} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getInstructedStudents}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox

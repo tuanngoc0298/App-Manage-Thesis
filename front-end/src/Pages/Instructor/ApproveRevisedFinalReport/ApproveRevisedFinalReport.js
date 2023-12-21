@@ -11,8 +11,7 @@ import styles from "./ApproveRevisedFinalReport.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveRevisedFinalReport() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [reports, setReports] = useState([]);
   const [reportsDetail, setReportsDetail] = useState([]);
@@ -56,10 +55,10 @@ function ApproveRevisedFinalReport() {
   function getAllReports() {
     axios
       .get(
-        `${host}:${port}/api/approveRevisedFinalReport?searchQuery=${searchQuery}${
+        `${url}/api/approveRevisedFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setReports(res.data);
@@ -72,9 +71,9 @@ function ApproveRevisedFinalReport() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`${host}:${port}/api/approveRevisedReportDetail/${detail._id}`, {
+        .get(`${url}/api/approveRevisedReportDetail/${detail._id}`, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((res) => {
           setReportsDetail(res.data);
@@ -89,7 +88,7 @@ function ApproveRevisedFinalReport() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/approveRevisedFinalReport/${editReport._id}`,
+          `${url}/api/approveRevisedFinalReport/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -155,7 +154,10 @@ function ApproveRevisedFinalReport() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllReports} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllReports}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -261,10 +263,12 @@ function ApproveRevisedFinalReport() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__linkDownload")}>
                     <span className={cx("details__title")}>Tệp tin:</span>
-                    <span className="material-symbols-outlined">folder_zip</span>
+                    <span className="material-symbols-outlined">
+                      folder_zip
+                    </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${host}:${port}/api/approveRevisedFinalReport/${editReport._id}`}
+                      href={`${url}/api/approveRevisedFinalReport/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
@@ -272,7 +276,8 @@ function ApproveRevisedFinalReport() {
                   </div>
                 </div>
                 <div>
-                  <span className={cx("details__title")}>Thời gian:</span> {formatTime(new Date(editReport.time))}
+                  <span className={cx("details__title")}>Thời gian:</span>{" "}
+                  {formatTime(new Date(editReport.time))}
                 </div>
                 <div className={cx("form__comment")}>
                   <span className={cx("details__title")}>Nhận xét:</span>
@@ -287,21 +292,37 @@ function ApproveRevisedFinalReport() {
                 </div>
                 <div className={cx("details__checkBox")}>
                   <label>
-                    <input type="radio" checked={isApprove === "Duyệt"} onChange={() => setIsApprove("Duyệt")} /> Phê
-                    duyệt
+                    <input
+                      type="radio"
+                      checked={isApprove === "Duyệt"}
+                      onChange={() => setIsApprove("Duyệt")}
+                    />{" "}
+                    Phê duyệt
                   </label>
                   <label>
-                    <input type="radio" checked={isApprove === "Từ chối"} onChange={() => setIsApprove("Từ chối")} /> Từ
-                    chối
+                    <input
+                      type="radio"
+                      checked={isApprove === "Từ chối"}
+                      onChange={() => setIsApprove("Từ chối")}
+                    />{" "}
+                    Từ chối
                   </label>
                 </div>
               </div>
-              {errorApprove && <div className={cx("message")}>{errorApprove}</div>}
+              {errorApprove && (
+                <div className={cx("message")}>{errorApprove}</div>
+              )}
               <div className={cx("btns")}>
-                <button className={cx("btn-modal")} onClick={handleCancleApprove}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleCancleApprove}
+                >
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveRevisedFinalReport}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleApproveRevisedFinalReport}
+                >
                   Lưu
                 </button>
               </div>
@@ -321,14 +342,16 @@ function ApproveRevisedFinalReport() {
             <div className={cx("form", "form-detail")}>
               {reportsDetail.map((report, index) => (
                 <div className={cx("detail-item")} key={index}>
-                  <div className={cx("detail-title")}>Lần báo cáo thứ {index + 1}</div>
+                  <div className={cx("detail-title")}>
+                    Lần báo cáo thứ {index + 1}
+                  </div>
                   <table className={cx("detail-table")}>
                     <tr>
                       <th>Tệp tin</th>
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`${host}:${port}/api/approveRevisedFinalReport/${report._id}`}
+                          href={`${url}/api/approveRevisedFinalReport/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}

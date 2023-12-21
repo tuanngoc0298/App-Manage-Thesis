@@ -11,8 +11,7 @@ const cx = classNames.bind(styles);
 function Header() {
   const navigate = useNavigate();
   const { userName, handleLogout } = useContext(HeaderContext);
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [changePassword, setChangePassword] = useState(false);
   const [errorChangePassword, setErrorChangePassword] = useState("");
@@ -32,9 +31,9 @@ function Header() {
       }
       axios
         .put(
-          `${host}:${port}/api/changePassword`,
+          `${url}/api/changePassword`,
           { currentPass, newPass },
-          { withCredentials: true, baseURL: `${host}:${port}` }
+          { withCredentials: true, baseURL: `${url}` }
         )
         .then((res) => {
           setErrorChangePassword("Cập nhật thành công");
@@ -115,7 +114,10 @@ function Header() {
       {changePassword && (
         <div>
           <div className={cx("modal")}>
-            <div className={cx("modal-close")} onClick={handleCancleChangePassword}>
+            <div
+              className={cx("modal-close")}
+              onClick={handleCancleChangePassword}
+            >
               <span className="material-symbols-outlined">close</span>
             </div>
             <div className={cx("title-modal")}>Đổi mật khẩu</div>
@@ -129,8 +131,13 @@ function Header() {
                     }}
                     placeholder="Mật khẩu hiện tại"
                   />
-                  <button className={cx("btn")} onClick={toggleCurPasswordVisibility}>
-                    <span className="material-symbols-outlined">visibility</span>
+                  <button
+                    className={cx("btn")}
+                    onClick={toggleCurPasswordVisibility}
+                  >
+                    <span className="material-symbols-outlined">
+                      visibility
+                    </span>
                   </button>
                 </div>
                 <div className={cx("details__input")}>
@@ -141,8 +148,13 @@ function Header() {
                     }}
                     placeholder="Mật khẩu mới"
                   />
-                  <button className={cx("btn")} onClick={toggleNewPasswordVisibility}>
-                    <span className="material-symbols-outlined">visibility</span>
+                  <button
+                    className={cx("btn")}
+                    onClick={toggleNewPasswordVisibility}
+                  >
+                    <span className="material-symbols-outlined">
+                      visibility
+                    </span>
                   </button>
                 </div>
 
@@ -154,16 +166,29 @@ function Header() {
                     }}
                     placeholder="Nhập lại mật khẩu mới"
                   />
-                  <button className={cx("btn")} onClick={toggleRePasswordVisibility}>
-                    <span className="material-symbols-outlined">visibility</span>
+                  <button
+                    className={cx("btn")}
+                    onClick={toggleRePasswordVisibility}
+                  >
+                    <span className="material-symbols-outlined">
+                      visibility
+                    </span>
                   </button>
                 </div>
-                {errorChangePassword && <div className={cx("message")}>{errorChangePassword}</div>}
+                {errorChangePassword && (
+                  <div className={cx("message")}>{errorChangePassword}</div>
+                )}
                 <div className={cx("btns")}>
-                  <button className={cx("btn-modal")} onClick={handleCancleChangePassword}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleCancleChangePassword}
+                  >
                     Hủy
                   </button>
-                  <button className={cx("btn-modal")} onClick={handleChangePassword}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleChangePassword}
+                  >
                     Lưu
                   </button>
                 </div>

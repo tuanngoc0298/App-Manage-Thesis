@@ -10,8 +10,7 @@ import styles from "./Feedback.module.scss";
 const cx = classNames.bind(styles);
 
 function Feedback() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [feedbacks, setFeedbacks] = useState([]);
 
@@ -36,10 +35,10 @@ function Feedback() {
   function getAllStudents() {
     axios
       .get(
-        `${host}:${port}/api/feedback?searchQuery=${searchQuery}${
+        `${url}/api/feedback?searchQuery=${searchQuery}${
           isTabFeedback ? `&isTabFeedback=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setFeedbacks(res.data);
@@ -50,16 +49,22 @@ function Feedback() {
   }
 
   const handleEditFeedback = () => {
-    if (editFeedback.feedback?.fileFeedback && editFeedback.feedback?.stateFeedback) {
+    if (
+      editFeedback.feedback?.fileFeedback &&
+      editFeedback.feedback?.stateFeedback
+    ) {
       const file = editFeedback.feedback?.fileFeedback?.data;
       const formData = new FormData();
       formData.append("stateFeedback", editFeedback.feedback?.stateFeedback);
-      formData.append("nameFile", editFeedback.feedback?.fileFeedback?.nameFile);
+      formData.append(
+        "nameFile",
+        editFeedback.feedback?.fileFeedback?.nameFile
+      );
       formData.append("file", file);
       axios
-        .put(`${host}:${port}/api/feedback/${editFeedback._id}`, formData, {
+        .put(`${url}/api/feedback/${editFeedback._id}`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -108,7 +113,10 @@ function Feedback() {
       ...editFeedback,
       feedback: {
         ...editFeedback.feedback,
-        fileFeedback: { nameFile: e.target.files[0].name, data: e.target.files[0] },
+        fileFeedback: {
+          nameFile: e.target.files[0].name,
+          data: e.target.files[0],
+        },
       },
     });
   };
@@ -138,7 +146,10 @@ function Feedback() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudents} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllStudents}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -213,7 +224,7 @@ function Feedback() {
                   <td>
                     <a
                       className={cx("linkDownload")}
-                      href={`${host}:${port}/api/feedback/${feedback._id}`}
+                      href={`${url}/api/feedback/${feedback._id}`}
                       download={feedback.feedback?.fileFeedback?.nameFile}
                     >
                       {feedback.feedback?.fileFeedback?.nameFile}
@@ -280,7 +291,10 @@ function Feedback() {
                 </div>
                 <ComboBox
                   title="Trạng thái đánh giá KL"
-                  selfData={[{ name: "Cần chỉnh sửa" }, { name: "Không cần chỉnh sửa" }]}
+                  selfData={[
+                    { name: "Cần chỉnh sửa" },
+                    { name: "Không cần chỉnh sửa" },
+                  ]}
                   onSelectionChange={handleChangeStateFeedback}
                   oldData={editFeedback.feedback?.stateFeedback}
                   customStyle={{ justifyContent: "flex-start" }}
@@ -288,10 +302,16 @@ function Feedback() {
 
                 {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
                 <div className={cx("btns")}>
-                  <button className={cx("btn-modal")} onClick={handleCancleEdit}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleCancleEdit}
+                  >
                     Hủy
                   </button>
-                  <button className={cx("btn-modal")} onClick={handleEditFeedback}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleEditFeedback}
+                  >
                     Lưu
                   </button>
                 </div>

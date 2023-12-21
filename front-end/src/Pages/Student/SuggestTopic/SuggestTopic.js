@@ -13,13 +13,15 @@ import styles from "./SuggestTopic.module.scss";
 const cx = classNames.bind(styles);
 
 function SuggestTopic() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const { code } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [topic, setTopic] = useState();
-  const [newSuggestTopic, setNewSuggestTopic] = useState({ state: "Đang chờ duyệt", code });
+  const [newSuggestTopic, setNewSuggestTopic] = useState({
+    state: "Đang chờ duyệt",
+    code,
+  });
   const [editSuggestTopic, setEditSuggestTopic] = useState({});
 
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
@@ -37,7 +39,10 @@ function SuggestTopic() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -55,7 +60,10 @@ function SuggestTopic() {
 
   function getSuggestTopic() {
     axios
-      .get(`${host}:${port}/api/suggestTopic`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/suggestTopic`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setTopic(res.data);
       })
@@ -66,9 +74,9 @@ function SuggestTopic() {
     if (newSuggestTopic.nameTopic && newSuggestTopic.describe) {
       // Gọi API để thêm đề tài mới
       axios
-        .post(`${host}:${port}/api/suggestTopic`, newSuggestTopic, {
+        .post(`${url}/api/suggestTopic`, newSuggestTopic, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((res) => {
           // Cập nhật danh sách đề tài
@@ -90,10 +98,14 @@ function SuggestTopic() {
     // Gọi API để sửa đề tài
     if (editSuggestTopic.nameTopic && editSuggestTopic.describe) {
       axios
-        .put(`${host}:${port}/api/suggestTopic/${editSuggestTopic._id}`, editSuggestTopic, {
-          withCredentials: true,
-          baseURL: `${host}:${port}`,
-        })
+        .put(
+          `${url}/api/suggestTopic/${editSuggestTopic._id}`,
+          editSuggestTopic,
+          {
+            withCredentials: true,
+            baseURL: `${url}`,
+          }
+        )
         .then((res) => {
           // Cập nhật danh sách đề tài
 
@@ -115,9 +127,9 @@ function SuggestTopic() {
   const handleDeleteTopic = (id) => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`${host}:${port}/api/suggestTopic/${id}`, {
+      .delete(`${url}/api/suggestTopic/${id}`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then(() => {
         // Cập nhật danh sách đề tài
@@ -166,7 +178,10 @@ function SuggestTopic() {
       <h2 className={cx("title")}>Đăng ký đề tài đề xuất</h2>
       <div className={cx("function")}>
         <div className={cx("function__allow")}>
-          <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+          <button
+            className={cx("btn", "btn-add")}
+            onClick={() => setIsOpenAddModal(true)}
+          >
             Thêm đề tài
           </button>
         </div>
@@ -217,8 +232,13 @@ function SuggestTopic() {
 
                   {idActiveRow === topic._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

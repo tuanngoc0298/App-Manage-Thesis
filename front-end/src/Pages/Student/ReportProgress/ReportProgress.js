@@ -11,8 +11,7 @@ import styles from "./ReportProgress.module.scss";
 const cx = classNames.bind(styles);
 
 function ReportProgress() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [topics, setTopics] = useState([]);
   const [completeLevel, setCompleteLevel] = useState("");
@@ -40,7 +39,10 @@ function ReportProgress() {
   }
   function getTopic() {
     axios
-      .get(`${host}:${port}/api/reportProgress`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/reportProgress`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setTopics(res.data);
       })
@@ -57,9 +59,9 @@ function ReportProgress() {
       formData.append("file", reportFile);
 
       axios
-        .post(`${host}:${port}/api/reportProgress`, formData, {
+        .post(`${url}/api/reportProgress`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -99,7 +101,10 @@ function ReportProgress() {
       <h2 className={cx("title")}>Báo cáo tiến độ</h2>
       <div className={cx("function")}>
         <div className={cx("function__allow")}>
-          <button className={cx("btn", "btn-add")} onClick={() => setIsOpenReportModal(true)}>
+          <button
+            className={cx("btn", "btn-add")}
+            onClick={() => setIsOpenReportModal(true)}
+          >
             Báo cáo
           </button>
         </div>
@@ -133,7 +138,7 @@ function ReportProgress() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${host}:${port}/api/approveReportProgess/${topic._id}`}
+                    href={`${url}/api/approveReportProgess/${topic._id}`}
                     download={topic.file.nameFile}
                   >
                     {topic.file.nameFile}

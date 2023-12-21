@@ -11,8 +11,7 @@ import styles from "./SeeScoreResult.module.scss";
 const cx = classNames.bind(styles);
 
 function SeeScoreResult() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [result, setResult] = useState({});
 
@@ -24,9 +23,9 @@ function SeeScoreResult() {
 
   function getResult() {
     axios
-      .get(`${host}:${port}/api/seeScoreResult`, {
+      .get(`${url}/api/seeScoreResult`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         setResult(res.data);

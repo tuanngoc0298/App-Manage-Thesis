@@ -11,8 +11,7 @@ import styles from "./ApproveReportProgress.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveReportProgress() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [reports, setReports] = useState([]);
   const [reportsDetail, setReportsDetail] = useState([]);
@@ -57,10 +56,10 @@ function ApproveReportProgress() {
   function getAllReports() {
     axios
       .get(
-        `${host}:${port}/api/approveReportProgess?searchQuery=${searchQuery}${
+        `${url}/api/approveReportProgess?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setReports(res.data);
@@ -73,9 +72,9 @@ function ApproveReportProgress() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`${host}:${port}/api/approveReportDetail/${detail._id}`, {
+        .get(`${url}/api/approveReportDetail/${detail._id}`, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((res) => {
           setReportsDetail(res.data);
@@ -90,7 +89,7 @@ function ApproveReportProgress() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/approveReportProgess/${editReport._id}`,
+          `${url}/api/approveReportProgess/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -156,7 +155,10 @@ function ApproveReportProgress() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllReports} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllReports}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -259,10 +261,12 @@ function ApproveReportProgress() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__linkDownload")}>
                     <span className={cx("details__title")}>Tệp tin:</span>
-                    <span className="material-symbols-outlined">folder_zip</span>
+                    <span className="material-symbols-outlined">
+                      folder_zip
+                    </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${host}:${port}/api/approveReportProgess/${editReport._id}`}
+                      href={`${url}/api/approveReportProgess/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
@@ -270,11 +274,15 @@ function ApproveReportProgress() {
                   </div>
 
                   <div>
-                    <span className={cx("details__title")}>Mức độ hoàn thành:</span> {editReport.completeLevel}
+                    <span className={cx("details__title")}>
+                      Mức độ hoàn thành:
+                    </span>{" "}
+                    {editReport.completeLevel}
                   </div>
                 </div>
                 <div>
-                  <span className={cx("details__title")}>Thời gian:</span> {formatTime(new Date(editReport.time))}
+                  <span className={cx("details__title")}>Thời gian:</span>{" "}
+                  {formatTime(new Date(editReport.time))}
                 </div>
                 <div className={cx("form__comment")}>
                   <span className={cx("details__title")}>Nhận xét:</span>
@@ -289,21 +297,37 @@ function ApproveReportProgress() {
                 </div>
                 <div className={cx("details__checkBox")}>
                   <label>
-                    <input type="radio" checked={isApprove === "Duyệt"} onChange={() => setIsApprove("Duyệt")} /> Phê
-                    duyệt
+                    <input
+                      type="radio"
+                      checked={isApprove === "Duyệt"}
+                      onChange={() => setIsApprove("Duyệt")}
+                    />{" "}
+                    Phê duyệt
                   </label>
                   <label>
-                    <input type="radio" checked={isApprove === "Từ chối"} onChange={() => setIsApprove("Từ chối")} /> Từ
-                    chối
+                    <input
+                      type="radio"
+                      checked={isApprove === "Từ chối"}
+                      onChange={() => setIsApprove("Từ chối")}
+                    />{" "}
+                    Từ chối
                   </label>
                 </div>
               </div>
-              {errorApprove && <div className={cx("message")}>{errorApprove}</div>}
+              {errorApprove && (
+                <div className={cx("message")}>{errorApprove}</div>
+              )}
               <div className={cx("btns")}>
-                <button className={cx("btn-modal")} onClick={handleCancleApprove}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleCancleApprove}
+                >
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveReportProgress}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleApproveReportProgress}
+                >
                   Lưu
                 </button>
               </div>
@@ -323,14 +347,16 @@ function ApproveReportProgress() {
             <div className={cx("form", "form-detail")}>
               {reportsDetail.map((report, index) => (
                 <div className={cx("detail-item")}>
-                  <div className={cx("detail-title")}>Lần báo cáo thứ {index + 1}</div>
+                  <div className={cx("detail-title")}>
+                    Lần báo cáo thứ {index + 1}
+                  </div>
                   <table className={cx("detail-table")}>
                     <tr>
                       <th>Tệp tin</th>
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`${host}:${port}/api/approveReportProgess/${report._id}`}
+                          href={`${url}/api/approveReportProgess/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}

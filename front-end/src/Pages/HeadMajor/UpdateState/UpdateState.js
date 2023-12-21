@@ -11,8 +11,7 @@ import styles from "./UpdateState.module.scss";
 const cx = classNames.bind(styles);
 
 function UpdateState() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [students, setStudents] = useState([]);
 
@@ -37,10 +36,10 @@ function UpdateState() {
   function getAllRegister() {
     axios
       .get(
-        `${host}:${port}/api/updateState?searchQuery=${searchQuery}${
+        `${url}/api/updateState?searchQuery=${searchQuery}${
           isFilterApproved ? `&isTabComplete=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setStudents(res.data);
@@ -54,7 +53,7 @@ function UpdateState() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/updateState/${editStudent._id}`,
+          `${url}/api/updateState/${editStudent._id}`,
           { isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -117,7 +116,10 @@ function UpdateState() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllRegister} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllRegister}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -212,34 +214,53 @@ function UpdateState() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mã sinh viên:</span>
-                    <span className={cx("details__content")}>{editStudent.codeStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editStudent.codeStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Điểm KLTN:</span>
-                    <span className={cx("details__content")}>{editStudent.score}</span>
+                    <span className={cx("details__content")}>
+                      {editStudent.score}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editStudent.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editStudent.nameStudent}
+                    </span>
                   </div>
                 </div>
 
                 <div className={cx("details__checkBox")}>
                   <label>
-                    <input type="radio" checked={isApprove === "Duyệt"} onChange={() => setIsApprove("Duyệt")} /> Hoàn
-                    thành KLTN
+                    <input
+                      type="radio"
+                      checked={isApprove === "Duyệt"}
+                      onChange={() => setIsApprove("Duyệt")}
+                    />{" "}
+                    Hoàn thành KLTN
                   </label>
                   <label>
-                    <input type="radio" checked={isApprove === "Từ chối"} onChange={() => setIsApprove("Từ chối")} />{" "}
+                    <input
+                      type="radio"
+                      checked={isApprove === "Từ chối"}
+                      onChange={() => setIsApprove("Từ chối")}
+                    />{" "}
                     Không hoàn thành KLTN
                   </label>
                 </div>
               </div>
-              {errorApprove && <div className={cx("message")}>{errorApprove}</div>}
+              {errorApprove && (
+                <div className={cx("message")}>{errorApprove}</div>
+              )}
               <div className={cx("btns")}>
-                <button className={cx("btn-modal")} onClick={handleCancleApprove}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleCancleApprove}
+                >
                   Hủy
                 </button>
                 <button className={cx("btn-modal")} onClick={handleUpdateState}>

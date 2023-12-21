@@ -9,8 +9,8 @@ import styles from "./ForgetPass.module.scss";
 const cx = classNames.bind(styles);
 
 function ForgetPass() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
+
   // Xử lý input
   const [isFocusedEmail, setIsFocusedEmail] = useState(false);
   const [isFocusedUsername, setIsFocusedUsername] = useState(false);
@@ -38,7 +38,7 @@ function ForgetPass() {
 
     if (email && username) {
       await axios
-        .post(`${host}:${port}/api/forgetPassWord`, { username, email })
+        .post(`${url}/api/forgetPassWord`, { username, email })
         .then((res) => {
           alert(res.data);
         })
@@ -62,7 +62,10 @@ function ForgetPass() {
             <input
               type="text"
               placeholder={isFocusedEmail ? "" : "Email"}
-              className={cx("input", `${inputValueEmail && !isFocusedEmail ? "hasVal" : ""}`)}
+              className={cx(
+                "input",
+                `${inputValueEmail && !isFocusedEmail ? "hasVal" : ""}`
+              )}
               value={email}
               onChange={(e) => {
                 setEmail(e.target.value);
@@ -71,7 +74,9 @@ function ForgetPass() {
               onFocus={handleFocusEmail}
               onBlur={handleBlurEmail}
             ></input>
-            <span className={cx("material-symbols-outlined", "focus__icon")}>mail</span>
+            <span className={cx("material-symbols-outlined", "focus__icon")}>
+              mail
+            </span>
             <span className={cx("focus-input")}></span>
           </div>
 
@@ -79,7 +84,10 @@ function ForgetPass() {
             <input
               type="text"
               placeholder={isFocusedUsername ? "" : "Tên đăng nhập"}
-              className={cx("input", `${inputValueUsername && !isFocusedUsername ? "hasVal" : ""}`)}
+              className={cx(
+                "input",
+                `${inputValueUsername && !isFocusedUsername ? "hasVal" : ""}`
+              )}
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -88,7 +96,9 @@ function ForgetPass() {
               onFocus={handleFocusUsername}
               onBlur={handleBlurUsername}
             ></input>
-            <span class={cx("material-symbols-outlined", "focus__icon")}>person</span>
+            <span class={cx("material-symbols-outlined", "focus__icon")}>
+              person
+            </span>
             <span className={cx("focus-input")}></span>
           </div>
 

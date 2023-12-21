@@ -11,8 +11,7 @@ import styles from "./CapstoneProjects.module.scss";
 const cx = classNames.bind(styles);
 
 function CapstoneProjects() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [capstoneProjects, setCapstoneProjects] = useState([]);
   const [newCapstoneProject, setNewCapstoneProject] = useState({});
@@ -34,7 +33,7 @@ function CapstoneProjects() {
   useEffect(() => {
     // Gọi API để lấy danh sách học phần KLTN
     axios
-      .get(`${host}:${port}/api/capstoneProjects`, {
+      .get(`${url}/api/capstoneProjects`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -47,7 +46,10 @@ function CapstoneProjects() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -71,7 +73,7 @@ function CapstoneProjects() {
     ) {
       // Gọi API để thêm học phần KLTN mới
       axios
-        .post(`${host}:${port}/api/capstoneProjects`, newCapstoneProject, {
+        .post(`${url}/api/capstoneProjects`, newCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -101,18 +103,24 @@ function CapstoneProjects() {
       editCapstoneProject.credit
     ) {
       axios
-        .put(`${host}:${port}/api/capstoneProjects/${editCapstoneProject._id}`, editCapstoneProject, {
-          headers: { Authorization: `Bearer ${token}` },
-        })
+        .put(
+          `${url}/api/capstoneProjects/${editCapstoneProject._id}`,
+          editCapstoneProject,
+          {
+            headers: { Authorization: `Bearer ${token}` },
+          }
+        )
         .then((res) => {
           // Cập nhật danh sách học phần KLTN
           if (res.status !== 400) {
-            const updatedCapstoneProjects = capstoneProjects.map((capstoneProject) => {
-              if (capstoneProject._id === editCapstoneProject._id) {
-                return { ...capstoneProject, ...res.data };
+            const updatedCapstoneProjects = capstoneProjects.map(
+              (capstoneProject) => {
+                if (capstoneProject._id === editCapstoneProject._id) {
+                  return { ...capstoneProject, ...res.data };
+                }
+                return capstoneProject;
               }
-              return capstoneProject;
-            });
+            );
             setCapstoneProjects(updatedCapstoneProjects);
 
             setEditCapstoneProject({});
@@ -133,12 +141,14 @@ function CapstoneProjects() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa học phần KLTN
     axios
-      .delete(`${host}:${port}/api/capstoneProjects/${id}`, {
+      .delete(`${url}/api/capstoneProjects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách học phần KLTN
-        const updatedCapstoneProjects = capstoneProjects.filter((capstoneProject) => capstoneProject._id !== id);
+        const updatedCapstoneProjects = capstoneProjects.filter(
+          (capstoneProject) => capstoneProject._id !== id
+        );
         setCapstoneProjects(updatedCapstoneProjects);
         setError("");
       })
@@ -148,7 +158,7 @@ function CapstoneProjects() {
   };
   const handleSearchCapstoneProject = () => {
     axios
-      .get(`${host}:${port}/api/capstoneProjects?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/capstoneProjects?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -191,8 +201,14 @@ function CapstoneProjects() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý học phần KLTN</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchCapstoneProject} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchCapstoneProject}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm học phần KLTN
         </button>
       </div>
@@ -242,8 +258,13 @@ function CapstoneProjects() {
 
                   {idActiveRow === capstoneProject._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

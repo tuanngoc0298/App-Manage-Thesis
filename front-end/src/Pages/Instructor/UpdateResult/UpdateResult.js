@@ -12,9 +12,11 @@ import styles from "./UpdateResult.module.scss";
 const cx = classNames.bind(styles);
 
 function UpdateResult() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
-  const nameUser = Cookies.get("token") ? jwt_decode(Cookies.get("token")).userInfo.name : "";
+  const url = process.env.REACT_APP_URL;
+
+  const nameUser = Cookies.get("token")
+    ? jwt_decode(Cookies.get("token")).userInfo.name
+    : "";
 
   const [role, setRole] = useState("");
 
@@ -59,16 +61,35 @@ function UpdateResult() {
     ["Độ khó đề tài", "2.0"],
   ];
   const roleTeachers = [
-    ["Giáo viên hướng dẫn", editResult.nameTeacher, editResult.scoreResult?.teacher?.total],
-    ["Giáo viên phản biện", editResult.nameCounterTeacher, editResult.scoreResult?.counterTeacher?.total],
-    ["Chủ tịch hội đồng", editResult.chairperson, editResult.scoreResult?.chairperson?.total],
+    [
+      "Giáo viên hướng dẫn",
+      editResult.nameTeacher,
+      editResult.scoreResult?.teacher?.total,
+    ],
+    [
+      "Giáo viên phản biện",
+      editResult.nameCounterTeacher,
+      editResult.scoreResult?.counterTeacher?.total,
+    ],
+    [
+      "Chủ tịch hội đồng",
+      editResult.chairperson,
+      editResult.scoreResult?.chairperson?.total,
+    ],
     ["Thư ký", editResult.secretary, editResult.scoreResult?.secretary?.total],
-    ["Ủy viên", editResult.commissioner, editResult.scoreResult?.commissioner?.total],
+    [
+      "Ủy viên",
+      editResult.commissioner,
+      editResult.scoreResult?.commissioner?.total,
+    ],
   ];
   useEffect(getAllStudents, [filterBySemester, filterByYear, isTabResult]);
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -85,7 +106,9 @@ function UpdateResult() {
     setTotal(editResult.scoreResult?.[role]?.total);
     if (role === "secretary") {
       setScoresTeacher(editResult.scoreResult?.teacher?.scores || []);
-      setScoresCounterTeacher(editResult.scoreResult?.counterTeacher?.scores || []);
+      setScoresCounterTeacher(
+        editResult.scoreResult?.counterTeacher?.scores || []
+      );
       setScoresChairperson(editResult.scoreResult?.chairperson?.scores || []);
       setScoresCommissioner(editResult.scoreResult?.commissioner?.scores || []);
 
@@ -98,10 +121,10 @@ function UpdateResult() {
   function getAllStudents() {
     axios
       .get(
-        `${host}:${port}/api/updateResult?searchQuery=${searchQuery}${
+        `${url}/api/updateResult?searchQuery=${searchQuery}${
           isTabResult ? `&isTabResult=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setStudents(res.data);
@@ -114,7 +137,7 @@ function UpdateResult() {
   const handleUpdateResult = () => {
     axios
       .put(
-        `${host}:${port}/api/updateResult/${editResult._id}`,
+        `${url}/api/updateResult/${editResult._id}`,
         {
           scores,
           total,
@@ -285,7 +308,10 @@ function UpdateResult() {
       </div>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudents} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllStudents}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -371,7 +397,9 @@ function UpdateResult() {
                             setIsOpenDetailModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">visibility</span>
+                          <span className="material-symbols-outlined">
+                            visibility
+                          </span>
                         </button>
                         <button
                           className={cx("btn")}
@@ -380,7 +408,9 @@ function UpdateResult() {
                             setIsOpenEditModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">edit</span>
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
                         </button>
                       </div>
                     )}
@@ -419,17 +449,23 @@ function UpdateResult() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mã sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.codeStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.codeStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên HĐBV:</span>
-                    <span className={cx("details__content")}>{editResult.nameCouncil}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameCouncil}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameStudent}
+                    </span>
                   </div>
                 </div>
                 <table className={cx("data", "data__result")}>
@@ -456,7 +492,9 @@ function UpdateResult() {
                             className={cx("data__input")}
                             type="number"
                             value={scores[index] || ""}
-                            onChange={(e) => handleInputChange(index, e.target.value)}
+                            onChange={(e) =>
+                              handleInputChange(index, e.target.value)
+                            }
                           />
                         </td>
                       </tr>
@@ -475,10 +513,16 @@ function UpdateResult() {
                 </table>
                 {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
                 <div className={cx("btns")}>
-                  <button className={cx("btn-modal")} onClick={handleCancleEdit}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleCancleEdit}
+                  >
                     Hủy
                   </button>
-                  <button className={cx("btn-modal")} onClick={handleUpdateResult}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleUpdateResult}
+                  >
                     Lưu
                   </button>
                 </div>
@@ -501,21 +545,29 @@ function UpdateResult() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mã sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.codeStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.codeStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên HĐBV:</span>
-                    <span className={cx("details__content")}>{editResult.nameCouncil}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameCouncil}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameStudent}
+                    </span>
                   </div>
                 </div>
                 <div className={cx("details__role")}>
-                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Thư ký</h2>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                    Thư ký
+                  </h2>
                   <table className={cx("data", "data__result")}>
                     <thead>
                       <tr>
@@ -540,7 +592,9 @@ function UpdateResult() {
                               className={cx("data__input")}
                               type="number"
                               value={scores[index] || ""}
-                              onChange={(e) => handleInputChange(index, e.target.value)}
+                              onChange={(e) =>
+                                handleInputChange(index, e.target.value)
+                              }
                             />
                           </td>
                         </tr>
@@ -559,7 +613,9 @@ function UpdateResult() {
                   </table>
                 </div>
                 <div className={cx("details__role")}>
-                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Giáo viên hướng dẫn</h2>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                    Giáo viên hướng dẫn
+                  </h2>
                   <table className={cx("data", "data__result")}>
                     <thead>
                       <tr>
@@ -584,7 +640,9 @@ function UpdateResult() {
                               className={cx("data__input")}
                               type="number"
                               value={scoresTeacher[index] || ""}
-                              onChange={(e) => handleInputChangeTeacher(index, e.target.value)}
+                              onChange={(e) =>
+                                handleInputChangeTeacher(index, e.target.value)
+                              }
                             />
                           </td>
                         </tr>
@@ -603,7 +661,9 @@ function UpdateResult() {
                   </table>
                 </div>
                 <div className={cx("details__role")}>
-                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Giáo viên phản biện</h2>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                    Giáo viên phản biện
+                  </h2>
                   <table className={cx("data", "data__result")}>
                     <thead>
                       <tr>
@@ -628,7 +688,12 @@ function UpdateResult() {
                               className={cx("data__input")}
                               type="number"
                               value={scoresCounterTeacher[index] || ""}
-                              onChange={(e) => handleInputChangeCounterTeacher(index, e.target.value)}
+                              onChange={(e) =>
+                                handleInputChangeCounterTeacher(
+                                  index,
+                                  e.target.value
+                                )
+                              }
                             />
                           </td>
                         </tr>
@@ -647,7 +712,9 @@ function UpdateResult() {
                   </table>
                 </div>
                 <div className={cx("details__role")}>
-                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Chủ tịch hội đồng</h2>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                    Chủ tịch hội đồng
+                  </h2>
                   <table className={cx("data", "data__result")}>
                     <thead>
                       <tr>
@@ -672,7 +739,12 @@ function UpdateResult() {
                               className={cx("data__input")}
                               type="number"
                               value={scoresChairperson[index] || ""}
-                              onChange={(e) => handleInputChangeChairperson(index, e.target.value)}
+                              onChange={(e) =>
+                                handleInputChangeChairperson(
+                                  index,
+                                  e.target.value
+                                )
+                              }
                             />
                           </td>
                         </tr>
@@ -691,7 +763,9 @@ function UpdateResult() {
                   </table>
                 </div>
                 <div className={cx("details__role")}>
-                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>Ủy viên</h2>
+                  <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                    Ủy viên
+                  </h2>
                   <table className={cx("data", "data__result")}>
                     <thead>
                       <tr>
@@ -716,7 +790,12 @@ function UpdateResult() {
                               className={cx("data__input")}
                               type="number"
                               value={scoresCommissioner[index] || ""}
-                              onChange={(e) => handleInputChangeCommissioner(index, e.target.value)}
+                              onChange={(e) =>
+                                handleInputChangeCommissioner(
+                                  index,
+                                  e.target.value
+                                )
+                              }
                             />
                           </td>
                         </tr>
@@ -736,10 +815,16 @@ function UpdateResult() {
                 </div>
                 {errorEdit && <div className={cx("message")}>{errorEdit}</div>}
                 <div className={cx("btns")}>
-                  <button className={cx("btn-modal")} onClick={handleCancleEdit}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleCancleEdit}
+                  >
                     Hủy
                   </button>
-                  <button className={cx("btn-modal")} onClick={handleUpdateResult}>
+                  <button
+                    className={cx("btn-modal")}
+                    onClick={handleUpdateResult}
+                  >
                     Lưu
                   </button>
                 </div>
@@ -762,17 +847,23 @@ function UpdateResult() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Mã sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.codeStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.codeStudent}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên HĐBV:</span>
-                    <span className={cx("details__content")}>{editResult.nameCouncil}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameCouncil}
+                    </span>
                   </div>
 
                   <div className={cx("details__row")}>
                     <span className={cx("details__title")}>Tên sinh viên:</span>
-                    <span className={cx("details__content")}>{editResult.nameStudent}</span>
+                    <span className={cx("details__content")}>
+                      {editResult.nameStudent}
+                    </span>
                   </div>
                 </div>
 
@@ -786,20 +877,22 @@ function UpdateResult() {
                     </tr>
                   </thead>
                   <tbody>
-                    {roleTeachers.map(([roleTeacher, nameTeacher, total], index) => (
-                      <tr key={index}>
-                        <td>{index + 1}</td>
-                        <td>
-                          <div>{nameTeacher} </div>
-                        </td>
-                        <td>
-                          <div>{roleTeacher}</div>
-                        </td>
-                        <td>
-                          <div>{total}</div>
-                        </td>
-                      </tr>
-                    ))}
+                    {roleTeachers.map(
+                      ([roleTeacher, nameTeacher, total], index) => (
+                        <tr key={index}>
+                          <td>{index + 1}</td>
+                          <td>
+                            <div>{nameTeacher} </div>
+                          </td>
+                          <td>
+                            <div>{roleTeacher}</div>
+                          </td>
+                          <td>
+                            <div>{total}</div>
+                          </td>
+                        </tr>
+                      )
+                    )}
                     <tr>
                       <td style={{ border: "none" }}></td>
                       <td style={{ border: "none" }}></td>
@@ -808,7 +901,9 @@ function UpdateResult() {
                         <div>Kết quả: </div>
                       </td>
 
-                      <td style={{ border: "none" }}>{editResult.scoreResult?.average}</td>
+                      <td style={{ border: "none" }}>
+                        {editResult.scoreResult?.average}
+                      </td>
                     </tr>
                   </tbody>
                 </table>

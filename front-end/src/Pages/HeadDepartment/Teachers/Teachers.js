@@ -11,8 +11,7 @@ import styles from "./Teachers.module.scss";
 const cx = classNames.bind(styles);
 
 function Teachers() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [teachers, setTeachers] = useState([]);
   const [newTeacher, setNewTeacher] = useState({});
@@ -34,7 +33,7 @@ function Teachers() {
   useEffect(() => {
     // Gọi API để lấy danh sách giáo viên
     axios
-      .get(`${host}:${port}/api/teachers`, {
+      .get(`${url}/api/teachers`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -47,7 +46,10 @@ function Teachers() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -64,10 +66,15 @@ function Teachers() {
   }, [isOpenDeleteModal]);
 
   const handleAddTeacher = () => {
-    if (newTeacher.code && newTeacher.name && newTeacher.nameMajor && newTeacher.roleTeacher) {
+    if (
+      newTeacher.code &&
+      newTeacher.name &&
+      newTeacher.nameMajor &&
+      newTeacher.roleTeacher
+    ) {
       // Gọi API để thêm giáo viên mới
       axios
-        .post(`${host}:${port}/api/teachers`, newTeacher, {
+        .post(`${url}/api/teachers`, newTeacher, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -89,10 +96,15 @@ function Teachers() {
 
   const handleEditTeacher = () => {
     // Gọi API để sửa giáo viên
-    if (editTeacher.name && editTeacher.code && editTeacher.nameMajor && editTeacher.roleTeacher) {
+    if (
+      editTeacher.name &&
+      editTeacher.code &&
+      editTeacher.nameMajor &&
+      editTeacher.roleTeacher
+    ) {
       axios
         .put(
-          `${host}:${port}/api/teachers/${editTeacher._id}`,
+          `${url}/api/teachers/${editTeacher._id}`,
           { editTeacher, initialValueComboBox },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -127,12 +139,14 @@ function Teachers() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa giáo viên
     axios
-      .delete(`${host}:${port}/api/teachers/${id}`, {
+      .delete(`${url}/api/teachers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
         // Cập nhật danh sách giáo viên
-        const updatedTeachers = teachers.filter((teacher) => teacher._id !== id);
+        const updatedTeachers = teachers.filter(
+          (teacher) => teacher._id !== id
+        );
         setTeachers(updatedTeachers);
         setError("");
       })
@@ -142,7 +156,7 @@ function Teachers() {
   };
   const handleSearchTeacher = () => {
     axios
-      .get(`${host}:${port}/api/teachers?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/teachers?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -196,8 +210,14 @@ function Teachers() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý giáo viên</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTeacher} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchTeacher}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm giáo viên
         </button>
       </div>
@@ -246,8 +266,13 @@ function Teachers() {
 
                   {idActiveRow === teacher._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}
@@ -300,7 +325,11 @@ function Teachers() {
               title: "Chức vụ",
               index: 3,
               onSelectionChange: handleChangeAddSelf,
-              selfData: [{ name: "Trưởng khoa" }, { name: "Trưởng ngành" }, { name: "Giáo viên" }],
+              selfData: [
+                { name: "Trưởng khoa" },
+                { name: "Trưởng ngành" },
+                { name: "Giáo viên" },
+              ],
             },
           ]}
         />
@@ -330,7 +359,11 @@ function Teachers() {
               title: "Chức vụ",
               index: 3,
               onSelectionChange: handleChangeEditSelf,
-              selfData: [{ name: "Trưởng khoa" }, { name: "Trưởng ngành" }, { name: "Giáo viên" }],
+              selfData: [
+                { name: "Trưởng khoa" },
+                { name: "Trưởng ngành" },
+                { name: "Giáo viên" },
+              ],
               oldData: editTeacher.roleTeacher,
               onGetInitialValue: handleChangeInitialValueComboBox,
             },

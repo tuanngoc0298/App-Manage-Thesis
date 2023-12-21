@@ -11,8 +11,7 @@ import styles from "./ApproveRegisterPresent.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveRegisterPresent() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [registers, setRegisters] = useState([]);
 
@@ -37,8 +36,8 @@ function ApproveRegisterPresent() {
   function getAllRegister() {
     axios
       .get(
-        `${host}:${port}/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        `${url}/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setRegisters(res.data);
@@ -52,7 +51,7 @@ function ApproveRegisterPresent() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/approveRegisterPresent/${editRegister._id}`,
+          `${url}/api/approveRegisterPresent/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -95,7 +94,10 @@ function ApproveRegisterPresent() {
       <h2 className={cx("title")}>Duyệt đăng ký bảo vệ</h2>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllRegister} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllRegister}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox
@@ -181,10 +183,12 @@ function ApproveRegisterPresent() {
                 <div className={cx("wrap-details")}>
                   <div className={cx("details__linkDownload")}>
                     <span className={cx("details__title")}>Tệp tin:</span>
-                    <span className="material-symbols-outlined">folder_zip</span>
+                    <span className="material-symbols-outlined">
+                      folder_zip
+                    </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${host}:${port}/api/approveRegisterPresent/${editRegister._id}`}
+                      href={`${url}/api/approveRegisterPresent/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}
@@ -204,21 +208,37 @@ function ApproveRegisterPresent() {
                 </div>
                 <div className={cx("details__checkBox")}>
                   <label>
-                    <input type="radio" checked={isApprove === "Duyệt"} onChange={() => setIsApprove("Duyệt")} /> Phê
-                    duyệt
+                    <input
+                      type="radio"
+                      checked={isApprove === "Duyệt"}
+                      onChange={() => setIsApprove("Duyệt")}
+                    />{" "}
+                    Phê duyệt
                   </label>
                   <label>
-                    <input type="radio" checked={isApprove === "Từ chối"} onChange={() => setIsApprove("Từ chối")} /> Từ
-                    chối
+                    <input
+                      type="radio"
+                      checked={isApprove === "Từ chối"}
+                      onChange={() => setIsApprove("Từ chối")}
+                    />{" "}
+                    Từ chối
                   </label>
                 </div>
               </div>
-              {errorApprove && <div className={cx("message")}>{errorApprove}</div>}
+              {errorApprove && (
+                <div className={cx("message")}>{errorApprove}</div>
+              )}
               <div className={cx("btns")}>
-                <button className={cx("btn-modal")} onClick={handleCancleApprove}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleCancleApprove}
+                >
                   Hủy
                 </button>
-                <button className={cx("btn-modal")} onClick={handleApproveRegisterPresent}>
+                <button
+                  className={cx("btn-modal")}
+                  onClick={handleApproveRegisterPresent}
+                >
                   Lưu
                 </button>
               </div>

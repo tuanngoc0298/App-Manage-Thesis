@@ -11,8 +11,7 @@ import styles from "./ApproveSuggestTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function ApproveSuggestTopics() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [suggestTopics, setSuggestTopics] = useState([]);
 
@@ -36,8 +35,8 @@ function ApproveSuggestTopics() {
   function getAllSuggestTopics() {
     axios
       .get(
-        `${host}:${port}/api/approveSuggesttopics?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        `${url}/api/approveSuggesttopics?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
         setSuggestTopics(res.data);
@@ -52,7 +51,7 @@ function ApproveSuggestTopics() {
     if (isApprove) {
       axios
         .put(
-          `${host}:${port}/api/approveSuggesttopics/${editSuggestTopic._id}`,
+          `${url}/api/approveSuggesttopics/${editSuggestTopic._id}`,
           { editSuggestTopic, isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -92,7 +91,10 @@ function ApproveSuggestTopics() {
       <h2 className={cx("title")}>Duyệt đề tài đề xuất</h2>
 
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllSuggestTopics} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllSuggestTopics}
+        />
       </div>
       <div className={cx("filter-comboBox")}>
         <ComboBox

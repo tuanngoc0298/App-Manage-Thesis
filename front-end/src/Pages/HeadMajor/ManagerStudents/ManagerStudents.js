@@ -13,12 +13,15 @@ import styles from "./ManagerStudents.module.scss";
 const cx = classNames.bind(styles);
 
 function ManagerStudents() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
+
   const { nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   const [students, setStudents] = useState([]);
-  const [newStudent, setNewStudent] = useState({ nameMajor, state: "Đăng ký đề tài" });
+  const [newStudent, setNewStudent] = useState({
+    nameMajor,
+    state: "Đăng ký đề tài",
+  });
   const [editStudent, setEditStudent] = useState({});
   const [isOpenAddModal, setIsOpenAddModal] = useState(false);
   const [isOpenEditModal, setIsOpenEditModal] = useState(false);
@@ -45,7 +48,10 @@ function ManagerStudents() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -65,10 +71,10 @@ function ManagerStudents() {
     setErrorImport("");
     axios
       .get(
-        `${host}:${port}/api/students?searchQuery=${searchQuery}${
+        `${url}/api/students?searchQuery=${searchQuery}${
           isFilterByMajor ? `&nameMajor=${nameMajor}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
-        { withCredentials: true, baseURL: `${host}:${port}` }
+        { withCredentials: true, baseURL: `${url}` }
       )
       .then((response) => {
         setStudents(response.data);
@@ -90,9 +96,9 @@ function ManagerStudents() {
       formData.append("file", file);
       const form = document.getElementById("formImport");
       axios
-        .post(`${host}:${port}/api/studentsUpload`, formData, {
+        .post(`${url}/api/studentsUpload`, formData, {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         })
         .then((res) => {
           setErrorImport("");
@@ -115,10 +121,16 @@ function ManagerStudents() {
   };
 
   const handleAddStudent = () => {
-    if (newStudent.code && newStudent.name && newStudent.year && newStudent.semester && newStudent.state) {
+    if (
+      newStudent.code &&
+      newStudent.name &&
+      newStudent.year &&
+      newStudent.semester &&
+      newStudent.state
+    ) {
       // Gọi API để thêm sinh viên mới
       axios
-        .post(`${host}:${port}/api/students`, newStudent, {
+        .post(`${url}/api/students`, newStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -140,9 +152,15 @@ function ManagerStudents() {
 
   const handleEditStudent = () => {
     // Gọi API để sửa sinh viên
-    if (editStudent.name && editStudent.code && editStudent.year && editStudent.semester && editStudent.state) {
+    if (
+      editStudent.name &&
+      editStudent.code &&
+      editStudent.year &&
+      editStudent.semester &&
+      editStudent.state
+    ) {
       axios
-        .put(`${host}:${port}/api/students/${editStudent._id}`, editStudent, {
+        .put(`${url}/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -174,7 +192,7 @@ function ManagerStudents() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa sinh viên
     axios
-      .delete(`${host}:${port}/api/students/${id}`, {
+      .delete(`${url}/api/students/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -255,15 +273,25 @@ function ManagerStudents() {
         </button>
       </div>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={getAllStudents} />
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={getAllStudents}
+        />
         <div style={{ color: "red" }}>{errorImport}</div>
         {isFilterByMajor && (
           <div className={cx("function__allow")}>
             <form id="formImport" className={cx("importFile")}>
-              <input type="file" accept=".xlsx, .xls" onChange={handleFileUpload} />
+              <input
+                type="file"
+                accept=".xlsx, .xls"
+                onChange={handleFileUpload}
+              />
               <button onClick={handleUpload}>Tải lên</button>
             </form>
-            <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+            <button
+              className={cx("btn", "btn-add")}
+              onClick={() => setIsOpenAddModal(true)}
+            >
               Thêm sinh viên
             </button>
           </div>
@@ -342,8 +370,13 @@ function ManagerStudents() {
 
                     {idActiveRow === student._id && (
                       <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                        <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                          <span className="material-symbols-outlined">delete</span>
+                        <button
+                          className={cx("btn")}
+                          onClick={() => setIsOpenDeleteModal(true)}
+                        >
+                          <span className="material-symbols-outlined">
+                            delete
+                          </span>
                         </button>
                         <button
                           className={cx("btn")}
@@ -352,7 +385,9 @@ function ManagerStudents() {
                             setIsOpenEditModal(true);
                           }}
                         >
-                          <span className="material-symbols-outlined">edit</span>
+                          <span className="material-symbols-outlined">
+                            edit
+                          </span>
                         </button>
                       </div>
                     )}

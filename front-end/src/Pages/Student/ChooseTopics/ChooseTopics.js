@@ -11,8 +11,8 @@ import styles from "./ChooseTopics.module.scss";
 const cx = classNames.bind(styles);
 
 function ChooseTopics() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
+
   const { code, nameMajor } = jwt_decode(Cookies.get("token")).userInfo;
 
   let editTopic = {};
@@ -34,7 +34,10 @@ function ChooseTopics() {
 
     setIsSelectedTopicTab(false);
     axios
-      .get(`${host}:${port}/api/topicsByMajor`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/topicsByMajor`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setTopics(res.data);
         setError("");
@@ -47,7 +50,10 @@ function ChooseTopics() {
   function getSelectedTopic() {
     setIsSelectedTopicTab(true);
     axios
-      .get(`${host}:${port}/api/chooseTopics`, { withCredentials: true, baseURL: `${host}:${port}` })
+      .get(`${url}/api/chooseTopics`, {
+        withCredentials: true,
+        baseURL: `${url}`,
+      })
       .then((res) => {
         setTopics(res.data);
         setError("");
@@ -60,11 +66,11 @@ function ChooseTopics() {
   const handleRegisterTopic = () => {
     axios
       .put(
-        `${host}:${port}/api/chooseTopics/${editTopic._id}`,
+        `${url}/api/chooseTopics/${editTopic._id}`,
         { editTopic, code },
         {
           withCredentials: true,
-          baseURL: `${host}:${port}`,
+          baseURL: `${url}`,
         }
       )
       .then((res) => {
@@ -80,9 +86,9 @@ function ChooseTopics() {
   const handleCancleRegisterTopic = () => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`${host}:${port}/api/chooseTopics/${editTopic._id}`, {
+      .delete(`${url}/api/chooseTopics/${editTopic._id}`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         // Cập nhật danh sách đề tài
@@ -97,9 +103,9 @@ function ChooseTopics() {
 
   const handleSearchTopic = () => {
     axios
-      .get(`${host}:${port}/api/topicsByMajor?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/topicsByMajor?searchQuery=${searchQuery}`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         setTopics(res.data);
@@ -118,11 +124,20 @@ function ChooseTopics() {
       </div>
       {!isSelectedTopicTab && (
         <div className={cx("function")}>
-          <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchTopic} />
+          <SearchBar
+            setSearchQuery={setSearchQuery}
+            handleSearch={handleSearchTopic}
+          />
           <div style={{ color: "red" }}>{errorRegister}</div>
         </div>
       )}
-      {<div style={{ color: "red", textAlign: "center", marginBottom: "10px" }}>{error}</div>}
+      {
+        <div
+          style={{ color: "red", textAlign: "center", marginBottom: "10px" }}
+        >
+          {error}
+        </div>
+      }
       <div>
         <table className={cx("data")}>
           <thead>
@@ -152,7 +167,10 @@ function ChooseTopics() {
                 <td className={cx("column__functions")}>
                   {isSelectedTopicTab && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={handleCancleRegisterTopic}>
+                      <button
+                        className={cx("btn")}
+                        onClick={handleCancleRegisterTopic}
+                      >
                         Hủy đăng ký
                       </button>
                     </div>

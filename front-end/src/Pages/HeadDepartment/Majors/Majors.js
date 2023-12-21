@@ -11,8 +11,7 @@ import styles from "./Majors.module.scss";
 const cx = classNames.bind(styles);
 
 function Majors() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [majors, setMajors] = useState([]);
   const [newMajor, setNewMajor] = useState({});
@@ -34,7 +33,7 @@ function Majors() {
   useEffect(() => {
     // Gọi API để lấy danh sách ngành
     axios
-      .get(`${host}:${port}/api/majors`, {
+      .get(`${url}/api/majors`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -47,7 +46,10 @@ function Majors() {
 
   useEffect(() => {
     function handleClickOutside(event) {
-      if (wrapperBtnRef.current && !wrapperBtnRef.current.contains(event.target)) {
+      if (
+        wrapperBtnRef.current &&
+        !wrapperBtnRef.current.contains(event.target)
+      ) {
         setIdActiveRow(null);
       }
     }
@@ -67,7 +69,7 @@ function Majors() {
     if (newMajor.codeMajor && newMajor.nameMajor && newMajor.nameDepartment) {
       // Gọi API để thêm ngành mới
       axios
-        .post(`${host}:${port}/api/majors`, newMajor, {
+        .post(`${url}/api/majors`, newMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -90,9 +92,13 @@ function Majors() {
   const handleEdiMajor = () => {
     // Gọi API để sửa ngành
 
-    if (editMajor.nameDepartment && editMajor.nameMajor && editMajor.codeMajor) {
+    if (
+      editMajor.nameDepartment &&
+      editMajor.nameMajor &&
+      editMajor.codeMajor
+    ) {
       axios
-        .put(`${host}:${port}/api/majors/${editMajor._id}`, editMajor, {
+        .put(`${url}/api/majors/${editMajor._id}`, editMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -124,7 +130,7 @@ function Majors() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa ngành
     axios
-      .delete(`${host}:${port}/api/majors/${id}`, {
+      .delete(`${url}/api/majors/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -139,7 +145,7 @@ function Majors() {
   };
   const handleSearchMajor = () => {
     axios
-      .get(`${host}:${port}/api/majors?searchQuery=${searchQuery}`, {
+      .get(`${url}/api/majors?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {
@@ -183,8 +189,14 @@ function Majors() {
     <DefaultLayout>
       <h2 className={cx("title")}>Quản lý ngành</h2>
       <div className={cx("function")}>
-        <SearchBar setSearchQuery={setSearchQuery} handleSearch={handleSearchMajor} />
-        <button className={cx("btn", "btn-add")} onClick={() => setIsOpenAddModal(true)}>
+        <SearchBar
+          setSearchQuery={setSearchQuery}
+          handleSearch={handleSearchMajor}
+        />
+        <button
+          className={cx("btn", "btn-add")}
+          onClick={() => setIsOpenAddModal(true)}
+        >
           Thêm ngành
         </button>
       </div>
@@ -233,8 +245,13 @@ function Majors() {
                   </button>
                   {idActiveRow === major._id && (
                     <div ref={wrapperBtnRef} className={cx("wrapper__btn")}>
-                      <button className={cx("btn")} onClick={() => setIsOpenDeleteModal(true)}>
-                        <span className="material-symbols-outlined">delete</span>
+                      <button
+                        className={cx("btn")}
+                        onClick={() => setIsOpenDeleteModal(true)}
+                      >
+                        <span className="material-symbols-outlined">
+                          delete
+                        </span>
                       </button>
                       <button
                         className={cx("btn")}

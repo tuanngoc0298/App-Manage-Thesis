@@ -11,8 +11,7 @@ import styles from "./ProtectionSchedule.module.scss";
 const cx = classNames.bind(styles);
 
 function ProtectionSchedule() {
-  const host = process.env.REACT_APP_HOST;
-  const port = process.env.REACT_APP_PORT;
+  const url = process.env.REACT_APP_URL;
 
   const [schedule, setSchedule] = useState({});
 
@@ -24,9 +23,9 @@ function ProtectionSchedule() {
 
   function getSchedule() {
     axios
-      .get(`${host}:${port}/api/protectionSchedule`, {
+      .get(`${url}/api/protectionSchedule`, {
         withCredentials: true,
-        baseURL: `${host}:${port}`,
+        baseURL: `${url}`,
       })
       .then((res) => {
         setSchedule(res.data);
@@ -65,12 +64,15 @@ function ProtectionSchedule() {
                 </td>
                 <td>
                   <div>
-                    {schedule.protectionCouncil?.shift}/{schedule.protectionCouncil?.roomCode}
+                    {schedule.protectionCouncil?.shift}/
+                    {schedule.protectionCouncil?.roomCode}
                   </div>
                 </td>
                 <td>
                   <div>
-                    {new Date(schedule.protectionCouncil?.time).toLocaleDateString("vi-VI", {
+                    {new Date(
+                      schedule.protectionCouncil?.time
+                    ).toLocaleDateString("vi-VI", {
                       day: "2-digit",
                       month: "2-digit",
                       year: "2-digit",
