@@ -40,20 +40,22 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios.post(`${host}:${port}/api/login`, { username, password }).then((res) => {
-        const {
-          token,
-          userInfo: { name },
-          role,
-        } = res.data;
+      await axios
+        .post(`${host}:${port}/api/login`, { username, password })
+        .then((res) => {
+          const {
+            token,
+            userInfo: { name },
+            role,
+          } = res.data;
 
-        Cookies.set("token", token, { expires: 1 / 4 });
-        onLogin(token, name, role);
-        navigate("/");
-      });
+          Cookies.set("token", token, { expires: 1 / 4 });
+          onLogin(token, name, role);
+          navigate("/");
+        });
       setError("");
     } catch (err) {
-      setError(err.response.data);
+      setError(err);
     }
   };
 
@@ -69,7 +71,10 @@ function Login({ onLogin }) {
             <input
               type="text"
               placeholder={isFocusedName ? "" : "Tên đăng nhập"}
-              className={cx("input", `${inputValueName && !isFocusedName ? "hasVal" : ""}`)}
+              className={cx(
+                "input",
+                `${inputValueName && !isFocusedName ? "hasVal" : ""}`
+              )}
               value={username}
               onChange={(e) => {
                 setUsername(e.target.value);
@@ -78,7 +83,9 @@ function Login({ onLogin }) {
               onFocus={handleFocusName}
               onBlur={handleBlurName}
             ></input>
-            <span className={cx("material-symbols-outlined", "focus__icon")}>person</span>
+            <span className={cx("material-symbols-outlined", "focus__icon")}>
+              person
+            </span>
             <span className={cx("focus-input")}></span>
           </div>
 
@@ -86,7 +93,10 @@ function Login({ onLogin }) {
             <input
               type="password"
               placeholder={isFocusedPass ? "" : "Mật khẩu"}
-              className={cx("input", `${inputValuePass && !isFocusedPass ? "hasVal" : ""}`)}
+              className={cx(
+                "input",
+                `${inputValuePass && !isFocusedPass ? "hasVal" : ""}`
+              )}
               value={password}
               onChange={(e) => {
                 setPassword(e.target.value);
@@ -95,12 +105,20 @@ function Login({ onLogin }) {
               onFocus={handleFocusPass}
               onBlur={handleBlurPass}
             ></input>
-            <span className={cx("material-symbols-outlined", "focus__icon")}>lock</span>
+            <span className={cx("material-symbols-outlined", "focus__icon")}>
+              lock
+            </span>
             <span className={cx("focus-input")}></span>
           </div>
           {error && <div className={cx("message")}>{error}</div>}
           <div className={cx("btn")}>
-            <input type="submit" value="Đăng nhập" name="btnLogin" id="btnLogin" className={cx("btn-input")} />
+            <input
+              type="submit"
+              value="Đăng nhập"
+              name="btnLogin"
+              id="btnLogin"
+              className={cx("btn-input")}
+            />
           </div>
           <div className={cx("forgetPass")}>
             <Link to="/forgetPassWord">Quên mật khẩu?</Link>
