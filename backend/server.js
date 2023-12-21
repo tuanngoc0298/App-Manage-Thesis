@@ -66,9 +66,19 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 app.use(express.json({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+
+const whitelist = [
+  "http://localhost:3000",
+  "https://app-manage-thesis.vercel.app",
+];
 const corsOptions = {
-  credentials: true, //access-control-allow-credentials:true
-  origin: ["http://localhost:3000", "https://app-manage-thesis.vercel.app"],
+  origin: (origin, callback) => {
+    if (whitelist.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error());
+    }
+  },
 };
 app.use(cors(corsOptions));
 
