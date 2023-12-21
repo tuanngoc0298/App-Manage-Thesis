@@ -73,13 +73,7 @@ const whitelist = [
 ];
 const corsOptions = {
   credentials: true,
-  origin: (origin, callback) => {
-    if (whitelist.indexOf(origin) !== -1) {
-      callback(null, true);
-    } else {
-      callback(new Error());
-    }
-  },
+  origin: "https://app-manage-thesis.vercel.app",
   methods: "GET,PUT,POST,PATH,DELETE",
 };
 app.use(cors(corsOptions));
