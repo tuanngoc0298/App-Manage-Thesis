@@ -8,6 +8,8 @@ const ChooseTopicController = {
   getTopicsByMajor: async (req, res) => {
     const { searchQuery } = req.query;
     const decoded = jwt.verify(req.cookies.token, process.env.JWT_ACCESS_KEY);
+    console.log(req.cookies);
+    console.log(decoded);
     const { nameMajor, year, semester } = decoded.userInfo;
     try {
       if (searchQuery) {
@@ -40,7 +42,9 @@ const ChooseTopicController = {
       const { code } = decoded.userInfo;
 
       const topicStudent = await TopicStudent.findOne({ codeStudent: code });
-      const topicSelected = await Topic.find({ nameTopic: topicStudent ? topicStudent.nameTopic : "" });
+      const topicSelected = await Topic.find({
+        nameTopic: topicStudent ? topicStudent.nameTopic : "",
+      });
 
       res.json(topicSelected);
     } catch (error) {
@@ -70,7 +74,9 @@ const ChooseTopicController = {
         await topicStudent.save();
         res.status(200).json({ message: "Đăng ký thành công" });
       } else {
-        res.status(500).json({ message: "Bạn phải hủy đăng ký đề tài đề xuất trước" });
+        res
+          .status(500)
+          .json({ message: "Bạn phải hủy đăng ký đề tài đề xuất trước" });
       }
     } catch (error) {
       res.status(500).json({ message: "Bạn chỉ được đăng ký 1 đề tài." });
