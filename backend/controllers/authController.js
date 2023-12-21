@@ -24,7 +24,12 @@ const authController = {
       const salt = await bcrypt.genSalt(10);
       const hashedPassword = await bcrypt.hash(password, salt);
 
-      const user = await new User({ username, password: hashedPassword, role, code: userCode });
+      const user = await new User({
+        username,
+        password: hashedPassword,
+        role,
+        code: userCode,
+      });
       await user.save();
       res.status(201).json({ message: "Đăng ký thành công!" });
     } catch (error) {
@@ -66,11 +71,17 @@ const authController = {
           break;
       }
       if (!userInfo) {
-        return res.status(500).send("Bạn chưa có thông tin trong cơ sở dữ liệu!");
+        return res
+          .status(500)
+          .send("Bạn chưa có thông tin trong cơ sở dữ liệu!");
       }
-      const token = jwt.sign({ _id: user._id, role: user.role, userInfo }, process.env.JWT_ACCESS_KEY, {
-        expiresIn: 60 * 60 * 6,
-      });
+      const token = jwt.sign(
+        { _id: user._id, role: user.role, userInfo },
+        process.env.JWT_ACCESS_KEY,
+        {
+          expiresIn: 60 * 60 * 6,
+        }
+      );
       res.cookie("token", token);
 
       res.json({ token, role: user.role, userInfo });
@@ -103,7 +114,10 @@ const authController = {
     const { email, username } = req.body;
     const user = await User.exists({ username, email });
 
-    if (!user) return res.status(500).send("Mã sinh viên và email không khớp nhau hoặc dữ liệu sai!");
+    if (!user)
+      return res
+        .status(500)
+        .send("Mã sinh viên và email không khớp nhau hoặc dữ liệu sai!");
 
     const transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -131,7 +145,11 @@ const authController = {
         console.log(error);
         res.status(500).send("Có lỗi xảy ra khi gửi email.");
       } else {
-        res.status(200).send("Email đã được gửi thành công. Vui lòng kiểm tra email của bạn.");
+        res
+          .status(200)
+          .send(
+            "Email đã được gửi thành công. Vui lòng kiểm tra email của bạn."
+          );
       }
     });
   },
@@ -143,7 +161,9 @@ const authController = {
       const hashedPassword = await bcrypt.hash(newPassword, salt);
 
       await User.findOneAndUpdate({ username }, { password: hashedPassword });
-      res.status(200).sendFile(path.join(__dirname, "../view", "resetPassword.html"));
+      res
+        .status(200)
+        .sendFile(path.join(__dirname, "../view", "resetPassword.html"));
     } catch (err) {
       console.log(err);
       res.status(500).send("Đổi mật khẩu không thành công!.");

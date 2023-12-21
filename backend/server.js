@@ -80,6 +80,7 @@ const corsOptions = {
       callback(new Error());
     }
   },
+  methods: "GET,PUT,POST,PATH,DELETE",
 };
 app.use(cors(corsOptions));
 
