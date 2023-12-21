@@ -47,7 +47,10 @@ const {
 } = require("./routes");
 
 // Kết nối đến cơ sở dữ liệu MongoDB
-mongoose.connect(process.env.MONGODB_URL, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
 const db = mongoose.connection;
 
 db.on("error", console.error.bind(console, "Kết nối MongoDB thất bại!"));
@@ -59,10 +62,12 @@ db.once("open", () => {
 // app.use(bodyParser.json());
 app.use(cookieParser());
 
-app.use(express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+app.use(
+  express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
+);
 app.use(express.json({ limit: "50mb", extended: true, parameterLimit: 50000 }));
 const corsOptions = {
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "https://app-manage-thesis.vercel.app"],
   credentials: true, //access-control-allow-credentials:true
 };
 app.use(cors(corsOptions));

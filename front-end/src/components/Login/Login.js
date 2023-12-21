@@ -46,7 +46,7 @@ function Login({ onLogin }) {
             token,
             userInfo: { name },
             role,
-          } = res.data;
+          } = res?.data;
 
           Cookies.set("token", token, { expires: 1 / 4 });
           onLogin(token, name, role);
@@ -54,7 +54,8 @@ function Login({ onLogin }) {
         });
       setError("");
     } catch (err) {
-      setError(err);
+      // console.log(err);
+      setError(err.response.data);
     }
   };
 
