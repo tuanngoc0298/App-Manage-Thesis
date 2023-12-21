@@ -73,8 +73,7 @@ const whitelist = [
 ];
 const corsOptions = {
   credentials: true,
-  origin: "https://app-manage-thesis.netlify.app",
-  methods: "GET,PUT,POST,PATH,DELETE",
+  origin: whitelist,
 };
 app.use(cors(corsOptions));
 
