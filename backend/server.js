@@ -66,11 +66,8 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 app.use(express.json({ limit: "50mb", extended: true, parameterLimit: 50000 }));
-const corsOptions = {
-  origin: ["http://localhost:3000", "https://app-manage-thesis.vercel.app"],
-  credentials: true, //access-control-allow-credentials:true
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use("/api", authRoutes);
 app.use("/api", statisticsCompletionRoutes);
