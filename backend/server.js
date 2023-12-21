@@ -73,7 +73,7 @@ const whitelist = [
 ];
 const corsOptions = {
   credentials: true,
-  origin: "https://app-manage-thesis.vercel.app",
+  origin: "https://app-manage-thesis.netlify.app",
   methods: "GET,PUT,POST,PATH,DELETE",
 };
 app.use(cors(corsOptions));
