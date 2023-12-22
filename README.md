@@ -1,6 +1,6 @@
 <div align="center">
 
-![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/d06a063c-f2da-41a0-8231-c44865a8599a)
+![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/db54afdc-de42-4988-98a2-f570b0e4dcc5)
 
 # Web App quản lý khóa luận tốt nghiệp
 
