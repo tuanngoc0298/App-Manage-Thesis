@@ -10,6 +10,7 @@ const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const app = express();
 app.set("trust proxy", 1);
+
 const whitelist = [
   "http://localhost:3000",
   "https://app-manage-thesis.vercel.app",
