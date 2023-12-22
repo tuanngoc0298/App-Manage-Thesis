@@ -26,7 +26,7 @@ function ComboBox({
   useEffect(() => {
     if (api) {
       axios
-        .get(`${url}/api/${api}`, {
+        .get(`/api/${api}`, {
           withCredentials: true,
           baseURL: `${url}`,
         })

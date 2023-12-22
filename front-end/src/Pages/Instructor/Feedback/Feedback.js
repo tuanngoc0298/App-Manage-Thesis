@@ -35,7 +35,7 @@ function Feedback() {
   function getAllStudents() {
     axios
       .get(
-        `${url}/api/feedback?searchQuery=${searchQuery}${
+        `/api/feedback?searchQuery=${searchQuery}${
           isTabFeedback ? `&isTabFeedback=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -62,7 +62,7 @@ function Feedback() {
       );
       formData.append("file", file);
       axios
-        .put(`${url}/api/feedback/${editFeedback._id}`, formData, {
+        .put(`/api/feedback/${editFeedback._id}`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
           headers: {
@@ -224,7 +224,7 @@ function Feedback() {
                   <td>
                     <a
                       className={cx("linkDownload")}
-                      href={`${url}/api/feedback/${feedback._id}`}
+                      href={`/api/feedback/${feedback._id}`}
                       download={feedback.feedback?.fileFeedback?.nameFile}
                     >
                       {feedback.feedback?.fileFeedback?.nameFile}

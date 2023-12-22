@@ -54,7 +54,7 @@ function EstablishCouncil() {
   function getAllStudents() {
     axios
       .get(
-        `${url}/api/establishCouncil?searchQuery=${searchQuery}${
+        `/api/establishCouncil?searchQuery=${searchQuery}${
           isTabCouncil ? `&isTabCouncil=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -79,7 +79,7 @@ function EstablishCouncil() {
       editCouncil.protectionCouncil?.members?.commissioner
     ) {
       axios
-        .put(`${url}/api/establishCouncil/${editCouncil._id}`, editCouncil, {
+        .put(`/api/establishCouncil/${editCouncil._id}`, editCouncil, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {

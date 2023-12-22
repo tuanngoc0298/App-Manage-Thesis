@@ -35,7 +35,7 @@ function ApproveSuggestTopics() {
   function getAllSuggestTopics() {
     axios
       .get(
-        `${url}/api/approveSuggesttopics?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        `/api/approveSuggesttopics?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
@@ -51,7 +51,7 @@ function ApproveSuggestTopics() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/approveSuggesttopics/${editSuggestTopic._id}`,
+          `/api/approveSuggesttopics/${editSuggestTopic._id}`,
           { editSuggestTopic, isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },

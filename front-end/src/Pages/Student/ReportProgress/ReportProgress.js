@@ -39,7 +39,7 @@ function ReportProgress() {
   }
   function getTopic() {
     axios
-      .get(`${url}/api/reportProgress`, {
+      .get(`/api/reportProgress`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -59,7 +59,7 @@ function ReportProgress() {
       formData.append("file", reportFile);
 
       axios
-        .post(`${url}/api/reportProgress`, formData, {
+        .post(`/api/reportProgress`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
           headers: {
@@ -138,7 +138,7 @@ function ReportProgress() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${url}/api/approveReportProgess/${topic._id}`}
+                    href={`/api/approveReportProgess/${topic._id}`}
                     download={topic.file.nameFile}
                   >
                     {topic.file.nameFile}

@@ -28,7 +28,7 @@ function StatisticsStudent() {
   function getStatistics() {
     axios
       .get(
-        `${url}/api/statisticsStudent?searchQuery=${searchQuery}&year=${filterByYear}&department=${filterByDepartment}`,
+        `/api/statisticsStudent?searchQuery=${searchQuery}&year=${filterByYear}&department=${filterByDepartment}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {

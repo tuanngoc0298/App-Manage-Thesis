@@ -17,7 +17,7 @@ function UpdateEmail() {
   useEffect(getEmail, []);
   function getEmail() {
     axios
-      .get(`${url}/api/getEmail`, {
+      .get(`/api/getEmail`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -33,7 +33,7 @@ function UpdateEmail() {
     if (!email) return setError("Vui lòng nhập thông tin!");
     axios
       .put(
-        `${url}/api/updateEmail`,
+        `/api/updateEmail`,
         { email },
         { withCredentials: true, baseURL: `${url}` }
       )

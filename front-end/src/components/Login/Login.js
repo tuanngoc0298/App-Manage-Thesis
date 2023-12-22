@@ -39,23 +39,21 @@ function Login({ onLogin }) {
   const handleLogin = async (e) => {
     e.preventDefault();
     try {
-      await axios
-        .post(`${url}/api/login`, { username, password })
-        .then((res) => {
-          const {
-            token,
-            userInfo: { name },
-            role,
-          } = res?.data;
+      await axios.post(`/api/login`, { username, password }).then((res) => {
+        const {
+          token,
+          userInfo: { name },
+          role,
+        } = res?.data;
 
-          Cookies.set("token", token, {
-            sameSite: "None",
-            secure: true,
-            expires: 1 / 4,
-          });
-          onLogin(token, name, role);
-          navigate("/");
+        Cookies.set("token", token, {
+          sameSite: "None",
+          secure: true,
+          expires: 1 / 4,
         });
+        onLogin(token, name, role);
+        navigate("/");
+      });
       setError("");
     } catch (err) {
       // console.log(err);

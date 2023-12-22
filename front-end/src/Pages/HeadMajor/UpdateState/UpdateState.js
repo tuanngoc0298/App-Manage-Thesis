@@ -36,7 +36,7 @@ function UpdateState() {
   function getAllRegister() {
     axios
       .get(
-        `${url}/api/updateState?searchQuery=${searchQuery}${
+        `/api/updateState?searchQuery=${searchQuery}${
           isFilterApproved ? `&isTabComplete=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -53,7 +53,7 @@ function UpdateState() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/updateState/${editStudent._id}`,
+          `/api/updateState/${editStudent._id}`,
           { isApprove },
           {
             headers: { Authorization: `Bearer ${token}` },

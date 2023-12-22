@@ -36,7 +36,7 @@ function ApproveFinalReport() {
   function getAllRegister() {
     axios
       .get(
-        `${url}/api/approveFinalReport?searchQuery=${searchQuery}${
+        `/api/approveFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -53,7 +53,7 @@ function ApproveFinalReport() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/approveFinalReport/${editRegister._id}`,
+          `/api/approveFinalReport/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -192,7 +192,7 @@ function ApproveFinalReport() {
                     <div>
                       <a
                         className={cx("linkDownload")}
-                        href={`${url}/api/approveFinalReport/${register._id}`}
+                        href={`/api/approveFinalReport/${register._id}`}
                         download={register.fileFinal.nameFile}
                       >
                         {register.fileFinal.nameFile}
@@ -234,7 +234,7 @@ function ApproveFinalReport() {
                     </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${url}/api/approveFinalReport/${editRegister._id}`}
+                      href={`/api/approveFinalReport/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}

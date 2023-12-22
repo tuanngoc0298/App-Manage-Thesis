@@ -26,7 +26,7 @@ function InstructedStudents() {
   function getInstructedStudents() {
     axios
       .get(
-        `${url}/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        `/api/instructedStudents?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {

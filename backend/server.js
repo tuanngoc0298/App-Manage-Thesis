@@ -9,7 +9,8 @@ dotenv.config();
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
 const app = express();
-app.set("trust proxy", 1);
+// app.set("trust proxy", 1);
+app.use(express.static("build"));
 
 const whitelist = [
   "http://localhost:3000",

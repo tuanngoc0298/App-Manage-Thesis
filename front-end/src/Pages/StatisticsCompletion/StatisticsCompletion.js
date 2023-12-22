@@ -32,7 +32,7 @@ function StatisticsCompletion() {
   function getStatistics() {
     axios
       .get(
-        `${url}/api/statisticsCompletion?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}&department=${filterByDepartment}`,
+        `/api/statisticsCompletion?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}&department=${filterByDepartment}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {

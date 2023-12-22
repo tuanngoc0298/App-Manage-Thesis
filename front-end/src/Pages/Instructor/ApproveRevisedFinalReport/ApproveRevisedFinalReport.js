@@ -55,7 +55,7 @@ function ApproveRevisedFinalReport() {
   function getAllReports() {
     axios
       .get(
-        `${url}/api/approveRevisedFinalReport?searchQuery=${searchQuery}${
+        `/api/approveRevisedFinalReport?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -71,7 +71,7 @@ function ApproveRevisedFinalReport() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`${url}/api/approveRevisedReportDetail/${detail._id}`, {
+        .get(`/api/approveRevisedReportDetail/${detail._id}`, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -88,7 +88,7 @@ function ApproveRevisedFinalReport() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/approveRevisedFinalReport/${editReport._id}`,
+          `/api/approveRevisedFinalReport/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -268,7 +268,7 @@ function ApproveRevisedFinalReport() {
                     </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${url}/api/approveRevisedFinalReport/${editReport._id}`}
+                      href={`/api/approveRevisedFinalReport/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
@@ -351,7 +351,7 @@ function ApproveRevisedFinalReport() {
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`${url}/api/approveRevisedFinalReport/${report._id}`}
+                          href={`/api/approveRevisedFinalReport/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}

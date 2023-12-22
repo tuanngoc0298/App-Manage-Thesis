@@ -67,7 +67,7 @@ function RegisterTopic() {
     setErrorImport("");
     axios
       .get(
-        `${url}/api/topics?searchQuery=${searchQuery}${
+        `/api/topics?searchQuery=${searchQuery}${
           isFilterByUserName ? `&nameTeacher=${name}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -93,7 +93,7 @@ function RegisterTopic() {
       const form = document.getElementById("formImport");
 
       axios
-        .post(`${url}/api/topicsUpload`, formData, {
+        .post(`/api/topicsUpload`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -127,7 +127,7 @@ function RegisterTopic() {
     ) {
       // Gọi API để thêm đề tài mới
       axios
-        .post(`${url}/api/topics`, newTopic, {
+        .post(`/api/topics`, newTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -158,7 +158,7 @@ function RegisterTopic() {
       editTopic.semester
     ) {
       axios
-        .put(`${url}/api/topics/${editTopic._id}`, editTopic, {
+        .put(`/api/topics/${editTopic._id}`, editTopic, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -190,7 +190,7 @@ function RegisterTopic() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa đề tài
     axios
-      .delete(`${url}/api/topics/${id}`, {
+      .delete(`/api/topics/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {

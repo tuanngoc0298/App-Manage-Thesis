@@ -36,7 +36,7 @@ function ApproveRegisterPresent() {
   function getAllRegister() {
     axios
       .get(
-        `${url}/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        `/api/approveRegisterPresent?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
@@ -51,7 +51,7 @@ function ApproveRegisterPresent() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/approveRegisterPresent/${editRegister._id}`,
+          `/api/approveRegisterPresent/${editRegister._id}`,
           { commentFinal, isApprove, editRegister },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -188,7 +188,7 @@ function ApproveRegisterPresent() {
                     </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${url}/api/approveRegisterPresent/${editRegister._id}`}
+                      href={`/api/approveRegisterPresent/${editRegister._id}`}
                       download={editRegister.fileFinal.nameFile}
                     >
                       {editRegister.fileFinal.nameFile}

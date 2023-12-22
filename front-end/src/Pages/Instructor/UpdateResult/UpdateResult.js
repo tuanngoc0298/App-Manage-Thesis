@@ -121,7 +121,7 @@ function UpdateResult() {
   function getAllStudents() {
     axios
       .get(
-        `${url}/api/updateResult?searchQuery=${searchQuery}${
+        `/api/updateResult?searchQuery=${searchQuery}${
           isTabResult ? `&isTabResult=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -137,7 +137,7 @@ function UpdateResult() {
   const handleUpdateResult = () => {
     axios
       .put(
-        `${url}/api/updateResult/${editResult._id}`,
+        `/api/updateResult/${editResult._id}`,
         {
           scores,
           total,

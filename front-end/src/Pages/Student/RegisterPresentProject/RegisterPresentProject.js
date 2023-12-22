@@ -27,7 +27,7 @@ function RegisterPresentProject() {
 
   function getTopic() {
     axios
-      .get(`${url}/api/registerPresent`, {
+      .get(`/api/registerPresent`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -47,7 +47,7 @@ function RegisterPresentProject() {
       formData.append("file", reportFile);
 
       axios
-        .put(`${url}/api/registerPresent/${topic._id}`, formData, {
+        .put(`/api/registerPresent/${topic._id}`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
           headers: {
@@ -116,7 +116,7 @@ function RegisterPresentProject() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${url}/api/approveRegisterPresent/${topic._id}`}
+                    href={`/api/approveRegisterPresent/${topic._id}`}
                     download={topic.fileFinal.nameFile}
                   >
                     {topic.fileFinal.nameFile}

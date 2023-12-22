@@ -37,7 +37,7 @@ function AssignTeachers() {
   function getAllStudentsNeedAssign() {
     axios
       .get(
-        `${url}/api/assignTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
+        `/api/assignTeachers?searchQuery=${searchQuery}&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
       )
       .then((res) => {
@@ -53,7 +53,7 @@ function AssignTeachers() {
     if (valNameTeacher) {
       axios
         .put(
-          `${url}/api/assignTeachers/${editSuggestTopic._id}`,
+          `/api/assignTeachers/${editSuggestTopic._id}`,
           { valNameTeacher, editSuggestTopic },
           {
             headers: { Authorization: `Bearer ${token}` },

@@ -58,7 +58,7 @@ function ManagerUsers() {
   function getAllUsers() {
     setErrorImport("");
     axios
-      .get(`${url}/api/managerUsers?searchQuery=${searchQuery}`, {
+      .get(`/api/managerUsers?searchQuery=${searchQuery}`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -83,7 +83,7 @@ function ManagerUsers() {
       const form = document.getElementById("formImport");
 
       axios
-        .post(`${url}/api/managerUsersUpload`, formData, {
+        .post(`/api/managerUsersUpload`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -110,7 +110,7 @@ function ManagerUsers() {
     if (newUser.username && newUser.code && newUser.email && newUser.role) {
       // Gọi API để thêm người dùng mới
       axios
-        .post(`${url}/api/managerUsers`, newUser, {
+        .post(`/api/managerUsers`, newUser, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -133,7 +133,7 @@ function ManagerUsers() {
     // Gọi API để sửa người dùng
     if (editUser.code && editUser.username && editUser.email && editUser.role) {
       axios
-        .put(`${url}/api/managerUsers/${editUser._id}`, editUser, {
+        .put(`/api/managerUsers/${editUser._id}`, editUser, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -158,7 +158,7 @@ function ManagerUsers() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa người dùng
     axios
-      .delete(`${url}/api/managerUsers/${id}`, {
+      .delete(`/api/managerUsers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {

@@ -31,7 +31,7 @@ function Permissions() {
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get(`${url}/api/permissions`, {
+      .get(`/api/permissions`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -71,7 +71,7 @@ function Permissions() {
     ) {
       // Gọi API để thêm khoa mới
       axios
-        .post(`${url}/api/permissions`, newPermission, {
+        .post(`/api/permissions`, newPermission, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -99,7 +99,7 @@ function Permissions() {
       editPermission.describePermission
     ) {
       axios
-        .put(`${url}/api/permissions/${editPermission._id}`, editPermission, {
+        .put(`/api/permissions/${editPermission._id}`, editPermission, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -131,7 +131,7 @@ function Permissions() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa khoa
     axios
-      .delete(`${url}/api/permissions/${id}`, {
+      .delete(`/api/permissions/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -148,7 +148,7 @@ function Permissions() {
   };
   const handleSearchPermission = () => {
     axios
-      .get(`${url}/api/permissions?searchQuery=${searchQuery}`, {
+      .get(`/api/permissions?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

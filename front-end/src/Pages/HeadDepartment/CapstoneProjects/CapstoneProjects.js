@@ -33,7 +33,7 @@ function CapstoneProjects() {
   useEffect(() => {
     // Gọi API để lấy danh sách học phần KLTN
     axios
-      .get(`${url}/api/capstoneProjects`, {
+      .get(`/api/capstoneProjects`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -73,7 +73,7 @@ function CapstoneProjects() {
     ) {
       // Gọi API để thêm học phần KLTN mới
       axios
-        .post(`${url}/api/capstoneProjects`, newCapstoneProject, {
+        .post(`/api/capstoneProjects`, newCapstoneProject, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -104,7 +104,7 @@ function CapstoneProjects() {
     ) {
       axios
         .put(
-          `${url}/api/capstoneProjects/${editCapstoneProject._id}`,
+          `/api/capstoneProjects/${editCapstoneProject._id}`,
           editCapstoneProject,
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -141,7 +141,7 @@ function CapstoneProjects() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa học phần KLTN
     axios
-      .delete(`${url}/api/capstoneProjects/${id}`, {
+      .delete(`/api/capstoneProjects/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -158,7 +158,7 @@ function CapstoneProjects() {
   };
   const handleSearchCapstoneProject = () => {
     axios
-      .get(`${url}/api/capstoneProjects?searchQuery=${searchQuery}`, {
+      .get(`/api/capstoneProjects?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

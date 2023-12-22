@@ -40,7 +40,7 @@ function SubmitFinalReport() {
 
   function getTopic() {
     axios
-      .get(`${url}/api/submitFinalReport`, {
+      .get(`/api/submitFinalReport`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -60,7 +60,7 @@ function SubmitFinalReport() {
       formData.append("file", reportFile);
 
       axios
-        .post(`${url}/api/submitFinalReport`, formData, {
+        .post(`/api/submitFinalReport`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
           headers: {
@@ -134,7 +134,7 @@ function SubmitFinalReport() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${url}/api/approveFinalReport/${report._id}`}
+                    href={`/api/approveFinalReport/${report._id}`}
                     download={report.file.nameFile}
                   >
                     {report.file.nameFile}

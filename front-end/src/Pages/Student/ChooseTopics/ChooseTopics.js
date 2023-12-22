@@ -34,7 +34,7 @@ function ChooseTopics() {
 
     setIsSelectedTopicTab(false);
     axios
-      .get(`${url}/api/topicsByMajor`, {
+      .get(`/api/topicsByMajor`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -50,7 +50,7 @@ function ChooseTopics() {
   function getSelectedTopic() {
     setIsSelectedTopicTab(true);
     axios
-      .get(`${url}/api/chooseTopics`, {
+      .get(`/api/chooseTopics`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -66,7 +66,7 @@ function ChooseTopics() {
   const handleRegisterTopic = () => {
     axios
       .put(
-        `${url}/api/chooseTopics/${editTopic._id}`,
+        `/api/chooseTopics/${editTopic._id}`,
         { editTopic, code },
         {
           withCredentials: true,
@@ -86,7 +86,7 @@ function ChooseTopics() {
   const handleCancleRegisterTopic = () => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`${url}/api/chooseTopics/${editTopic._id}`, {
+      .delete(`/api/chooseTopics/${editTopic._id}`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -103,7 +103,7 @@ function ChooseTopics() {
 
   const handleSearchTopic = () => {
     axios
-      .get(`${url}/api/topicsByMajor?searchQuery=${searchQuery}`, {
+      .get(`/api/topicsByMajor?searchQuery=${searchQuery}`, {
         withCredentials: true,
         baseURL: `${url}`,
       })

@@ -33,7 +33,7 @@ function Majors() {
   useEffect(() => {
     // Gọi API để lấy danh sách ngành
     axios
-      .get(`${url}/api/majors`, {
+      .get(`/api/majors`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -69,7 +69,7 @@ function Majors() {
     if (newMajor.codeMajor && newMajor.nameMajor && newMajor.nameDepartment) {
       // Gọi API để thêm ngành mới
       axios
-        .post(`${url}/api/majors`, newMajor, {
+        .post(`/api/majors`, newMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -98,7 +98,7 @@ function Majors() {
       editMajor.codeMajor
     ) {
       axios
-        .put(`${url}/api/majors/${editMajor._id}`, editMajor, {
+        .put(`/api/majors/${editMajor._id}`, editMajor, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -130,7 +130,7 @@ function Majors() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa ngành
     axios
-      .delete(`${url}/api/majors/${id}`, {
+      .delete(`/api/majors/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -145,7 +145,7 @@ function Majors() {
   };
   const handleSearchMajor = () => {
     axios
-      .get(`${url}/api/majors?searchQuery=${searchQuery}`, {
+      .get(`/api/majors?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

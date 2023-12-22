@@ -23,7 +23,7 @@ function SeeScoreResult() {
 
   function getResult() {
     axios
-      .get(`${url}/api/seeScoreResult`, {
+      .get(`/api/seeScoreResult`, {
         withCredentials: true,
         baseURL: `${url}`,
       })

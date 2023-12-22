@@ -23,7 +23,7 @@ function SeeFeedback() {
 
   function getFeedback() {
     axios
-      .get(`${url}/api/seeFeedback`, {
+      .get(`/api/seeFeedback`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -60,7 +60,7 @@ function SeeFeedback() {
                 <td>
                   <a
                     className={cx("linkDownload")}
-                    href={`${url}/api/feedback/${feedback._id}`}
+                    href={`/api/feedback/${feedback._id}`}
                     download={feedback.feedback?.fileFeedback?.nameFile}
                   >
                     {feedback.feedback?.fileFeedback?.nameFile}

@@ -56,7 +56,7 @@ function ApproveReportProgress() {
   function getAllReports() {
     axios
       .get(
-        `${url}/api/approveReportProgess?searchQuery=${searchQuery}${
+        `/api/approveReportProgess?searchQuery=${searchQuery}${
           isFilterApproved ? `&stateApprove=${true}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -72,7 +72,7 @@ function ApproveReportProgress() {
   function getAllReportsDetail() {
     if (detail) {
       axios
-        .get(`${url}/api/approveReportDetail/${detail._id}`, {
+        .get(`/api/approveReportDetail/${detail._id}`, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -89,7 +89,7 @@ function ApproveReportProgress() {
     if (isApprove) {
       axios
         .put(
-          `${url}/api/approveReportProgess/${editReport._id}`,
+          `/api/approveReportProgess/${editReport._id}`,
           { comment, isApprove, editReport },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -266,7 +266,7 @@ function ApproveReportProgress() {
                     </span>
                     <a
                       className={cx("linkDownload")}
-                      href={`${url}/api/approveReportProgess/${editReport._id}`}
+                      href={`/api/approveReportProgess/${editReport._id}`}
                       download={editReport.file.nameFile}
                     >
                       {editReport.file.nameFile}
@@ -356,7 +356,7 @@ function ApproveReportProgress() {
                       <th>
                         <a
                           className={cx("linkDownload")}
-                          href={`${url}/api/approveReportProgess/${report._id}`}
+                          href={`/api/approveReportProgess/${report._id}`}
                           download={report.file.nameFile}
                         >
                           {report.file.nameFile}

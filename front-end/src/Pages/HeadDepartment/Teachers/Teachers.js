@@ -33,7 +33,7 @@ function Teachers() {
   useEffect(() => {
     // Gọi API để lấy danh sách giáo viên
     axios
-      .get(`${url}/api/teachers`, {
+      .get(`/api/teachers`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -74,7 +74,7 @@ function Teachers() {
     ) {
       // Gọi API để thêm giáo viên mới
       axios
-        .post(`${url}/api/teachers`, newTeacher, {
+        .post(`/api/teachers`, newTeacher, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -104,7 +104,7 @@ function Teachers() {
     ) {
       axios
         .put(
-          `${url}/api/teachers/${editTeacher._id}`,
+          `/api/teachers/${editTeacher._id}`,
           { editTeacher, initialValueComboBox },
           {
             headers: { Authorization: `Bearer ${token}` },
@@ -139,7 +139,7 @@ function Teachers() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa giáo viên
     axios
-      .delete(`${url}/api/teachers/${id}`, {
+      .delete(`/api/teachers/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -156,7 +156,7 @@ function Teachers() {
   };
   const handleSearchTeacher = () => {
     axios
-      .get(`${url}/api/teachers?searchQuery=${searchQuery}`, {
+      .get(`/api/teachers?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

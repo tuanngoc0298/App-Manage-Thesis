@@ -23,7 +23,7 @@ function ProtectionSchedule() {
 
   function getSchedule() {
     axios
-      .get(`${url}/api/protectionSchedule`, {
+      .get(`/api/protectionSchedule`, {
         withCredentials: true,
         baseURL: `${url}`,
       })

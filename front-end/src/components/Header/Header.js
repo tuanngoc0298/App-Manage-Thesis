@@ -31,7 +31,7 @@ function Header() {
       }
       axios
         .put(
-          `${url}/api/changePassword`,
+          `/api/changePassword`,
           { currentPass, newPass },
           { withCredentials: true, baseURL: `${url}` }
         )

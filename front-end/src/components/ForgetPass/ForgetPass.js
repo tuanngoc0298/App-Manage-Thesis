@@ -38,7 +38,7 @@ function ForgetPass() {
 
     if (email && username) {
       await axios
-        .post(`${url}/api/forgetPassWord`, { username, email })
+        .post(`/api/forgetPassWord`, { username, email })
         .then((res) => {
           alert(res.data);
         })

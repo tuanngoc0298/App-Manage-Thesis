@@ -32,7 +32,7 @@ function Departments() {
   useEffect(() => {
     // Gọi API để lấy danh sách khoa
     axios
-      .get(`${url}/api/departments`, {
+      .get(`/api/departments`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -73,7 +73,7 @@ function Departments() {
     ) {
       // Gọi API để thêm khoa mới
       axios
-        .post(`${url}/api/departments`, newDepartment, {
+        .post(`/api/departments`, newDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -101,7 +101,7 @@ function Departments() {
       editDepartment.describeDepartment
     ) {
       axios
-        .put(`${url}/api/departments/${editDepartment._id}`, editDepartment, {
+        .put(`/api/departments/${editDepartment._id}`, editDepartment, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -133,7 +133,7 @@ function Departments() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa khoa
     axios
-      .delete(`${url}/api/departments/${id}`, {
+      .delete(`/api/departments/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -150,7 +150,7 @@ function Departments() {
   };
   const handleSearchDepartment = () => {
     axios
-      .get(`${url}/api/departments?searchQuery=${searchQuery}`, {
+      .get(`/api/departments?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

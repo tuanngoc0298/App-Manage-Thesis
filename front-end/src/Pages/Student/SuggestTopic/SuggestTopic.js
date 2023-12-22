@@ -60,7 +60,7 @@ function SuggestTopic() {
 
   function getSuggestTopic() {
     axios
-      .get(`${url}/api/suggestTopic`, {
+      .get(`/api/suggestTopic`, {
         withCredentials: true,
         baseURL: `${url}`,
       })
@@ -74,7 +74,7 @@ function SuggestTopic() {
     if (newSuggestTopic.nameTopic && newSuggestTopic.describe) {
       // Gọi API để thêm đề tài mới
       axios
-        .post(`${url}/api/suggestTopic`, newSuggestTopic, {
+        .post(`/api/suggestTopic`, newSuggestTopic, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -98,14 +98,10 @@ function SuggestTopic() {
     // Gọi API để sửa đề tài
     if (editSuggestTopic.nameTopic && editSuggestTopic.describe) {
       axios
-        .put(
-          `${url}/api/suggestTopic/${editSuggestTopic._id}`,
-          editSuggestTopic,
-          {
-            withCredentials: true,
-            baseURL: `${url}`,
-          }
-        )
+        .put(`/api/suggestTopic/${editSuggestTopic._id}`, editSuggestTopic, {
+          withCredentials: true,
+          baseURL: `${url}`,
+        })
         .then((res) => {
           // Cập nhật danh sách đề tài
 
@@ -127,7 +123,7 @@ function SuggestTopic() {
   const handleDeleteTopic = (id) => {
     // Gọi API để xóa đề tài
     axios
-      .delete(`${url}/api/suggestTopic/${id}`, {
+      .delete(`/api/suggestTopic/${id}`, {
         withCredentials: true,
         baseURL: `${url}`,
       })

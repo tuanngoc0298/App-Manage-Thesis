@@ -32,7 +32,7 @@ function SchoolYears() {
   useEffect(() => {
     // Gọi API để lấy danh sách năm học
     axios
-      .get(`${url}/api/schoolYears`, {
+      .get(`/api/schoolYears`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((response) => {
@@ -68,7 +68,7 @@ function SchoolYears() {
     if (newSchoolYear.year && newSchoolYear.semester) {
       // Gọi API để thêm năm học mới
       axios
-        .post(`${url}/api/schoolYears`, newSchoolYear, {
+        .post(`/api/schoolYears`, newSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -92,7 +92,7 @@ function SchoolYears() {
     // Gọi API để sửa năm học
     if (editSchoolYear.semester && editSchoolYear.year) {
       axios
-        .put(`${url}/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
+        .put(`/api/schoolYears/${editSchoolYear._id}`, editSchoolYear, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -124,7 +124,7 @@ function SchoolYears() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa năm học
     axios
-      .delete(`${url}/api/schoolYears/${id}`, {
+      .delete(`/api/schoolYears/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
@@ -141,7 +141,7 @@ function SchoolYears() {
   };
   const handleSearchSchoolYear = () => {
     axios
-      .get(`${url}/api/schoolYears?searchQuery=${searchQuery}`, {
+      .get(`/api/schoolYears?searchQuery=${searchQuery}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then((res) => {

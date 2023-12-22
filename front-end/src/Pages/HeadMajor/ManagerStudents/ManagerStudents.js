@@ -71,7 +71,7 @@ function ManagerStudents() {
     setErrorImport("");
     axios
       .get(
-        `${url}/api/students?searchQuery=${searchQuery}${
+        `/api/students?searchQuery=${searchQuery}${
           isFilterByMajor ? `&nameMajor=${nameMajor}` : ""
         }&year=${filterByYear}&semester=${filterBySemester}`,
         { withCredentials: true, baseURL: `${url}` }
@@ -96,7 +96,7 @@ function ManagerStudents() {
       formData.append("file", file);
       const form = document.getElementById("formImport");
       axios
-        .post(`${url}/api/studentsUpload`, formData, {
+        .post(`/api/studentsUpload`, formData, {
           withCredentials: true,
           baseURL: `${url}`,
         })
@@ -130,7 +130,7 @@ function ManagerStudents() {
     ) {
       // Gọi API để thêm sinh viên mới
       axios
-        .post(`${url}/api/students`, newStudent, {
+        .post(`/api/students`, newStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -160,7 +160,7 @@ function ManagerStudents() {
       editStudent.state
     ) {
       axios
-        .put(`${url}/api/students/${editStudent._id}`, editStudent, {
+        .put(`/api/students/${editStudent._id}`, editStudent, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => {
@@ -192,7 +192,7 @@ function ManagerStudents() {
     setIsOpenDeleteModal(false);
     // Gọi API để xóa sinh viên
     axios
-      .delete(`${url}/api/students/${id}`, {
+      .delete(`/api/students/${id}`, {
         headers: { Authorization: `Bearer ${token}` },
       })
       .then(() => {
