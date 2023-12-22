@@ -1,6 +1,6 @@
 <div align="center">
 
-![logo-dark](https://upload.wikimedia.org/wikipedia/vi/a/ad/LogoTLU.jpg)
+![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/d06a063c-f2da-41a0-8231-c44865a8599a)
 
 # Web App quản lý khóa luận tốt nghiệp
 
