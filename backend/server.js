@@ -8,22 +8,6 @@ dotenv.config();
 
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
-
-const app = express();
-const whitelist = [
-  "http://localhost:3000",
-  "https://app-manage-thesis.vercel.app",
-];
-const corsOptions = {
-  origin: whitelist,
-  methods: "*",
-  allowedHeaders: ["Content-Type", "Authorization"],
-  credentials: true,
-};
-app.use(cors(corsOptions));
-
-const port = process.env.PORT;
-
 const {
   permissionRoutes,
   authRoutes,
@@ -59,17 +43,18 @@ const {
   managerUserRoutes,
 } = require("./routes");
 
-// Kết nối đến cơ sở dữ liệu MongoDB
-mongoose.connect(process.env.MONGODB_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-const db = mongoose.connection;
-
-db.on("error", console.error.bind(console, "Kết nối MongoDB thất bại!"));
-db.once("open", () => {
-  console.log("Kết nối MongoDB thành công!");
-});
+const app = express();
+const whitelist = [
+  "http://localhost:3000",
+  "https://app-manage-thesis.vercel.app",
+];
+const corsOptions = {
+  origin: whitelist,
+  methods: "*",
+  allowedHeaders: ["Content-Type", "Authorization"],
+  credentials: true,
+};
+app.use(cors(corsOptions));
 
 // app.use(express.json());
 // app.use(bodyParser.json());
@@ -79,6 +64,18 @@ app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
 );
 app.use(express.json({ limit: "50mb", extended: true, parameterLimit: 50000 }));
+
+// Kết nối đến cơ sở dữ liệu MongoDB
+mongoose.connect(process.env.MONGODB_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+});
+const db = mongoose.connection;
+const port = process.env.PORT;
+db.on("error", console.error.bind(console, "Kết nối MongoDB thất bại!"));
+db.once("open", () => {
+  console.log("Kết nối MongoDB thành công!");
+});
 
 app.use("/api", authRoutes);
 app.use("/api", statisticsCompletionRoutes);
