@@ -137,7 +137,7 @@ const authController = {
       from: '"Quản lý khóa luận" <quanlykhoaluan0298@gmail.com>',
       to: email,
       subject: "Yêu cầu đặt lại mật khẩu",
-      html: `Hệ thống nhận được yêu cầu đổi mật khẩu cho tài khoản <span style="font-weight: bold">${username} </span> của bạn. Nếu đúng do bạn thực hiện thì mật khẩu mới của bạn là: <span style="font-weight: bold">${newPassword} </span> và thực hiện bằng cách nhấn vào liên kết sau để hệ thống tiến hành đổi <a href="${process.env.HOST}:${process.env.PORT}/api/resetPassword?username=${username}&newPassword=${newPassword}">Bấm vào đây để hệ thống tiến hành đổi mật khẩu</a>`,
+      html: `Hệ thống nhận được yêu cầu đổi mật khẩu cho tài khoản <span style="font-weight: bold">${username} </span> của bạn. Nếu đúng do bạn thực hiện thì mật khẩu mới của bạn là: <span style="font-weight: bold">${newPassword} </span> và thực hiện bằng cách nhấn vào liên kết sau để hệ thống tiến hành đổi <a href="https://thesis-management-server.onrender.com/api/resetPassword?username=${username}&newPassword=${newPassword}">Bấm vào đây để hệ thống tiến hành đổi mật khẩu</a>`,
     };
 
     transporter.sendMail(mailOptions, (error, info) => {
