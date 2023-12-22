@@ -82,7 +82,7 @@ const authController = {
           expiresIn: 60 * 60 * 6,
         }
       );
-      res.cookie("token", token);
+      res.cookie("token", token, { sameSite: "none", secure: true });
 
       res.json({ token, role: user.role, userInfo });
     } catch (error) {

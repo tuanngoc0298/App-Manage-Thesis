@@ -8,6 +8,22 @@ dotenv.config();
 
 const cookieParser = require("cookie-parser");
 const session = require("express-session");
+const app = express();
+app.set("trust proxy", 1);
+const whitelist = [
+  "http://localhost:3000",
+  "https://app-manage-thesis.vercel.app",
+];
+const corsOptions = {
+  credentials: true,
+  origin: whitelist,
+  methods: "*",
+  allowedHeaders: ["Content-Type", "Authorization"],
+};
+app.use(cors(corsOptions));
+// app.use(express.json());
+// app.use(bodyParser.json());
+app.use(cookieParser());
 const {
   permissionRoutes,
   authRoutes,
@@ -42,23 +58,6 @@ const {
   statisticsStudentRoutes,
   managerUserRoutes,
 } = require("./routes");
-
-const app = express();
-const whitelist = [
-  "http://localhost:3000",
-  "https://app-manage-thesis.vercel.app",
-];
-const corsOptions = {
-  credentials: true,
-  origin: whitelist,
-  methods: "*",
-  allowedHeaders: ["Content-Type", "Authorization"],
-};
-app.use(cors(corsOptions));
-
-// app.use(express.json());
-// app.use(bodyParser.json());
-app.use(cookieParser());
 
 app.use(
   express.urlencoded({ limit: "50mb", extended: true, parameterLimit: 50000 })
