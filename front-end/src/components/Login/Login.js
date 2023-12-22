@@ -48,7 +48,11 @@ function Login({ onLogin }) {
             role,
           } = res?.data;
 
-          Cookies.set("token", token, { expires: 1 / 4 });
+          Cookies.set("token", token, {
+            sameSite: "None",
+            secure: true,
+            expires: 1 / 4,
+          });
           onLogin(token, name, role);
           navigate("/");
         });
