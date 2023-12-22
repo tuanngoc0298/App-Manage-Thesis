@@ -42,7 +42,7 @@ Bạn có thể truy cập ứng dụng thông qua tài khoản sau:
 ## Quy trình nghiệp vụ 📝
 
 ### Quy trình nghiệp vụ cho quy trình Đăng ký và làm KLTN
-![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/ff236242-290c-4be8-b1ba-57e4426da653)
+![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/2aa111df-6e6c-40bd-b71b-f9d1d0bff7ed)
 
 ### Quy trình nghiệp vụ cho quy trình Bảo vệ KLTN
 ![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/30ad67c3-3bac-4462-bbd5-2954ee91cf2a)
