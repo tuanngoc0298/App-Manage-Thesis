@@ -51,7 +51,7 @@ Bạn có thể truy cập ứng dụng thông qua tài khoản sau:
 ![image](https://github.com/tuanngoc0298/App-Manage-Thesis/assets/75868787/a2f14399-a6b7-43f8-bbe4-cb163e55276d)
 
 
-## Xậy dựng với 🏗️
+## Công nghệ 🏗️
 
 1. Reactjs, axios
 2. Nodejs, express
