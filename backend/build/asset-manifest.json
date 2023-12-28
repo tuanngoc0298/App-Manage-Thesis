@@ -1,0 +1,16 @@
+{
+  "files": {
+    "main.css": "/static/css/main.a52f675a.css",
+    "main.js": "/static/js/main.4c5e2a4a.js",
+    "static/media/background-login.jpg": "/static/media/background-login.6fd6e83150f21d0eb4c1.jpg",
+    "static/media/logotlu.png": "/static/media/logotlu.456ebb20cf92d31c0591.png",
+    "index.html": "/index.html",
+    "static/media/search.svg": "/static/media/search.7cb486168035b1e1b0167eb244623a7a.svg",
+    "main.a52f675a.css.map": "/static/css/main.a52f675a.css.map",
+    "main.4c5e2a4a.js.map": "/static/js/main.4c5e2a4a.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.a52f675a.css",
+    "static/js/main.4c5e2a4a.js"
+  ]
+}
